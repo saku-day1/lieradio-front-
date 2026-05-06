@@ -158,18 +158,21 @@ function extractCastFromDescription(description, title = "") {
     }
 
     // 見出し検出（表記ゆれをできるだけ吸収）
+    const isGuestSection = /ゲスト\s*出演/.test(line) || /ゲスト/.test(line) || /^Guest[:：]/i.test(line);
+    if (isGuestSection) {
+      section = "guest";
+      continue;
+    }
+
     const isMainSection =
       /メイン\s*MC/i.test(line) ||
       /メイン\s*(パーソナリティ|キャスト)/i.test(line) ||
       /^パーソナリティ/.test(line) ||
-      /^MC[:：]/i.test(line);
+      /^MC[:：]/i.test(line) ||
+      /^【\s*出演\s*】$/.test(line) ||
+      /^出演[:：]?$/.test(line);
     if (isMainSection) {
       section = "main";
-      continue;
-    }
-    const isGuestSection = /ゲスト/.test(line) || /^Guest[:：]/i.test(line);
-    if (isGuestSection) {
-      section = "guest";
       continue;
     }
 
