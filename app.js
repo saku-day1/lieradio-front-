@@ -226,7 +226,7 @@ function filterEpisodes(episodes, keyword, andNames = [], unitKey = "") {
       return normalizedEpisodes;
     }
     return normalizedEpisodes.filter((episode) =>
-      episode.castMembers.some((member) => unit.members.includes(member))
+      unit.members.every((member) => episode.castMembers.includes(member))
     );
   }
 
