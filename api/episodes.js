@@ -134,6 +134,11 @@ function extractBroadcastNumber(title) {
     return Number(matchByHash[1]);
   }
 
+  const matchByJapanese = title.match(/第\s*(\d+)\s*回/);
+  if (matchByJapanese) {
+    return Number(matchByJapanese[1]);
+  }
+
   return null;
 }
 
