@@ -4,19 +4,23 @@
  */
 const YOUTUBE_API_BASE = "https://www.googleapis.com/youtube/v3/playlistItems";
 
-// 説明欄から検出する既知メンバー（表記ゆれ吸収後の正規名）
-const KNOWN_CAST_MEMBERS = [
+// ユーザー指定: 抽出対象はこの名前だけ
+const ALLOWED_CAST_MEMBERS = [
   "伊達さゆり",
-  "Liyuu",
+  "坂倉花",
   "岬なこ",
-  "ペイトン尚未",
   "青山なぎさ",
-  "鈴原希実",
+  "Liyuu",
+  "ペイトン尚未",
+  "結那",
+  "結木ゆな",
   "薮島朱音",
+  "鈴原希実",
   "大熊和奏",
   "絵森彩",
-  "結那",
-  "坂倉花"
+  "吉武千颯",
+  "相良茉優",
+  "田中ちえ美"
 ];
 
 // 表記ゆれを正規化する辞書
@@ -28,7 +32,11 @@ const NAME_ALIASES = {
   "坂倉 花": "坂倉花",
   "籔島 朱音": "薮島朱音",
   "籔島朱音": "薮島朱音",
-  "鈴原希美": "鈴原希実"
+  "鈴原希美": "鈴原希実",
+  "吉武 千颯": "吉武千颯",
+  "結木 ゆな": "結木ゆな",
+  "相良 茉優": "相良茉優",
+  "田中 ちえ美": "田中ちえ美"
 };
 
 export default async function handler(request, response) {
@@ -157,16 +165,16 @@ function extractCastFromDescription(description) {
   // セクションから拾えない古い回向けに、既知メンバー全文探索も併用
   const normalizedText = normalizeForSearch(description);
   if (mainCast.length === 0 && guests.length === 0) {
-    const detected = KNOWN_CAST_MEMBERS.filter((name) =>
+    const detected = ALLOWED_CAST_MEMBERS.filter((name) =>
       normalizedText.includes(normalizeForSearch(name))
     );
-    return { mainCast: [], guests: detected };
+    return applySpecialRules(description, { mainCast: [], guests: detected });
   }
 
-  return {
+  return applySpecialRules(description, {
     mainCast: uniqueNames(mainCast),
     guests: uniqueNames(guests)
-  };
+  });
 }
 
 function splitAndCleanNames(line) {
@@ -203,7 +211,7 @@ function cleanName(rawLine) {
 }
 
 function uniqueNames(names) {
-  return [...new Set(names)];
+  return [...new Set(names)].filter((name) => ALLOWED_CAST_MEMBERS.includes(name));
 }
 
 function normalizeDisplayName(name) {
@@ -213,4 +221,20 @@ function normalizeDisplayName(name) {
 
 function normalizeForSearch(text) {
   return text.replace(/\s+/g, "").toLowerCase();
+}
+
+function applySpecialRules(description, cast) {
+  const shouldExcludeSakakura = description.includes("リエラジ！への出演を見合わせることとなりました");
+
+  if (!shouldExcludeSakakura) {
+    return {
+      mainCast: uniqueNames(cast.mainCast),
+      guests: uniqueNames(cast.guests)
+    };
+  }
+
+  return {
+    mainCast: uniqueNames(cast.mainCast).filter((name) => name !== "坂倉花"),
+    guests: uniqueNames(cast.guests).filter((name) => name !== "坂倉花")
+  };
 }
