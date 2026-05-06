@@ -72,6 +72,13 @@ body {
   gap: 8px;
 }
 
+.unit-quick-filters {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
 .reset-filters-button {
   margin-top: 10px;
   border: 1px solid #3a4661;
@@ -107,6 +114,25 @@ body {
 }
 
 .cast-filter-button.is-active {
+  box-shadow: 0 0 0 2px var(--accent);
+}
+
+.unit-filter-button {
+  border: 1px solid #3a4661;
+  border-radius: 999px;
+  padding: 4px 10px;
+  color: #0f172a;
+  background: var(--unit-color, #334155);
+  font-size: 0.85rem;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.unit-filter-button:hover {
+  border-color: var(--accent);
+}
+
+.unit-filter-button.is-active {
   box-shadow: 0 0 0 2px var(--accent);
 }
 
