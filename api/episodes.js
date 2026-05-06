@@ -210,7 +210,7 @@ function toEpisode(item, episodeNumber) {
   const title = snippet.title || "タイトル未設定";
   const description = snippet.description || "";
   const videoId = (snippet.resourceId && snippet.resourceId.videoId) || "";
-  const publishedAt = (snippet.publishedAt || "").slice(0, 10);
+  const publishedAt = toJstDate(snippet.publishedAt || "");
   const { mainCast, guests } = extractCastFromDescription(description, title);
   const castMembers = uniqueNames([...mainCast, ...guests]);
 
@@ -224,6 +224,26 @@ function toEpisode(item, episodeNumber) {
     youtubeUrl: `https://www.youtube.com/watch?v=${videoId}`,
     publishedAt
   };
+}
+
+function toJstDate(isoDateString) {
+  if (!isoDateString) {
+    return "";
+  }
+
+  const date = new Date(isoDateString);
+  if (Number.isNaN(date.getTime())) {
+    return "";
+  }
+
+  const formatter = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Tokyo",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit"
+  });
+
+  return formatter.format(date);
 }
 
 function extractBroadcastNumber(title) {
