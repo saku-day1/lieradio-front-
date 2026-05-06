@@ -123,9 +123,10 @@ function renderEpisodeList(episodes) {
   episodeList.innerHTML = episodes
     .map((episode) => {
       const allCast = getAllCastMembers(episode).join(" / ");
+      const displayedNumber = episode.broadcastNumber ?? episode.episodeNumber;
       return `
         <article class="episode-item">
-          <h3>第${episode.episodeNumber}回 ${episode.title}</h3>
+          <h3>第${displayedNumber}回 ${episode.title}</h3>
           <p class="meta">出演者: ${allCast}</p>
           <p class="meta">公開日: ${episode.publishedAt}</p>
           <a href="${episode.youtubeUrl}" target="_blank" rel="noopener noreferrer">YouTubeで見る</a>

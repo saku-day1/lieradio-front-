@@ -109,6 +109,7 @@ function toEpisode(item, episodeNumber) {
 
   return {
     episodeNumber,
+    broadcastNumber: extractBroadcastNumber(title),
     title,
     mainCast,
     guests,
@@ -116,6 +117,20 @@ function toEpisode(item, episodeNumber) {
     youtubeUrl: `https://www.youtube.com/watch?v=${videoId}`,
     publishedAt
   };
+}
+
+function extractBroadcastNumber(title) {
+  const matchByJapanese = title.match(/第\s*(\d+)\s*回/);
+  if (matchByJapanese) {
+    return Number(matchByJapanese[1]);
+  }
+
+  const matchByHash = title.match(/#\s*(\d+)/i);
+  if (matchByHash) {
+    return Number(matchByHash[1]);
+  }
+
+  return null;
 }
 
 function extractCastFromDescription(description) {
