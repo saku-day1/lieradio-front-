@@ -157,12 +157,18 @@ function extractCastFromDescription(description, title = "") {
       continue;
     }
 
-    // 見出し検出（絵文字や記号の違いも吸収）
-    if (/メイン\s*MC/i.test(line)) {
+    // 見出し検出（表記ゆれをできるだけ吸収）
+    const isMainSection =
+      /メイン\s*MC/i.test(line) ||
+      /メイン\s*(パーソナリティ|キャスト)/i.test(line) ||
+      /^パーソナリティ/.test(line) ||
+      /^MC[:：]/i.test(line);
+    if (isMainSection) {
       section = "main";
       continue;
     }
-    if (/ゲスト/.test(line)) {
+    const isGuestSection = /ゲスト/.test(line) || /^Guest[:：]/i.test(line);
+    if (isGuestSection) {
       section = "guest";
       continue;
     }
