@@ -4,9 +4,32 @@
  */
 const YOUTUBE_API_BASE = "https://www.googleapis.com/youtube/v3/playlistItems";
 
-// 説明欄のセクション見出し
-const MAIN_MC_MARKER = "🎤メインMC";
-const GUEST_MARKER = "🌟ゲスト";
+// 説明欄から検出する既知メンバー（表記ゆれ吸収後の正規名）
+const KNOWN_CAST_MEMBERS = [
+  "伊達さゆり",
+  "Liyuu",
+  "岬なこ",
+  "ペイトン尚未",
+  "青山なぎさ",
+  "鈴原希実",
+  "薮島朱音",
+  "大熊和奏",
+  "絵森彩",
+  "結那",
+  "坂倉花"
+];
+
+// 表記ゆれを正規化する辞書
+const NAME_ALIASES = {
+  "伊達 さゆり": "伊達さゆり",
+  "岬 なこ": "岬なこ",
+  "絵森 彩": "絵森彩",
+  "大熊 和奏": "大熊和奏",
+  "坂倉 花": "坂倉花",
+  "籔島 朱音": "薮島朱音",
+  "籔島朱音": "薮島朱音",
+  "鈴原希美": "鈴原希実"
+};
 
 export default async function handler(request, response) {
   try {
@@ -73,8 +96,7 @@ function toEpisode(item, episodeNumber) {
   const description = snippet.description || "";
   const videoId = (snippet.resourceId && snippet.resourceId.videoId) || "";
   const publishedAt = (snippet.publishedAt || "").slice(0, 10);
-  const mainCast = extractPeopleFromSection(description, MAIN_MC_MARKER);
-  const guests = extractPeopleFromSection(description, GUEST_MARKER);
+  const { mainCast, guests } = extractCastFromDescription(description);
   const castMembers = uniqueNames([...mainCast, ...guests]);
 
   return {
@@ -88,58 +110,107 @@ function toEpisode(item, episodeNumber) {
   };
 }
 
-function extractPeopleFromSection(description, marker) {
-  // マーカー位置を探す（例: "🎤メインMC", "🌟ゲスト"）
-  const startIndex = description.indexOf(marker);
-  if (startIndex === -1) {
-    return [];
+function extractCastFromDescription(description) {
+  const lines = description.split("\n");
+  const mainCast = [];
+  const guests = [];
+  let section = "";
+
+  for (const rawLine of lines) {
+    const line = rawLine.trim();
+    if (!line) {
+      continue;
+    }
+
+    // 見出し検出（絵文字や記号の違いも吸収）
+    if (/メイン\s*MC/i.test(line)) {
+      section = "main";
+      continue;
+    }
+    if (/ゲスト/.test(line)) {
+      section = "guest";
+      continue;
+    }
+
+    // 別セクションに入ったら出演者抽出モードを終了
+    if (/^【.+】/.test(line) && !/出演/.test(line)) {
+      section = "";
+      continue;
+    }
+
+    if (!section) {
+      continue;
+    }
+
+    const names = splitAndCleanNames(line);
+    if (names.length === 0) {
+      continue;
+    }
+
+    if (section === "main") {
+      mainCast.push(...names);
+    } else if (section === "guest") {
+      guests.push(...names);
+    }
   }
 
-  // セクション開始位置から次の見出しまでを切り出す
-  const sectionStart = startIndex + marker.length;
-  const remaining = description.slice(sectionStart);
-  const sectionEnd = findSectionEndIndex(remaining);
-  const sectionText = sectionEnd === -1 ? remaining : remaining.slice(0, sectionEnd);
+  // セクションから拾えない古い回向けに、既知メンバー全文探索も併用
+  const normalizedText = normalizeForSearch(description);
+  if (mainCast.length === 0 && guests.length === 0) {
+    const detected = KNOWN_CAST_MEMBERS.filter((name) =>
+      normalizedText.includes(normalizeForSearch(name))
+    );
+    return { mainCast: [], guests: detected };
+  }
 
-  // 1行ずつ処理し、名前だけを抽出
-  return sectionText
-    .split("\n")
-    .map((line) => line.trim())
-    .filter((line) => line && !line.startsWith("※"))
-    .map(cleanName)
-    .filter(Boolean);
+  return {
+    mainCast: uniqueNames(mainCast),
+    guests: uniqueNames(guests)
+  };
 }
 
-function findSectionEndIndex(text) {
-  const candidates = [
-    text.indexOf("【"),
-    text.indexOf("🎤"),
-    text.indexOf("🌟"),
-    text.indexOf("◆"),
-    text.indexOf("#")
-  ].filter((index) => index >= 0);
+function splitAndCleanNames(line) {
+  const chunks = line
+    .split(/[、\/]/)
+    .map((part) => cleanName(part))
+    .filter(Boolean);
 
-  if (candidates.length === 0) {
-    return -1;
-  }
-  return Math.min(...candidates);
+  return chunks;
 }
 
 function cleanName(rawLine) {
-  // 先頭の記号や全角スペースを除去
-  const withoutPrefix = rawLine.replace(/^[・\-ー\s　]+/, "");
+  // 先頭の記号・絵文字・全角空白を除去
+  const withoutPrefix = rawLine
+    .replace(/^[・\-ー◆🎤🌟🌈\s　]+/, "")
+    .replace(/^※\s*/, "");
 
   // "坂倉 花（鬼塚冬毬役）" -> "坂倉 花"
   const nameOnly = withoutPrefix.split("（")[0].trim();
 
-  // URL行などは除外
-  if (!nameOnly || /^https?:\/\//.test(nameOnly)) {
+  if (!nameOnly) {
     return "";
   }
 
-  return nameOnly;
+  // 説明文ノイズ行は除外
+  const noisePattern =
+    /(出演見合わせ|詳細|ご確認|配信日程|お便り|関連サイト|公式|毎週|過去回|https?:\/\/|#lovelive|プロジェクト)/;
+  if (noisePattern.test(nameOnly)) {
+    return "";
+  }
+
+  const normalized = normalizeDisplayName(nameOnly);
+  return normalized;
 }
 
 function uniqueNames(names) {
   return [...new Set(names)];
+}
+
+function normalizeDisplayName(name) {
+  const compact = name.replace(/\s+/g, "");
+  return NAME_ALIASES[name] || NAME_ALIASES[compact] || compact;
+}
+
+function normalizeForSearch(text) {
+  return text.replace(/\s+/g, "").toLowerCase();
 }

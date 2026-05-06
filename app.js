@@ -83,10 +83,10 @@ function filterEpisodes(episodes, keyword) {
     return normalizedEpisodes;
   }
 
-  const lowerKeyword = keyword.toLowerCase();
+  const normalizedKeyword = normalizeSearchText(keyword);
   return normalizedEpisodes.filter((episode) =>
     episode.castMembers.some((member) =>
-      member.toLowerCase().includes(lowerKeyword)
+      normalizeSearchText(member).includes(normalizedKeyword)
     )
   );
 }
@@ -174,4 +174,8 @@ function getAllCastMembers(episode) {
   const merged = [...mainCast, ...guests];
 
   return merged.length > 0 ? [...new Set(merged)] : ["出演者情報未設定"];
+}
+
+function normalizeSearchText(text) {
+  return String(text).replace(/\s+/g, "").toLowerCase();
 }
