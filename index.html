@@ -23,6 +23,7 @@
           autocomplete="off"
         >
         <div id="castQuickFilters" class="cast-quick-filters"></div>
+        <button id="resetFiltersButton" type="button" class="reset-filters-button hidden">検索リセット</button>
       </div>
 
       <div class="control-group">
@@ -34,7 +35,7 @@
       </div>
     </section>
 
-    <section class="card">
+    <section id="rankingSection" class="card">
       <div class="section-header">
         <h2 id="rankingTitle">出演回数ランキング</h2>
         <button id="toggleRankingButton" type="button" class="toggle-button">表示する</button>
@@ -43,7 +44,7 @@
     </section>
 
     <section class="card">
-      <h2>放送回一覧</h2>
+      <h2 id="resultTitle">検索結果</h2>
       <p id="resultCount" class="result-count"></p>
       <div id="urlResultBox" class="url-result-box hidden">
         <h3>検索結果のYouTube URL</h3>

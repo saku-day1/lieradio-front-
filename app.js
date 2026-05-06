@@ -6,16 +6,20 @@ let allEpisodes = [];
 // DOMをまとめて取得しておく（毎回querySelectorしないため）
 const searchInput = document.getElementById("searchInput");
 const castQuickFilters = document.getElementById("castQuickFilters");
+const resetFiltersButton = document.getElementById("resetFiltersButton");
 const sortSelect = document.getElementById("sortSelect");
+const rankingSection = document.getElementById("rankingSection");
 const rankingTitle = document.getElementById("rankingTitle");
 const rankingList = document.getElementById("rankingList");
 const toggleRankingButton = document.getElementById("toggleRankingButton");
+const resultTitle = document.getElementById("resultTitle");
 const episodeList = document.getElementById("episodeList");
 const resultCount = document.getElementById("resultCount");
 const urlResultBox = document.getElementById("urlResultBox");
 const urlResultList = document.getElementById("urlResultList");
 let isRankingVisible = false;
 let quickFilterKeyword = "";
+let andFilterNames = [];
 
 const PRIORITY_CAST_FILTERS = [
   { name: "伊達さゆり", color: "#f39c12" }, // オレンジ
@@ -76,10 +80,12 @@ async function fetchEpisodes() {
 function bindEvents() {
   searchInput.addEventListener("input", () => {
     quickFilterKeyword = "";
+    andFilterNames = [];
     render();
   });
   sortSelect.addEventListener("change", render);
   toggleRankingButton.addEventListener("click", toggleRankingVisibility);
+  resetFiltersButton.addEventListener("click", resetFilters);
 }
 
 function renderCastQuickFilters(episodes) {
@@ -114,38 +120,71 @@ function renderCastQuickFilters(episodes) {
 
   castQuickFilters.querySelectorAll(".cast-filter-button").forEach((button) => {
     button.addEventListener("click", () => {
-      quickFilterKeyword = button.dataset.filterKey || "";
+      const filterKey = button.dataset.filterKey || "";
+      handleQuickFilterClick(filterKey);
       searchInput.value = "";
-      updateActiveQuickFilter();
       render();
     });
   });
 }
 
+function handleQuickFilterClick(filterKey) {
+  if (!filterKey) {
+    return;
+  }
+
+  if (filterKey === OTHERS_FILTER_KEY) {
+    andFilterNames = [];
+    quickFilterKeyword = OTHERS_FILTER_KEY;
+    return;
+  }
+
+  if (quickFilterKeyword === OTHERS_FILTER_KEY) {
+    quickFilterKeyword = "";
+  }
+
+  const existingIndex = andFilterNames.indexOf(filterKey);
+  if (existingIndex >= 0) {
+    andFilterNames.splice(existingIndex, 1);
+  } else if (andFilterNames.length < 3) {
+    andFilterNames.push(filterKey);
+  }
+
+  quickFilterKeyword = andFilterNames.length === 1 ? andFilterNames[0] : "";
+}
+
 // 画面の再描画を1つの関数にまとめる
 function render() {
   const keyword = quickFilterKeyword || searchInput.value.trim();
+  const isAndMode = andFilterNames.length >= 2;
   const sortOrder = sortSelect.value;
 
-  const filteredEpisodes = filterEpisodes(allEpisodes, keyword);
+  const filteredEpisodes = filterEpisodes(allEpisodes, keyword, andFilterNames);
   const sortedEpisodes = sortEpisodes(filteredEpisodes, sortOrder);
-  const ranking = buildRanking(filteredEpisodes);
+  const ranking = buildRanking(filteredEpisodes, keyword);
 
-  renderEpisodeList(sortedEpisodes);
+  renderEpisodeList(sortedEpisodes, isAndMode);
   renderUrlResultList(sortedEpisodes, keyword);
-  renderRanking(ranking);
-  renderRankingTitle(keyword);
+  renderRankingSection(ranking, keyword, isAndMode);
+  renderResultTitle(isAndMode);
   renderResultCount(sortedEpisodes.length);
   updateActiveQuickFilter();
+  updateResetButtonVisibility();
 }
 
 // 出演者（メインMC + ゲスト）の部分一致検索
 // APIデータに castMembers が無い場合は mainCast + guests を結合して扱う
-function filterEpisodes(episodes, keyword) {
+function filterEpisodes(episodes, keyword, andNames = []) {
   const normalizedEpisodes = episodes.map((episode) => ({
     ...episode,
     castMembers: getAllCastMembers(episode)
   }));
+
+  if (andNames.length >= 2) {
+    return normalizedEpisodes.filter((episode) =>
+      andNames.every((name) => episode.castMembers.includes(name))
+    );
+  }
 
   if (!keyword) {
     return normalizedEpisodes;
@@ -176,9 +215,13 @@ function sortEpisodes(episodes, sortOrder) {
 }
 
 // castMembersを集計してランキング配列を作る
-function buildRanking(episodes) {
+function buildRanking(episodes, keyword = "") {
+  const excludedNames = getExcludedRankingNames(keyword);
   const countMap = episodes.reduce((acc, episode) => {
     episode.castMembers.forEach((member) => {
+      if (excludedNames.has(member)) {
+        return;
+      }
       acc[member] = (acc[member] || 0) + 1;
     });
     return acc;
@@ -189,7 +232,24 @@ function buildRanking(episodes) {
     .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name, "ja"));
 }
 
-function renderEpisodeList(episodes) {
+function getExcludedRankingNames(keyword) {
+  if (!keyword || keyword === OTHERS_FILTER_KEY) {
+    return new Set();
+  }
+
+  if (quickFilterKeyword && quickFilterKeyword !== OTHERS_FILTER_KEY) {
+    return new Set([quickFilterKeyword]);
+  }
+
+  const normalizedKeyword = normalizeSearchText(keyword);
+  const matched = PRIORITY_CAST_FILTERS
+    .map((item) => item.name)
+    .filter((name) => normalizeSearchText(name) === normalizedKeyword);
+
+  return new Set(matched);
+}
+
+function renderEpisodeList(episodes, isAndMode = false) {
   if (episodes.length === 0) {
     episodeList.innerHTML = "<li class='empty-message'>該当する放送回がありません。</li>";
     return;
@@ -199,9 +259,10 @@ function renderEpisodeList(episodes) {
     .map((episode) => {
       const allCast = getAllCastMembers(episode).join(" / ");
       const displayedNumber = episode.broadcastNumber ?? episode.episodeNumber;
+      const titleText = isAndMode ? episode.title : `第${displayedNumber}回 ${episode.title}`;
       return `
         <li class="episode-item">
-          <h3>第${displayedNumber}回 ${episode.title}</h3>
+          <h3>${titleText}</h3>
           <p class="meta">出演者: ${allCast}</p>
           <p class="meta">公開日: ${episode.publishedAt}</p>
           <a href="${episode.youtubeUrl}" target="_blank" rel="noopener noreferrer">YouTubeで見る</a>
@@ -224,6 +285,21 @@ function renderRanking(ranking) {
 
 function renderRankingTitle(keyword) {
   rankingTitle.textContent = keyword ? "共演数ランキング" : "出演回数ランキング";
+}
+
+function renderRankingSection(ranking, keyword, isAndMode) {
+  if (isAndMode) {
+    rankingSection.classList.add("hidden");
+    return;
+  }
+
+  rankingSection.classList.remove("hidden");
+  renderRanking(ranking);
+  renderRankingTitle(keyword);
+}
+
+function renderResultTitle(isAndMode) {
+  resultTitle.textContent = isAndMode ? "AND検索結果（最大3人）" : "検索結果";
 }
 
 function renderResultCount(count) {
@@ -260,8 +336,24 @@ function toggleRankingVisibility() {
 
 function updateActiveQuickFilter() {
   castQuickFilters.querySelectorAll(".cast-filter-button").forEach((button) => {
-    button.classList.toggle("is-active", button.dataset.filterKey === quickFilterKeyword);
+    const key = button.dataset.filterKey;
+    const isActive = key === OTHERS_FILTER_KEY
+      ? quickFilterKeyword === OTHERS_FILTER_KEY
+      : andFilterNames.includes(key || "");
+    button.classList.toggle("is-active", isActive);
   });
+}
+
+function updateResetButtonVisibility() {
+  const shouldShow = andFilterNames.length > 0 || quickFilterKeyword === OTHERS_FILTER_KEY;
+  resetFiltersButton.classList.toggle("hidden", !shouldShow);
+}
+
+function resetFilters() {
+  andFilterNames = [];
+  quickFilterKeyword = "";
+  searchInput.value = "";
+  render();
 }
 
 function getAllCastMembers(episode) {
