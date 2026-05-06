@@ -5,6 +5,7 @@ let allEpisodes = [];
 
 // DOMをまとめて取得しておく（毎回querySelectorしないため）
 const searchInput = document.getElementById("searchInput");
+const castQuickFilters = document.getElementById("castQuickFilters");
 const sortSelect = document.getElementById("sortSelect");
 const rankingList = document.getElementById("rankingList");
 const toggleRankingButton = document.getElementById("toggleRankingButton");
@@ -20,6 +21,7 @@ init();
 async function init() {
   try {
     allEpisodes = await fetchEpisodes();
+    renderCastQuickFilters(allEpisodes);
     bindEvents();
     render();
   } catch (error) {
@@ -58,6 +60,24 @@ function bindEvents() {
   searchInput.addEventListener("input", render);
   sortSelect.addEventListener("change", render);
   toggleRankingButton.addEventListener("click", toggleRankingVisibility);
+}
+
+function renderCastQuickFilters(episodes) {
+  const castNames = [...new Set(
+    episodes.flatMap((episode) => getAllCastMembers(episode))
+  )].filter((name) => name !== "出演者情報未設定")
+    .sort((a, b) => a.localeCompare(b, "ja"));
+
+  castQuickFilters.innerHTML = castNames
+    .map((name) => `<button type="button" class="cast-filter-button" data-cast-name="${name}">${name}</button>`)
+    .join("");
+
+  castQuickFilters.querySelectorAll(".cast-filter-button").forEach((button) => {
+    button.addEventListener("click", () => {
+      searchInput.value = button.dataset.castName || "";
+      render();
+    });
+  });
 }
 
 // 画面の再描画を1つの関数にまとめる

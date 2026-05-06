@@ -65,6 +65,27 @@ body {
   font-size: 0.9rem;
 }
 
+.cast-quick-filters {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.cast-filter-button {
+  border: 1px solid #3a4661;
+  border-radius: 999px;
+  padding: 4px 10px;
+  color: var(--text);
+  background: #141a25;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.cast-filter-button:hover {
+  border-color: var(--accent);
+}
+
 input,
 select {
   width: 100%;
