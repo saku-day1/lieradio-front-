@@ -55,6 +55,15 @@ export default async function handler(request, response) {
 
     // 公開日の古い順で回番号を振り直す（第1回が一番古い想定）
     const normalized = episodes
+      .filter((episode) => {
+        if (shouldExcludeFromAggregation(episode.title)) {
+          return false;
+        }
+        if (isPublicRecordingTitle(episode.title)) {
+          return true;
+        }
+        return episode.broadcastNumber !== null;
+      })
       .sort((a, b) => new Date(a.publishedAt) - new Date(b.publishedAt))
       .map((episode, index) => ({
         ...episode,
@@ -104,7 +113,7 @@ function toEpisode(item, episodeNumber) {
   const description = snippet.description || "";
   const videoId = (snippet.resourceId && snippet.resourceId.videoId) || "";
   const publishedAt = (snippet.publishedAt || "").slice(0, 10);
-  const { mainCast, guests } = extractCastFromDescription(description);
+  const { mainCast, guests } = extractCastFromDescription(description, title);
   const castMembers = uniqueNames([...mainCast, ...guests]);
 
   return {
@@ -120,11 +129,6 @@ function toEpisode(item, episodeNumber) {
 }
 
 function extractBroadcastNumber(title) {
-  const matchByJapanese = title.match(/第\s*(\d+)\s*回/);
-  if (matchByJapanese) {
-    return Number(matchByJapanese[1]);
-  }
-
   const matchByHash = title.match(/#\s*(\d+)/i);
   if (matchByHash) {
     return Number(matchByHash[1]);
@@ -133,7 +137,7 @@ function extractBroadcastNumber(title) {
   return null;
 }
 
-function extractCastFromDescription(description) {
+function extractCastFromDescription(description, title = "") {
   const lines = description.split("\n");
   const mainCast = [];
   const guests = [];
@@ -180,6 +184,11 @@ function extractCastFromDescription(description) {
   // セクションから拾えない古い回向けに、既知メンバー全文探索も併用
   const normalizedText = normalizeForSearch(description);
   if (mainCast.length === 0 && guests.length === 0) {
+    // 公開録音回は全文探索を避け、説明文の出演欄のみを信頼する
+    if (isPublicRecordingTitle(title)) {
+      return applySpecialRules(description, { mainCast: [], guests: [] });
+    }
+
     const detected = ALLOWED_CAST_MEMBERS.filter((name) =>
       normalizedText.includes(normalizeForSearch(name))
     );
@@ -236,6 +245,14 @@ function normalizeDisplayName(name) {
 
 function normalizeForSearch(text) {
   return text.replace(/\s+/g, "").toLowerCase();
+}
+
+function shouldExcludeFromAggregation(title) {
+  return /耐久|総集編/.test(title);
+}
+
+function isPublicRecordingTitle(title) {
+  return /公開録音|公録/.test(title);
 }
 
 function applySpecialRules(description, cast) {
