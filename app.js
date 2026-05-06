@@ -7,9 +7,12 @@ let allEpisodes = [];
 const searchInput = document.getElementById("searchInput");
 const sortSelect = document.getElementById("sortSelect");
 const rankingList = document.getElementById("rankingList");
+const toggleRankingButton = document.getElementById("toggleRankingButton");
 const episodeList = document.getElementById("episodeList");
 const resultCount = document.getElementById("resultCount");
+const urlResultBox = document.getElementById("urlResultBox");
 const urlResultList = document.getElementById("urlResultList");
+let isRankingVisible = false;
 
 // ページ初期化
 init();
@@ -21,7 +24,7 @@ async function init() {
     render();
   } catch (error) {
     // 失敗したときに最低限のエラーメッセージを表示
-    episodeList.innerHTML = "<p class='empty-message'>データの読み込みに失敗しました。</p>";
+    episodeList.innerHTML = "<li class='empty-message'>データの読み込みに失敗しました。</li>";
     resultCount.textContent = "";
     rankingList.innerHTML = "<li>ランキングを表示できませんでした</li>";
     console.error(error);
@@ -54,6 +57,7 @@ async function fetchEpisodes() {
 function bindEvents() {
   searchInput.addEventListener("input", render);
   sortSelect.addEventListener("change", render);
+  toggleRankingButton.addEventListener("click", toggleRankingVisibility);
 }
 
 // 画面の再描画を1つの関数にまとめる
@@ -66,7 +70,7 @@ function render() {
   const ranking = buildRanking(filteredEpisodes);
 
   renderEpisodeList(sortedEpisodes);
-  renderUrlResultList(sortedEpisodes);
+  renderUrlResultList(sortedEpisodes, keyword);
   renderRanking(ranking);
   renderResultCount(sortedEpisodes.length);
 }
@@ -116,7 +120,7 @@ function buildRanking(episodes) {
 
 function renderEpisodeList(episodes) {
   if (episodes.length === 0) {
-    episodeList.innerHTML = "<p class='empty-message'>該当する放送回がありません。</p>";
+    episodeList.innerHTML = "<li class='empty-message'>該当する放送回がありません。</li>";
     return;
   }
 
@@ -125,12 +129,12 @@ function renderEpisodeList(episodes) {
       const allCast = getAllCastMembers(episode).join(" / ");
       const displayedNumber = episode.broadcastNumber ?? episode.episodeNumber;
       return `
-        <article class="episode-item">
+        <li class="episode-item">
           <h3>第${displayedNumber}回 ${episode.title}</h3>
           <p class="meta">出演者: ${allCast}</p>
           <p class="meta">公開日: ${episode.publishedAt}</p>
           <a href="${episode.youtubeUrl}" target="_blank" rel="noopener noreferrer">YouTubeで見る</a>
-        </article>
+        </li>
       `;
     })
     .join("");
@@ -151,7 +155,15 @@ function renderResultCount(count) {
   resultCount.textContent = `検索結果: ${count}件`;
 }
 
-function renderUrlResultList(episodes) {
+function renderUrlResultList(episodes, keyword) {
+  const shouldShowUrlList = keyword.length > 0;
+  urlResultBox.classList.toggle("hidden", !shouldShowUrlList);
+
+  if (!shouldShowUrlList) {
+    urlResultList.innerHTML = "";
+    return;
+  }
+
   if (episodes.length === 0) {
     urlResultList.innerHTML = "<li>該当URLなし</li>";
     return;
@@ -163,6 +175,12 @@ function renderUrlResultList(episodes) {
         `<li><a href="${episode.youtubeUrl}" target="_blank" rel="noopener noreferrer">${episode.youtubeUrl}</a></li>`
     )
     .join("");
+}
+
+function toggleRankingVisibility() {
+  isRankingVisible = !isRankingVisible;
+  rankingList.classList.toggle("hidden", !isRankingVisible);
+  toggleRankingButton.textContent = isRankingVisible ? "閉じる" : "表示する";
 }
 
 function getAllCastMembers(episode) {
