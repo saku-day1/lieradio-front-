@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Liella! リエラジ出演ゲスト検索</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <header class="site-header">
+    <h1>Liella!のリエラジ出演ゲスト検索</h1>
+    <p class="subtitle">ゲスト検索 / 出演回数ランキング / YouTubeリンク</p>
+  </header>
+
+  <main class="container">
+    <section class="controls card">
+      <div class="control-group">
+        <label for="searchInput">ゲスト名で検索</label>
+        <input
+          id="searchInput"
+          type="text"
+          placeholder="例: 鈴原"
+          autocomplete="off"
+        >
+      </div>
+
+      <div class="control-group">
+        <label for="sortSelect">並び順</label>
+        <select id="sortSelect">
+          <option value="desc">新しい順</option>
+          <option value="asc">古い順</option>
+        </select>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>出演回数ランキング</h2>
+      <ol id="rankingList" class="ranking-list"></ol>
+    </section>
+
+    <section class="card">
+      <h2>放送回一覧</h2>
+      <p id="resultCount" class="result-count"></p>
+      <div id="episodeList" class="episode-list"></div>
+    </section>
+  </main>
+
+  <script src="./app.js" defer></script>
+</body>
+</html>
