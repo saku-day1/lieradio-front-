@@ -7,8 +7,10 @@ const CACHE_TTL_MS = Number(process.env.EPISODES_CACHE_TTL_MS || 10 * 60 * 1000)
 const STALE_TTL_MS = Number(process.env.EPISODES_STALE_TTL_MS || 6 * 60 * 60 * 1000);
 const RATE_LIMIT_WINDOW_MS = Number(process.env.EPISODES_RATE_LIMIT_WINDOW_MS || 60 * 1000);
 const RATE_LIMIT_MAX_REQUESTS = Number(process.env.EPISODES_RATE_LIMIT_MAX_REQUESTS || 30);
+const RATE_LIMIT_MAX_STATE_SIZE = Number(process.env.EPISODES_RATE_LIMIT_MAX_STATE_SIZE || 5000);
 const YOUTUBE_FETCH_TIMEOUT_MS = Number(process.env.YOUTUBE_FETCH_TIMEOUT_MS || 12000);
 const YOUTUBE_FETCH_RETRIES = Number(process.env.YOUTUBE_FETCH_RETRIES || 2);
+const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || "";
 
 let episodesCache = {
   data: null,
@@ -52,15 +54,26 @@ const NAME_ALIASES = {
 };
 
 export default async function handler(request, response) {
-  setResponseHeaders(response);
+  if (!isAllowedOrigin(request)) {
+    return response.status(403).json({ error: "Forbidden" });
+  }
+
+  setResponseHeaders(request, response);
+
+  if (request.method === "OPTIONS") {
+    response.setHeader("Allow", "GET, OPTIONS");
+    return response.status(204).end();
+  }
 
   if (request.method !== "GET") {
-    response.setHeader("Allow", "GET");
+    response.setHeader("Allow", "GET, OPTIONS");
     return response.status(405).json({ error: "Method Not Allowed" });
   }
 
   const clientIp = getClientIp(request);
-  if (isRateLimited(clientIp)) {
+  const rateState = checkRateLimit(clientIp);
+  if (rateState.limited) {
+    response.setHeader("Retry-After", String(rateState.retryAfterSeconds));
     return response.status(429).json({ error: "Too Many Requests" });
   }
 
@@ -68,10 +81,9 @@ export default async function handler(request, response) {
     const apiKey = process.env.YOUTUBE_API_KEY;
     const playlistId = process.env.YOUTUBE_PLAYLIST_ID;
 
-    if (!apiKey || !playlistId) {
-      return response.status(500).json({
-        error: "Missing YOUTUBE_API_KEY or YOUTUBE_PLAYLIST_ID"
-      });
+    if (!isValidYouTubeApiKey(apiKey) || !isValidPlaylistId(playlistId)) {
+      console.error("Invalid or missing required environment variables.");
+      return response.status(500).json({ error: "Server is not configured correctly." });
     }
 
     const cacheAge = Date.now() - episodesCache.fetchedAt;
@@ -179,30 +191,119 @@ async function fetchWithRetry(url, retries) {
 function getClientIp(request) {
   const forwardedFor = request.headers["x-forwarded-for"];
   if (typeof forwardedFor === "string" && forwardedFor.length > 0) {
-    return forwardedFor.split(",")[0].trim();
+    return sanitizeIp(forwardedFor.split(",")[0].trim());
   }
 
-  return request.socket?.remoteAddress || "unknown";
+  return sanitizeIp(request.socket?.remoteAddress || "unknown");
 }
 
-function isRateLimited(clientIp) {
+function checkRateLimit(clientIp) {
+  cleanupRateLimitMap();
+
   const now = Date.now();
   const state = ipRateState.get(clientIp);
   if (!state || now - state.windowStart > RATE_LIMIT_WINDOW_MS) {
-    ipRateState.set(clientIp, { windowStart: now, count: 1 });
-    return false;
+    ipRateState.set(clientIp, { windowStart: now, count: 1, updatedAt: now });
+    return { limited: false, retryAfterSeconds: 0 };
   }
 
   state.count += 1;
+  state.updatedAt = now;
   ipRateState.set(clientIp, state);
-  return state.count > RATE_LIMIT_MAX_REQUESTS;
+  if (state.count > RATE_LIMIT_MAX_REQUESTS) {
+    const elapsedMs = now - state.windowStart;
+    const retryAfterSeconds = Math.max(1, Math.ceil((RATE_LIMIT_WINDOW_MS - elapsedMs) / 1000));
+    return { limited: true, retryAfterSeconds };
+  }
+
+  return { limited: false, retryAfterSeconds: 0 };
 }
 
-function setResponseHeaders(response) {
+function cleanupRateLimitMap() {
+  if (ipRateState.size < RATE_LIMIT_MAX_STATE_SIZE) {
+    return;
+  }
+
+  const expireBefore = Date.now() - RATE_LIMIT_WINDOW_MS * 2;
+  for (const [ip, state] of ipRateState.entries()) {
+    if (state.updatedAt < expireBefore) {
+      ipRateState.delete(ip);
+    }
+  }
+
+  if (ipRateState.size < RATE_LIMIT_MAX_STATE_SIZE) {
+    return;
+  }
+
+  // メモリ逼迫を防ぐため、古い順に間引く
+  const entries = [...ipRateState.entries()].sort((a, b) => a[1].updatedAt - b[1].updatedAt);
+  const removeCount = Math.ceil(entries.length * 0.25);
+  for (let i = 0; i < removeCount; i += 1) {
+    ipRateState.delete(entries[i][0]);
+  }
+}
+
+function setResponseHeaders(request, response) {
+  setCorsHeaders(request, response);
   response.setHeader("Cache-Control", "public, max-age=60, s-maxage=600, stale-while-revalidate=3600");
+  response.setHeader("Content-Type", "application/json; charset=utf-8");
   response.setHeader("X-Content-Type-Options", "nosniff");
   response.setHeader("X-Frame-Options", "DENY");
+  response.setHeader("X-DNS-Prefetch-Control", "off");
+  response.setHeader("X-Permitted-Cross-Domain-Policies", "none");
+  response.setHeader("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
   response.setHeader("Referrer-Policy", "no-referrer");
+  response.setHeader("Cross-Origin-Resource-Policy", "same-origin");
+  response.setHeader("Cross-Origin-Opener-Policy", "same-origin");
+  response.setHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload");
+  response.setHeader(
+    "Content-Security-Policy",
+    "default-src 'none'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'"
+  );
+}
+
+function setCorsHeaders(request, response) {
+  const origin = getRequestOrigin(request);
+  if (!origin) {
+    return;
+  }
+
+  if (!ALLOWED_ORIGIN || origin === ALLOWED_ORIGIN) {
+    response.setHeader("Access-Control-Allow-Origin", origin);
+    response.setHeader("Vary", "Origin");
+    response.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
+    response.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  }
+}
+
+function isAllowedOrigin(request) {
+  const origin = getRequestOrigin(request);
+  if (!origin) {
+    return true;
+  }
+
+  if (!ALLOWED_ORIGIN) {
+    return true;
+  }
+
+  return origin === ALLOWED_ORIGIN;
+}
+
+function getRequestOrigin(request) {
+  const origin = request.headers.origin;
+  return typeof origin === "string" ? origin : "";
+}
+
+function sanitizeIp(rawIp) {
+  return String(rawIp).replace(/[^\da-fA-F:.,]/g, "").slice(0, 64) || "unknown";
+}
+
+function isValidYouTubeApiKey(value) {
+  return typeof value === "string" && /^AIza[\w-]{20,}$/.test(value);
+}
+
+function isValidPlaylistId(value) {
+  return typeof value === "string" && /^[\w-]{10,64}$/.test(value);
 }
 
 function toEpisode(item, episodeNumber) {

@@ -324,7 +324,12 @@ function renderRanking(ranking) {
 }
 
 function renderRankingTitle(keyword) {
-  rankingTitle.textContent = keyword ? "共演数ランキング" : "出演回数ランキング";
+  if (!keyword || keyword === OTHERS_FILTER_KEY) {
+    rankingTitle.textContent = "出演回数ランキング";
+    return;
+  }
+
+  rankingTitle.textContent = `${keyword}の共演者ランキング`;
 }
 
 function renderRankingSection(ranking, keyword, isAndMode) {
