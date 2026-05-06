@@ -76,14 +76,24 @@ body {
   border: 1px solid #3a4661;
   border-radius: 999px;
   padding: 4px 10px;
-  color: var(--text);
-  background: #141a25;
+  color: #0f172a;
+  background: var(--cast-color, #141a25);
   font-size: 0.85rem;
   cursor: pointer;
+  font-weight: 600;
 }
 
 .cast-filter-button:hover {
   border-color: var(--accent);
+}
+
+.cast-filter-button-others {
+  color: var(--text);
+  background: #475569;
+}
+
+.cast-filter-button.is-active {
+  box-shadow: 0 0 0 2px var(--accent);
 }
 
 input,

@@ -7,6 +7,7 @@ let allEpisodes = [];
 const searchInput = document.getElementById("searchInput");
 const castQuickFilters = document.getElementById("castQuickFilters");
 const sortSelect = document.getElementById("sortSelect");
+const rankingTitle = document.getElementById("rankingTitle");
 const rankingList = document.getElementById("rankingList");
 const toggleRankingButton = document.getElementById("toggleRankingButton");
 const episodeList = document.getElementById("episodeList");
@@ -14,6 +15,22 @@ const resultCount = document.getElementById("resultCount");
 const urlResultBox = document.getElementById("urlResultBox");
 const urlResultList = document.getElementById("urlResultList");
 let isRankingVisible = false;
+let quickFilterKeyword = "";
+
+const PRIORITY_CAST_FILTERS = [
+  { name: "伊達さゆり", color: "#f39c12" }, // オレンジ
+  { name: "Liyuu", color: "#5bc0de" }, // 水色
+  { name: "岬なこ", color: "#ff7eb6" }, // ピンク
+  { name: "ペイトン尚未", color: "#4caf50" }, // 緑
+  { name: "青山なぎさ", color: "#3b82f6" }, // 青
+  { name: "鈴原希実", color: "#facc15" }, // 黄色
+  { name: "薮島朱音", color: "#ef4444" }, // 赤
+  { name: "大熊和奏", color: "#f8fafc" }, // 白
+  { name: "絵森彩", color: "#ff9ed1" }, // ピンク
+  { name: "結那", color: "#a855f7" }, // 紫
+  { name: "坂倉花", color: "#22c55e" } // 緑
+];
+const OTHERS_FILTER_KEY = "__others__";
 
 // ページ初期化
 init();
@@ -57,24 +74,49 @@ async function fetchEpisodes() {
 
 // 入力値変更イベントを登録
 function bindEvents() {
-  searchInput.addEventListener("input", render);
+  searchInput.addEventListener("input", () => {
+    quickFilterKeyword = "";
+    render();
+  });
   sortSelect.addEventListener("change", render);
   toggleRankingButton.addEventListener("click", toggleRankingVisibility);
 }
 
 function renderCastQuickFilters(episodes) {
-  const castNames = [...new Set(
+  const existingCastNames = new Set(
     episodes.flatMap((episode) => getAllCastMembers(episode))
-  )].filter((name) => name !== "出演者情報未設定")
-    .sort((a, b) => a.localeCompare(b, "ja"));
+  );
+  existingCastNames.delete("出演者情報未設定");
 
-  castQuickFilters.innerHTML = castNames
-    .map((name) => `<button type="button" class="cast-filter-button" data-cast-name="${name}">${name}</button>`)
-    .join("");
+  const priorityNames = new Set(PRIORITY_CAST_FILTERS.map((item) => item.name));
+  const hasOthers = [...existingCastNames].some((name) => !priorityNames.has(name));
+
+  const castButtons = PRIORITY_CAST_FILTERS.map((item) => `
+    <button
+      type="button"
+      class="cast-filter-button"
+      data-filter-key="${item.name}"
+      style="--cast-color: ${item.color};"
+    >
+      ${item.name}
+    </button>
+  `);
+
+  if (hasOthers) {
+    castButtons.push(`
+      <button type="button" class="cast-filter-button cast-filter-button-others" data-filter-key="${OTHERS_FILTER_KEY}">
+        その他
+      </button>
+    `);
+  }
+
+  castQuickFilters.innerHTML = castButtons.join("");
 
   castQuickFilters.querySelectorAll(".cast-filter-button").forEach((button) => {
     button.addEventListener("click", () => {
-      searchInput.value = button.dataset.castName || "";
+      quickFilterKeyword = button.dataset.filterKey || "";
+      searchInput.value = "";
+      updateActiveQuickFilter();
       render();
     });
   });
@@ -82,7 +124,7 @@ function renderCastQuickFilters(episodes) {
 
 // 画面の再描画を1つの関数にまとめる
 function render() {
-  const keyword = searchInput.value.trim();
+  const keyword = quickFilterKeyword || searchInput.value.trim();
   const sortOrder = sortSelect.value;
 
   const filteredEpisodes = filterEpisodes(allEpisodes, keyword);
@@ -92,7 +134,9 @@ function render() {
   renderEpisodeList(sortedEpisodes);
   renderUrlResultList(sortedEpisodes, keyword);
   renderRanking(ranking);
+  renderRankingTitle(keyword);
   renderResultCount(sortedEpisodes.length);
+  updateActiveQuickFilter();
 }
 
 // 出演者（メインMC + ゲスト）の部分一致検索
@@ -105,6 +149,13 @@ function filterEpisodes(episodes, keyword) {
 
   if (!keyword) {
     return normalizedEpisodes;
+  }
+
+  if (keyword === OTHERS_FILTER_KEY) {
+    const priorityNames = new Set(PRIORITY_CAST_FILTERS.map((item) => item.name));
+    return normalizedEpisodes.filter((episode) =>
+      episode.castMembers.some((member) => !priorityNames.has(member))
+    );
   }
 
   const normalizedKeyword = normalizeSearchText(keyword);
@@ -171,6 +222,10 @@ function renderRanking(ranking) {
     .join("");
 }
 
+function renderRankingTitle(keyword) {
+  rankingTitle.textContent = keyword ? "共演数ランキング" : "出演回数ランキング";
+}
+
 function renderResultCount(count) {
   resultCount.textContent = `検索結果: ${count}件`;
 }
@@ -201,6 +256,12 @@ function toggleRankingVisibility() {
   isRankingVisible = !isRankingVisible;
   rankingList.classList.toggle("hidden", !isRankingVisible);
   toggleRankingButton.textContent = isRankingVisible ? "閉じる" : "表示する";
+}
+
+function updateActiveQuickFilter() {
+  castQuickFilters.querySelectorAll(".cast-filter-button").forEach((button) => {
+    button.classList.toggle("is-active", button.dataset.filterKey === quickFilterKeyword);
+  });
 }
 
 function getAllCastMembers(episode) {
