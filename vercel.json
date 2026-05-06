@@ -1,7 +1,7 @@
 {
   "crons": [
     {
-      "path": "/api/episodes/refresh",
+      "path": "/api/episodes-refresh",
       "schedule": "0 * * * *"
     }
   ]
