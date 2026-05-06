@@ -59,6 +59,9 @@ export default async function handler(request, response) {
         if (shouldExcludeFromAggregation(episode.title)) {
           return false;
         }
+        if (episode.castMembers.length === 0) {
+          return false;
+        }
         if (isPublicRecordingTitle(episode.title)) {
           return true;
         }
