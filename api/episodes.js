@@ -207,10 +207,12 @@ function setResponseHeaders(response) {
 
 function toEpisode(item, episodeNumber) {
   const snippet = item.snippet || {};
+  const contentDetails = item.contentDetails || {};
   const title = snippet.title || "タイトル未設定";
   const description = snippet.description || "";
   const videoId = (snippet.resourceId && snippet.resourceId.videoId) || "";
-  const publishedAt = toJstDate(snippet.publishedAt || "");
+  const rawPublishedAt = contentDetails.videoPublishedAt || snippet.publishedAt || "";
+  const publishedAt = toJstDate(rawPublishedAt);
   const { mainCast, guests } = extractCastFromDescription(description, title);
   const castMembers = uniqueNames([...mainCast, ...guests]);
 
