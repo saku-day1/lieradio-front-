@@ -406,16 +406,31 @@ function getQueryParam(request, key) {
   }
 
   const requestUrl = typeof request.url === "string" ? request.url : "";
-  if (!requestUrl) {
-    return "";
+  const candidateUrls = [
+    requestUrl,
+    request.headers["x-original-url"],
+    request.headers["x-rewrite-url"],
+    request.headers["x-forwarded-uri"],
+    request.headers["x-invoke-path"],
+    request.headers["x-matched-path"]
+  ];
+
+  for (const candidate of candidateUrls) {
+    if (typeof candidate !== "string" || !candidate) {
+      continue;
+    }
+    try {
+      const parsed = new URL(candidate, "http://localhost");
+      const value = parsed.searchParams.get(key);
+      if (value) {
+        return value;
+      }
+    } catch (error) {
+      // no-op
+    }
   }
 
-  try {
-    const parsed = new URL(requestUrl, "http://localhost");
-    return parsed.searchParams.get(key) || "";
-  } catch (error) {
-    return "";
-  }
+  return "";
 }
 
 function sanitizeIp(rawIp) {
