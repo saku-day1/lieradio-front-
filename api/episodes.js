@@ -60,7 +60,7 @@ const NAME_ALIASES = {
 };
 
 export default async function handler(request, response) {
-  const requestedRefresh = isForceRefresh(request);
+  const requestedRefresh = isRefreshRequest(request);
   const forceRefresh = requestedRefresh && isAuthorizedCron(request);
   const skipOriginCheck = forceRefresh;
 
@@ -135,6 +135,15 @@ export default async function handler(request, response) {
 
 function isForceRefresh(request) {
   return getQueryParam(request, "refresh") === "1";
+}
+
+function isRefreshRequest(request) {
+  if (isForceRefresh(request)) {
+    return true;
+  }
+
+  const pathname = getRequestPathname(request);
+  return pathname === "/api/episodes/refresh";
 }
 
 function isAuthorizedCron(request) {
@@ -424,6 +433,34 @@ function getQueryParam(request, key) {
       const value = parsed.searchParams.get(key);
       if (value) {
         return value;
+      }
+    } catch (error) {
+      // no-op
+    }
+  }
+
+  return "";
+}
+
+function getRequestPathname(request) {
+  const candidates = [
+    request.url,
+    request.headers["x-original-url"],
+    request.headers["x-rewrite-url"],
+    request.headers["x-forwarded-uri"],
+    request.headers["x-invoke-path"],
+    request.headers["x-matched-path"]
+  ];
+
+  for (const candidate of candidates) {
+    if (typeof candidate !== "string" || !candidate) {
+      continue;
+    }
+
+    try {
+      const parsed = new URL(candidate, "http://localhost");
+      if (parsed.pathname) {
+        return parsed.pathname;
       }
     } catch (error) {
       // no-op
