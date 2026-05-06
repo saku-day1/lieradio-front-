@@ -15,13 +15,7 @@
   <main class="container">
     <section class="controls card">
       <div class="control-group">
-        <label for="searchInput">出演者名で検索</label>
-        <input
-          id="searchInput"
-          type="text"
-          placeholder="例: 鈴原"
-          autocomplete="off"
-        >
+        <label>出演者ボタンで検索</label>
         <div id="castQuickFilters" class="cast-quick-filters"></div>
         <div id="unitQuickFilters" class="unit-quick-filters"></div>
         <button id="resetFiltersButton" type="button" class="reset-filters-button hidden">検索リセット</button>
@@ -47,10 +41,6 @@
     <section class="card">
       <h2 id="resultTitle">検索結果</h2>
       <p id="resultCount" class="result-count"></p>
-      <div id="urlResultBox" class="url-result-box hidden">
-        <h3>検索結果のYouTube URL</h3>
-        <ul id="urlResultList" class="url-result-list"></ul>
-      </div>
       <ul id="episodeList" class="episode-list"></ul>
     </section>
   </main>

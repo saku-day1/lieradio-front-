@@ -4,7 +4,6 @@
 let allEpisodes = [];
 
 // DOMをまとめて取得しておく（毎回querySelectorしないため）
-const searchInput = document.getElementById("searchInput");
 const castQuickFilters = document.getElementById("castQuickFilters");
 const unitQuickFilters = document.getElementById("unitQuickFilters");
 const resetFiltersButton = document.getElementById("resetFiltersButton");
@@ -16,8 +15,6 @@ const toggleRankingButton = document.getElementById("toggleRankingButton");
 const resultTitle = document.getElementById("resultTitle");
 const episodeList = document.getElementById("episodeList");
 const resultCount = document.getElementById("resultCount");
-const urlResultBox = document.getElementById("urlResultBox");
-const urlResultList = document.getElementById("urlResultList");
 let isRankingVisible = false;
 let quickFilterKeyword = "";
 let andFilterNames = [];
@@ -90,12 +87,6 @@ async function fetchEpisodes() {
 
 // 入力値変更イベントを登録
 function bindEvents() {
-  searchInput.addEventListener("input", () => {
-    quickFilterKeyword = "";
-    andFilterNames = [];
-    activeUnitFilterKey = "";
-    render();
-  });
   sortSelect.addEventListener("change", render);
   toggleRankingButton.addEventListener("click", toggleRankingVisibility);
   resetFiltersButton.addEventListener("click", resetFilters);
@@ -135,7 +126,6 @@ function renderCastQuickFilters(episodes) {
     button.addEventListener("click", () => {
       const filterKey = button.dataset.filterKey || "";
       handleQuickFilterClick(filterKey);
-      searchInput.value = "";
       render();
     });
   });
@@ -159,7 +149,6 @@ function renderUnitQuickFilters() {
       activeUnitFilterKey = activeUnitFilterKey === selected ? "" : selected;
       quickFilterKeyword = "";
       andFilterNames = [];
-      searchInput.value = "";
       render();
     });
   });
@@ -194,7 +183,7 @@ function handleQuickFilterClick(filterKey) {
 
 // 画面の再描画を1つの関数にまとめる
 function render() {
-  const keyword = quickFilterKeyword || searchInput.value.trim();
+  const keyword = quickFilterKeyword;
   const isAndMode = andFilterNames.length >= 2;
   const isUnitMode = Boolean(activeUnitFilterKey);
   const shouldHideRanking = isAndMode || isUnitMode;
@@ -205,7 +194,6 @@ function render() {
   const ranking = buildRanking(filteredEpisodes, keyword);
 
   renderEpisodeList(sortedEpisodes, isAndMode);
-  renderUrlResultList(sortedEpisodes, keyword);
   renderRankingSection(ranking, keyword, shouldHideRanking);
   renderResultTitle(isAndMode);
   renderResultCount(sortedEpisodes.length);
@@ -358,28 +346,6 @@ function renderResultCount(count) {
   resultCount.textContent = `検索結果: ${count}件`;
 }
 
-function renderUrlResultList(episodes, keyword) {
-  const shouldShowUrlList = keyword.length > 0;
-  urlResultBox.classList.toggle("hidden", !shouldShowUrlList);
-
-  if (!shouldShowUrlList) {
-    urlResultList.innerHTML = "";
-    return;
-  }
-
-  if (episodes.length === 0) {
-    urlResultList.innerHTML = "<li>該当URLなし</li>";
-    return;
-  }
-
-  urlResultList.innerHTML = episodes
-    .map(
-      (episode) =>
-        `<li><a href="${episode.youtubeUrl}" target="_blank" rel="noopener noreferrer">${episode.youtubeUrl}</a></li>`
-    )
-    .join("");
-}
-
 function toggleRankingVisibility() {
   isRankingVisible = !isRankingVisible;
   rankingList.classList.toggle("hidden", !isRankingVisible);
@@ -414,7 +380,6 @@ function resetFilters() {
   andFilterNames = [];
   quickFilterKeyword = "";
   activeUnitFilterKey = "";
-  searchInput.value = "";
   render();
 }
 
