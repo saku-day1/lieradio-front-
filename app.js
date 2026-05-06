@@ -9,6 +9,7 @@ const sortSelect = document.getElementById("sortSelect");
 const rankingList = document.getElementById("rankingList");
 const episodeList = document.getElementById("episodeList");
 const resultCount = document.getElementById("resultCount");
+const urlResultList = document.getElementById("urlResultList");
 
 // ページ初期化
 init();
@@ -65,18 +66,25 @@ function render() {
   const ranking = buildRanking(filteredEpisodes);
 
   renderEpisodeList(sortedEpisodes);
+  renderUrlResultList(sortedEpisodes);
   renderRanking(ranking);
   renderResultCount(sortedEpisodes.length);
 }
 
-// ゲスト名の部分一致検索（大文字/小文字の差をなくす）
+// 出演者（メインMC + ゲスト）の部分一致検索
+// APIデータに castMembers が無い場合は mainCast + guests を結合して扱う
 function filterEpisodes(episodes, keyword) {
+  const normalizedEpisodes = episodes.map((episode) => ({
+    ...episode,
+    castMembers: getAllCastMembers(episode)
+  }));
+
   if (!keyword) {
-    return episodes;
+    return normalizedEpisodes;
   }
 
   const lowerKeyword = keyword.toLowerCase();
-  return episodes.filter((episode) =>
+  return normalizedEpisodes.filter((episode) =>
     episode.castMembers.some((member) =>
       member.toLowerCase().includes(lowerKeyword)
     )
@@ -114,11 +122,11 @@ function renderEpisodeList(episodes) {
 
   episodeList.innerHTML = episodes
     .map((episode) => {
-      const guests = episode.castMembers.join(" / ");
+      const allCast = getAllCastMembers(episode).join(" / ");
       return `
         <article class="episode-item">
           <h3>第${episode.episodeNumber}回 ${episode.title}</h3>
-          <p class="meta">ゲスト: ${guests}</p>
+          <p class="meta">出演者: ${allCast}</p>
           <p class="meta">公開日: ${episode.publishedAt}</p>
           <a href="${episode.youtubeUrl}" target="_blank" rel="noopener noreferrer">YouTubeで見る</a>
         </article>
@@ -140,4 +148,30 @@ function renderRanking(ranking) {
 
 function renderResultCount(count) {
   resultCount.textContent = `検索結果: ${count}件`;
+}
+
+function renderUrlResultList(episodes) {
+  if (episodes.length === 0) {
+    urlResultList.innerHTML = "<li>該当URLなし</li>";
+    return;
+  }
+
+  urlResultList.innerHTML = episodes
+    .map(
+      (episode) =>
+        `<li><a href="${episode.youtubeUrl}" target="_blank" rel="noopener noreferrer">${episode.youtubeUrl}</a></li>`
+    )
+    .join("");
+}
+
+function getAllCastMembers(episode) {
+  if (Array.isArray(episode.castMembers) && episode.castMembers.length > 0) {
+    return episode.castMembers;
+  }
+
+  const mainCast = Array.isArray(episode.mainCast) ? episode.mainCast : [];
+  const guests = Array.isArray(episode.guests) ? episode.guests : [];
+  const merged = [...mainCast, ...guests];
+
+  return merged.length > 0 ? [...new Set(merged)] : ["出演者情報未設定"];
 }

@@ -4,20 +4,9 @@
  */
 const YOUTUBE_API_BASE = "https://www.googleapis.com/youtube/v3/playlistItems";
 
-// タイトル/概要欄から検出するための候補（必要に応じて増やしてください）
-const KNOWN_CAST_MEMBERS = [
-  "伊達さゆり",
-  "Liyuu",
-  "岬なこ",
-  "ペイトン尚未",
-  "青山なぎさ",
-  "鈴原希実",
-  "薮島朱音",
-  "大熊和奏",
-  "絵森彩",
-  "結那",
-  "坂倉花"
-];
+// 説明欄のセクション見出し
+const MAIN_MC_MARKER = "🎤メインMC";
+const GUEST_MARKER = "🌟ゲスト";
 
 export default async function handler(request, response) {
   try {
@@ -84,21 +73,73 @@ function toEpisode(item, episodeNumber) {
   const description = snippet.description || "";
   const videoId = (snippet.resourceId && snippet.resourceId.videoId) || "";
   const publishedAt = (snippet.publishedAt || "").slice(0, 10);
-  const castMembers = extractCastMembers(title, description);
+  const mainCast = extractPeopleFromSection(description, MAIN_MC_MARKER);
+  const guests = extractPeopleFromSection(description, GUEST_MARKER);
+  const castMembers = uniqueNames([...mainCast, ...guests]);
 
   return {
     episodeNumber,
     title,
+    mainCast,
+    guests,
     castMembers,
     youtubeUrl: `https://www.youtube.com/watch?v=${videoId}`,
     publishedAt
   };
 }
 
-function extractCastMembers(title, description) {
-  const text = `${title}\n${description}`;
-  const detected = KNOWN_CAST_MEMBERS.filter((name) => text.includes(name));
+function extractPeopleFromSection(description, marker) {
+  // マーカー位置を探す（例: "🎤メインMC", "🌟ゲスト"）
+  const startIndex = description.indexOf(marker);
+  if (startIndex === -1) {
+    return [];
+  }
 
-  // 誰も検出できなかった場合、検索UIで扱いやすいように共通ラベルを付与
-  return detected.length > 0 ? detected : ["ゲスト情報未設定"];
+  // セクション開始位置から次の見出しまでを切り出す
+  const sectionStart = startIndex + marker.length;
+  const remaining = description.slice(sectionStart);
+  const sectionEnd = findSectionEndIndex(remaining);
+  const sectionText = sectionEnd === -1 ? remaining : remaining.slice(0, sectionEnd);
+
+  // 1行ずつ処理し、名前だけを抽出
+  return sectionText
+    .split("\n")
+    .map((line) => line.trim())
+    .filter((line) => line && !line.startsWith("※"))
+    .map(cleanName)
+    .filter(Boolean);
+}
+
+function findSectionEndIndex(text) {
+  const candidates = [
+    text.indexOf("【"),
+    text.indexOf("🎤"),
+    text.indexOf("🌟"),
+    text.indexOf("◆"),
+    text.indexOf("#")
+  ].filter((index) => index >= 0);
+
+  if (candidates.length === 0) {
+    return -1;
+  }
+  return Math.min(...candidates);
+}
+
+function cleanName(rawLine) {
+  // 先頭の記号や全角スペースを除去
+  const withoutPrefix = rawLine.replace(/^[・\-ー\s　]+/, "");
+
+  // "坂倉 花（鬼塚冬毬役）" -> "坂倉 花"
+  const nameOnly = withoutPrefix.split("（")[0].trim();
+
+  // URL行などは除外
+  if (!nameOnly || /^https?:\/\//.test(nameOnly)) {
+    return "";
+  }
+
+  return nameOnly;
+}
+
+function uniqueNames(names) {
+  return [...new Set(names)];
 }

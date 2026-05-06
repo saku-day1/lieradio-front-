@@ -100,6 +100,39 @@ h2 {
   color: var(--muted);
 }
 
+.url-result-box {
+  margin: 0 0 12px;
+  padding: 10px;
+  border: 1px solid #33405a;
+  border-radius: 10px;
+  background: #121826;
+}
+
+.url-result-box h3 {
+  margin: 0 0 8px;
+  font-size: 0.95rem;
+  color: var(--accent-soft);
+}
+
+.url-result-list {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.url-result-list li {
+  margin-bottom: 6px;
+  word-break: break-all;
+}
+
+.url-result-list a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.url-result-list a:hover {
+  text-decoration: underline;
+}
+
 .episode-list {
   display: grid;
   gap: 10px;
