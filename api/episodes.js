@@ -2,6 +2,8 @@
  * Vercel Serverless Function
  * YouTube APIキーをサーバー側だけで利用し、フロントへ露出させない。
  */
+import { Redis } from "@upstash/redis";
+
 const YOUTUBE_API_BASE = "https://www.googleapis.com/youtube/v3/playlistItems";
 const CACHE_TTL_MS = Number(process.env.EPISODES_CACHE_TTL_MS || 10 * 60 * 1000);
 const STALE_TTL_MS = Number(process.env.EPISODES_STALE_TTL_MS || 6 * 60 * 60 * 1000);
@@ -11,12 +13,16 @@ const RATE_LIMIT_MAX_STATE_SIZE = Number(process.env.EPISODES_RATE_LIMIT_MAX_STA
 const YOUTUBE_FETCH_TIMEOUT_MS = Number(process.env.YOUTUBE_FETCH_TIMEOUT_MS || 12000);
 const YOUTUBE_FETCH_RETRIES = Number(process.env.YOUTUBE_FETCH_RETRIES || 2);
 const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || "";
+const CRON_SECRET = process.env.CRON_SECRET || "";
+const PERSIST_CACHE_KEY = process.env.EPISODES_CACHE_KEY || "episodes_cache_v1";
+const PERSIST_CACHE_TTL_SEC = Number(process.env.EPISODES_PERSIST_CACHE_TTL_SEC || 7 * 24 * 60 * 60);
 
 let episodesCache = {
   data: null,
   fetchedAt: 0
 };
 const ipRateState = new Map();
+let redisClient = null;
 
 // ユーザー指定: 抽出対象はこの名前だけ
 const ALLOWED_CAST_MEMBERS = [
@@ -54,7 +60,11 @@ const NAME_ALIASES = {
 };
 
 export default async function handler(request, response) {
-  if (!isAllowedOrigin(request)) {
+  const requestedRefresh = isForceRefresh(request);
+  const forceRefresh = requestedRefresh && isAuthorizedCron(request);
+  const skipOriginCheck = forceRefresh;
+
+  if (!skipOriginCheck && !isAllowedOrigin(request)) {
     return response.status(403).json({ error: "Forbidden" });
   }
 
@@ -70,11 +80,17 @@ export default async function handler(request, response) {
     return response.status(405).json({ error: "Method Not Allowed" });
   }
 
-  const clientIp = getClientIp(request);
-  const rateState = checkRateLimit(clientIp);
-  if (rateState.limited) {
-    response.setHeader("Retry-After", String(rateState.retryAfterSeconds));
-    return response.status(429).json({ error: "Too Many Requests" });
+  if (requestedRefresh && !forceRefresh) {
+    return response.status(401).json({ error: "Unauthorized" });
+  }
+
+  if (!forceRefresh) {
+    const clientIp = getClientIp(request);
+    const rateState = checkRateLimit(clientIp);
+    if (rateState.limited) {
+      response.setHeader("Retry-After", String(rateState.retryAfterSeconds));
+      return response.status(429).json({ error: "Too Many Requests" });
+    }
   }
 
   try {
@@ -86,8 +102,11 @@ export default async function handler(request, response) {
       return response.status(500).json({ error: "Server is not configured correctly." });
     }
 
+    const persistentCache = await readPersistentCache();
+    hydrateInMemoryCache(persistentCache);
+
     const cacheAge = Date.now() - episodesCache.fetchedAt;
-    if (episodesCache.data && cacheAge < CACHE_TTL_MS) {
+    if (!forceRefresh && episodesCache.data && cacheAge < CACHE_TTL_MS) {
       return response.status(200).json(episodesCache.data);
     }
 
@@ -95,10 +114,12 @@ export default async function handler(request, response) {
     const episodes = items.map((item, index) => toEpisode(item, index + 1));
     const normalized = normalizeEpisodes(episodes);
 
-    episodesCache = {
+    const nextCache = {
       data: normalized,
       fetchedAt: Date.now()
     };
+    episodesCache = nextCache;
+    await writePersistentCache(nextCache);
 
     return response.status(200).json(normalized);
   } catch (error) {
@@ -110,6 +131,87 @@ export default async function handler(request, response) {
     }
     return response.status(500).json({ error: "Failed to load playlist data." });
   }
+}
+
+function isForceRefresh(request) {
+  return getQueryParam(request, "refresh") === "1";
+}
+
+function isAuthorizedCron(request) {
+  if (!CRON_SECRET) {
+    return false;
+  }
+
+  const authHeader = request.headers.authorization;
+  const cronHeader = request.headers["x-cron-secret"];
+  const bearerToken = typeof authHeader === "string" && authHeader.startsWith("Bearer ")
+    ? authHeader.slice("Bearer ".length)
+    : "";
+
+  return cronHeader === CRON_SECRET || bearerToken === CRON_SECRET;
+}
+
+function hydrateInMemoryCache(persistentCache) {
+  if (!persistentCache?.data || !persistentCache?.fetchedAt) {
+    return;
+  }
+
+  if (episodesCache.fetchedAt >= persistentCache.fetchedAt) {
+    return;
+  }
+
+  episodesCache = persistentCache;
+}
+
+async function readPersistentCache() {
+  const redis = getRedisClient();
+  if (!redis) {
+    return null;
+  }
+
+  try {
+    const value = await redis.get(PERSIST_CACHE_KEY);
+    if (!value || typeof value !== "object") {
+      return null;
+    }
+
+    if (!Array.isArray(value.data) || typeof value.fetchedAt !== "number") {
+      return null;
+    }
+
+    return value;
+  } catch (error) {
+    console.error("Failed to read persistent cache.", error);
+    return null;
+  }
+}
+
+async function writePersistentCache(cacheValue) {
+  const redis = getRedisClient();
+  if (!redis) {
+    return;
+  }
+
+  try {
+    await redis.set(PERSIST_CACHE_KEY, cacheValue, { ex: PERSIST_CACHE_TTL_SEC });
+  } catch (error) {
+    console.error("Failed to write persistent cache.", error);
+  }
+}
+
+function getRedisClient() {
+  if (redisClient) {
+    return redisClient;
+  }
+
+  const url = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
+  const token = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
+  if (!url || !token) {
+    return null;
+  }
+
+  redisClient = new Redis({ url, token });
+  return redisClient;
 }
 
 async function fetchAllPlaylistItems(apiKey, playlistId) {
@@ -292,6 +394,28 @@ function isAllowedOrigin(request) {
 function getRequestOrigin(request) {
   const origin = request.headers.origin;
   return typeof origin === "string" ? origin : "";
+}
+
+function getQueryParam(request, key) {
+  const fromQueryObject = request.query?.[key];
+  if (typeof fromQueryObject === "string") {
+    return fromQueryObject;
+  }
+  if (Array.isArray(fromQueryObject) && typeof fromQueryObject[0] === "string") {
+    return fromQueryObject[0];
+  }
+
+  const requestUrl = typeof request.url === "string" ? request.url : "";
+  if (!requestUrl) {
+    return "";
+  }
+
+  try {
+    const parsed = new URL(requestUrl, "http://localhost");
+    return parsed.searchParams.get(key) || "";
+  } catch (error) {
+    return "";
+  }
 }
 
 function sanitizeIp(rawIp) {
