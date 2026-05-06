@@ -3,6 +3,18 @@
  * YouTube APIキーをサーバー側だけで利用し、フロントへ露出させない。
  */
 const YOUTUBE_API_BASE = "https://www.googleapis.com/youtube/v3/playlistItems";
+const CACHE_TTL_MS = Number(process.env.EPISODES_CACHE_TTL_MS || 10 * 60 * 1000);
+const STALE_TTL_MS = Number(process.env.EPISODES_STALE_TTL_MS || 6 * 60 * 60 * 1000);
+const RATE_LIMIT_WINDOW_MS = Number(process.env.EPISODES_RATE_LIMIT_WINDOW_MS || 60 * 1000);
+const RATE_LIMIT_MAX_REQUESTS = Number(process.env.EPISODES_RATE_LIMIT_MAX_REQUESTS || 30);
+const YOUTUBE_FETCH_TIMEOUT_MS = Number(process.env.YOUTUBE_FETCH_TIMEOUT_MS || 12000);
+const YOUTUBE_FETCH_RETRIES = Number(process.env.YOUTUBE_FETCH_RETRIES || 2);
+
+let episodesCache = {
+  data: null,
+  fetchedAt: 0
+};
+const ipRateState = new Map();
 
 // ユーザー指定: 抽出対象はこの名前だけ
 const ALLOWED_CAST_MEMBERS = [
@@ -40,6 +52,18 @@ const NAME_ALIASES = {
 };
 
 export default async function handler(request, response) {
+  setResponseHeaders(response);
+
+  if (request.method !== "GET") {
+    response.setHeader("Allow", "GET");
+    return response.status(405).json({ error: "Method Not Allowed" });
+  }
+
+  const clientIp = getClientIp(request);
+  if (isRateLimited(clientIp)) {
+    return response.status(429).json({ error: "Too Many Requests" });
+  }
+
   try {
     const apiKey = process.env.YOUTUBE_API_KEY;
     const playlistId = process.env.YOUTUBE_PLAYLIST_ID;
@@ -50,32 +74,28 @@ export default async function handler(request, response) {
       });
     }
 
+    const cacheAge = Date.now() - episodesCache.fetchedAt;
+    if (episodesCache.data && cacheAge < CACHE_TTL_MS) {
+      return response.status(200).json(episodesCache.data);
+    }
+
     const items = await fetchAllPlaylistItems(apiKey, playlistId);
     const episodes = items.map((item, index) => toEpisode(item, index + 1));
+    const normalized = normalizeEpisodes(episodes);
 
-    // 公開日の古い順で回番号を振り直す（第1回が一番古い想定）
-    const normalized = episodes
-      .filter((episode) => {
-        if (shouldExcludeFromAggregation(episode.title)) {
-          return false;
-        }
-        if (episode.castMembers.length === 0) {
-          return false;
-        }
-        if (isPublicRecordingTitle(episode.title)) {
-          return true;
-        }
-        return episode.broadcastNumber !== null;
-      })
-      .sort((a, b) => new Date(a.publishedAt) - new Date(b.publishedAt))
-      .map((episode, index) => ({
-        ...episode,
-        episodeNumber: index + 1
-      }));
+    episodesCache = {
+      data: normalized,
+      fetchedAt: Date.now()
+    };
 
     return response.status(200).json(normalized);
   } catch (error) {
     console.error(error);
+    const staleAge = Date.now() - episodesCache.fetchedAt;
+    if (episodesCache.data && staleAge < STALE_TTL_MS) {
+      response.setHeader("Warning", "110 - Response is stale");
+      return response.status(200).json(episodesCache.data);
+    }
     return response.status(500).json({ error: "Failed to load playlist data." });
   }
 }
@@ -97,7 +117,7 @@ async function fetchAllPlaylistItems(apiKey, playlistId) {
     }
 
     const url = `${YOUTUBE_API_BASE}?${params.toString()}`;
-    const result = await fetch(url);
+    const result = await fetchWithRetry(url, YOUTUBE_FETCH_RETRIES);
     if (!result.ok) {
       throw new Error(`YouTube API failed: ${result.status}`);
     }
@@ -108,6 +128,81 @@ async function fetchAllPlaylistItems(apiKey, playlistId) {
   } while (pageToken);
 
   return allItems;
+}
+
+function normalizeEpisodes(episodes) {
+  // 公開日の古い順で回番号を振り直す（第1回が一番古い想定）
+  return episodes
+    .filter((episode) => {
+      if (shouldExcludeFromAggregation(episode.title)) {
+        return false;
+      }
+      if (episode.castMembers.length === 0) {
+        return false;
+      }
+      if (isPublicRecordingTitle(episode.title)) {
+        return true;
+      }
+      return episode.broadcastNumber !== null;
+    })
+    .sort((a, b) => new Date(a.publishedAt) - new Date(b.publishedAt))
+    .map((episode, index) => ({
+      ...episode,
+      episodeNumber: index + 1
+    }));
+}
+
+async function fetchWithRetry(url, retries) {
+  let lastError = null;
+  for (let attempt = 0; attempt <= retries; attempt += 1) {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), YOUTUBE_FETCH_TIMEOUT_MS);
+    try {
+      const result = await fetch(url, { signal: controller.signal });
+      clearTimeout(timeoutId);
+      if (result.ok || result.status < 500 || attempt === retries) {
+        return result;
+      }
+      lastError = new Error(`YouTube API temporary failure: ${result.status}`);
+    } catch (error) {
+      clearTimeout(timeoutId);
+      lastError = error;
+      if (attempt === retries) {
+        throw error;
+      }
+    }
+  }
+
+  throw lastError || new Error("YouTube API request failed");
+}
+
+function getClientIp(request) {
+  const forwardedFor = request.headers["x-forwarded-for"];
+  if (typeof forwardedFor === "string" && forwardedFor.length > 0) {
+    return forwardedFor.split(",")[0].trim();
+  }
+
+  return request.socket?.remoteAddress || "unknown";
+}
+
+function isRateLimited(clientIp) {
+  const now = Date.now();
+  const state = ipRateState.get(clientIp);
+  if (!state || now - state.windowStart > RATE_LIMIT_WINDOW_MS) {
+    ipRateState.set(clientIp, { windowStart: now, count: 1 });
+    return false;
+  }
+
+  state.count += 1;
+  ipRateState.set(clientIp, state);
+  return state.count > RATE_LIMIT_MAX_REQUESTS;
+}
+
+function setResponseHeaders(response) {
+  response.setHeader("Cache-Control", "public, max-age=60, s-maxage=600, stale-while-revalidate=3600");
+  response.setHeader("X-Content-Type-Options", "nosniff");
+  response.setHeader("X-Frame-Options", "DENY");
+  response.setHeader("Referrer-Policy", "no-referrer");
 }
 
 function toEpisode(item, episodeNumber) {

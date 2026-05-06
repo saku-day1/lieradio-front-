@@ -196,6 +196,8 @@ function handleQuickFilterClick(filterKey) {
 function render() {
   const keyword = quickFilterKeyword || searchInput.value.trim();
   const isAndMode = andFilterNames.length >= 2;
+  const isUnitMode = Boolean(activeUnitFilterKey);
+  const shouldHideRanking = isAndMode || isUnitMode;
   const sortOrder = sortSelect.value;
 
   const filteredEpisodes = filterEpisodes(allEpisodes, keyword, andFilterNames, activeUnitFilterKey);
@@ -204,7 +206,7 @@ function render() {
 
   renderEpisodeList(sortedEpisodes, isAndMode);
   renderUrlResultList(sortedEpisodes, keyword);
-  renderRankingSection(ranking, keyword, isAndMode);
+  renderRankingSection(ranking, keyword, shouldHideRanking);
   renderResultTitle(isAndMode);
   renderResultCount(sortedEpisodes.length);
   updateActiveQuickFilter();
