@@ -60,45 +60,6 @@ const NAME_ALIASES = {
   "田中 ちえ美": "田中ちえ美"
 };
 
-// タイトルの放送回で特定し、欠席注釈の取りこぼし時でも一覧・検索から外す（回と名前を追加で拡張）
-const MANUAL_REMOVE_CAST_BY_BROADCAST = new Map([
-  [237, new Set(["伊達さゆり"])],
-  [238, new Set(["伊達さゆり"])]
-]);
-
-function resolveBroadcastNumberForManualFix(episode) {
-  if (episode.broadcastNumber != null && Number.isFinite(episode.broadcastNumber)) {
-    return episode.broadcastNumber;
-  }
-  const title = episode.title || "";
-  const mJa = title.match(/第\s*(\d+)\s*回/);
-  if (mJa) {
-    return Number(mJa[1]);
-  }
-  const mHash = title.match(/#\s*(\d+)/i);
-  if (mHash) {
-    return Number(mHash[1]);
-  }
-  return null;
-}
-
-function applyManualBroadcastCastRemovals(episode) {
-  const n = resolveBroadcastNumberForManualFix(episode);
-  if (n == null) {
-    return episode;
-  }
-  const removeNames = MANUAL_REMOVE_CAST_BY_BROADCAST.get(n);
-  if (!removeNames || removeNames.size === 0) {
-    return episode;
-  }
-  return {
-    ...episode,
-    mainCast: episode.mainCast.filter((name) => !removeNames.has(name)),
-    guests: episode.guests.filter((name) => !removeNames.has(name)),
-    castMembers: episode.castMembers.filter((name) => !removeNames.has(name))
-  };
-}
-
 export default async function handler(request, response) {
   const requestedRefresh = isRefreshRequest(request);
   const forceRefresh = requestedRefresh && isAuthorizedCron(request);
@@ -535,18 +496,17 @@ function toEpisode(item, episodeNumber) {
   const mainCastFiltered = mainCast.filter((name) => !absent.has(name));
   const guestsFiltered = guests.filter((name) => !absent.has(name));
   const castMembers = uniqueNames([...mainCastFiltered, ...guestsFiltered]);
-  const broadcastNumber = extractBroadcastNumber(title);
 
-  return applyManualBroadcastCastRemovals({
+  return {
     episodeNumber,
-    broadcastNumber,
+    broadcastNumber: extractBroadcastNumber(title),
     title,
     mainCast: mainCastFiltered,
     guests: guestsFiltered,
     castMembers,
     youtubeUrl: `https://www.youtube.com/watch?v=${videoId}`,
     publishedAt
-  });
+  };
 }
 
 function toJstDate(isoDateString) {
