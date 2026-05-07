@@ -17,10 +17,15 @@ const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || "";
 const CRON_SECRET = process.env.CRON_SECRET || "";
 const PERSIST_CACHE_KEY = process.env.EPISODES_CACHE_KEY || "episodes_cache_v1";
 const PERSIST_CACHE_TTL_SEC = Number(process.env.EPISODES_PERSIST_CACHE_TTL_SEC || 7 * 24 * 60 * 60);
+const CACHE_SCHEMA_VERSION =
+  process.env.EPISODES_CACHE_SCHEMA_VERSION ||
+  process.env.VERCEL_GIT_COMMIT_SHA ||
+  "v2";
 
 let episodesCache = {
   data: null,
-  fetchedAt: 0
+  fetchedAt: 0,
+  version: CACHE_SCHEMA_VERSION
 };
 const ipRateState = new Map();
 let redisClient = null;
@@ -165,6 +170,9 @@ function hydrateInMemoryCache(persistentCache) {
   if (!persistentCache?.data || !persistentCache?.fetchedAt) {
     return;
   }
+  if (persistentCache.version !== CACHE_SCHEMA_VERSION) {
+    return;
+  }
 
   if (episodesCache.fetchedAt >= persistentCache.fetchedAt) {
     return;
@@ -188,6 +196,9 @@ async function readPersistentCache() {
     if (!Array.isArray(value.data) || typeof value.fetchedAt !== "number") {
       return null;
     }
+    if (value.version !== CACHE_SCHEMA_VERSION) {
+      return null;
+    }
 
     return value;
   } catch (error) {
@@ -203,7 +214,11 @@ async function writePersistentCache(cacheValue) {
   }
 
   try {
-    await redis.set(PERSIST_CACHE_KEY, cacheValue, { ex: PERSIST_CACHE_TTL_SEC });
+    await redis.set(
+      PERSIST_CACHE_KEY,
+      { ...cacheValue, version: CACHE_SCHEMA_VERSION },
+      { ex: PERSIST_CACHE_TTL_SEC }
+    );
   } catch (error) {
     console.error("Failed to write persistent cache.", error);
   }
