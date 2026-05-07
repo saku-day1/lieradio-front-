@@ -346,13 +346,19 @@ function formatEpisodeHeading(displayedNumber, rawTitle) {
     return `第${displayedNumber}回`;
   }
 
-  // 公開録音はタイトル先頭の「第◯回」を外して表示する。
-  if (/公開録音|公録/.test(title)) {
-    return title.replace(/^第\s*\d+\s*回\s*/, "").trim();
-  }
-
-  // タイトル側に既に回番号が含まれる場合は重複表示を避ける。
-  if (/^(第\s*\d+\s*回|#\s*\d+)/i.test(title)) {
+  const hasEpisodeLabel = /(第\s*\d+\s*回|#\s*\d+)/i.test(title);
+  if (hasEpisodeLabel) {
+    // タイトル中に回数表記がある場合は、先頭への回数付与をしない。
+    // 先頭の「第◯回」が重複しているときは先頭側を落とす。
+    const duplicateLeading = title.match(/^第\s*(\d+)\s*回\s*(.+)$/);
+    if (duplicateLeading) {
+      const number = duplicateLeading[1];
+      const rest = duplicateLeading[2].trim();
+      const hasSameLabelLater = new RegExp(`(第\\s*${number}\\s*回|#\\s*${number})`, "i").test(rest);
+      if (hasSameLabelLater) {
+        return rest;
+      }
+    }
     return title;
   }
 
