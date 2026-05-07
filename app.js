@@ -15,7 +15,12 @@ const toggleRankingButton = document.getElementById("toggleRankingButton");
 const resultTitle = document.getElementById("resultTitle");
 const episodeList = document.getElementById("episodeList");
 const resultCount = document.getElementById("resultCount");
+const castSelectionNotice = document.getElementById("castSelectionNotice");
+const episodeResultsCollapsible = document.getElementById("episodeResultsCollapsible");
+const toggleEpisodeListButton = document.getElementById("toggleEpisodeListButton");
 let isRankingVisible = false;
+let isEpisodeListVisible = false;
+let lastRenderHadFilter = false;
 let quickFilterKeyword = "";
 let andFilterNames = [];
 let activeUnitFilterKey = "";
@@ -34,6 +39,7 @@ const PRIORITY_CAST_FILTERS = [
   { name: "坂倉花", color: "#22c55e" } // 緑
 ];
 const OTHERS_FILTER_KEY = "__others__";
+const MAX_AND_CAST_SELECTION = 5;
 const UNIT_FILTERS = [
   { key: "catchu", label: "CatChu!", color: "#ef4444", members: ["伊達さゆり", "ペイトン尚未", "薮島朱音"] },
   { key: "kaleidoscore", label: "KALEIDOSCORE", color: "#3b82f6", members: ["Liyuu", "青山なぎさ", "結那"] },
@@ -55,10 +61,11 @@ async function init() {
     bindEvents();
     render();
   } catch (error) {
-    // 失敗したときに最低限のエラーメッセージを表示
     episodeList.innerHTML = "<li class='empty-message'>データの読み込みに失敗しました。</li>";
     resultCount.textContent = "";
     rankingList.innerHTML = "<li>ランキングを表示できませんでした</li>";
+    episodeResultsCollapsible.classList.remove("hidden");
+    toggleEpisodeListButton.classList.add("hidden");
     console.error(error);
   }
 }
@@ -89,7 +96,16 @@ async function fetchEpisodes() {
 function bindEvents() {
   sortSelect.addEventListener("change", render);
   toggleRankingButton.addEventListener("click", toggleRankingVisibility);
+  toggleEpisodeListButton.addEventListener("click", toggleEpisodeListVisibility);
   resetFiltersButton.addEventListener("click", resetFilters);
+}
+
+function isAnyFilterActive() {
+  return (
+    andFilterNames.length > 0 ||
+    quickFilterKeyword === OTHERS_FILTER_KEY ||
+    Boolean(activeUnitFilterKey)
+  );
 }
 
 function renderCastQuickFilters(episodes) {
@@ -160,6 +176,10 @@ function handleQuickFilterClick(filterKey) {
   }
 
   if (filterKey === OTHERS_FILTER_KEY) {
+    if (quickFilterKeyword === OTHERS_FILTER_KEY) {
+      quickFilterKeyword = "";
+      return;
+    }
     andFilterNames = [];
     quickFilterKeyword = OTHERS_FILTER_KEY;
     activeUnitFilterKey = "";
@@ -174,7 +194,7 @@ function handleQuickFilterClick(filterKey) {
   const existingIndex = andFilterNames.indexOf(filterKey);
   if (existingIndex >= 0) {
     andFilterNames.splice(existingIndex, 1);
-  } else if (andFilterNames.length < 3) {
+  } else if (andFilterNames.length < MAX_AND_CAST_SELECTION) {
     andFilterNames.push(filterKey);
   }
 
@@ -183,10 +203,17 @@ function handleQuickFilterClick(filterKey) {
 
 // 画面の再描画を1つの関数にまとめる
 function render() {
+  const hasFilter = isAnyFilterActive();
+  if (lastRenderHadFilter && !hasFilter) {
+    isEpisodeListVisible = false;
+  }
+  lastRenderHadFilter = hasFilter;
+
   const keyword = quickFilterKeyword;
   const isAndMode = andFilterNames.length >= 2;
   const isUnitMode = Boolean(activeUnitFilterKey);
-  const shouldHideRanking = isAndMode || isUnitMode;
+  const hideRanking =
+    isAndMode || isUnitMode || keyword === OTHERS_FILTER_KEY;
   const sortOrder = sortSelect.value;
 
   const filteredEpisodes = filterEpisodes(allEpisodes, keyword, andFilterNames, activeUnitFilterKey);
@@ -194,12 +221,14 @@ function render() {
   const ranking = buildRanking(filteredEpisodes, keyword);
 
   renderEpisodeList(sortedEpisodes, isAndMode);
-  renderRankingSection(ranking, keyword, shouldHideRanking);
-  renderResultTitle(isAndMode);
-  renderResultCount(sortedEpisodes.length);
+  renderRankingSection(ranking, keyword, hideRanking);
+  renderResultTitle(isAndMode, hasFilter);
+  renderResultCount(sortedEpisodes.length, hasFilter);
   updateActiveQuickFilter();
   updateActiveUnitFilter();
   updateResetButtonVisibility();
+  updateCastSelectionNotice();
+  updateEpisodeResultsVisibility(hasFilter);
 }
 
 // 出演者（メインMC + ゲスト）の部分一致検索
@@ -299,7 +328,9 @@ function renderEpisodeList(episodes, isAndMode = false) {
     .map((episode) => {
       const allCast = getAllCastMembers(episode).join(" / ");
       const displayedNumber = episode.broadcastNumber ?? episode.episodeNumber;
-      const titleText = isAndMode ? episode.title : `第${displayedNumber}回 ${episode.title}`;
+      const titleText = isAndMode
+        ? episode.title
+        : formatEpisodeHeading(displayedNumber, episode.title);
       return `
         <li class="episode-item">
           <h3>${titleText}</h3>
@@ -310,6 +341,31 @@ function renderEpisodeList(episodes, isAndMode = false) {
       `;
     })
     .join("");
+}
+
+function formatEpisodeHeading(displayedNumber, rawTitle) {
+  const title = String(rawTitle || "").trim();
+  if (!title) {
+    return `第${displayedNumber}回`;
+  }
+
+  const hasEpisodeLabel = /(第\s*\d+\s*回|#\s*\d+)/i.test(title);
+  if (hasEpisodeLabel) {
+    // タイトル中に回数表記がある場合は、先頭への回数付与をしない。
+    // 先頭の「第◯回」が重複しているときは先頭側を落とす。
+    const duplicateLeading = title.match(/^第\s*(\d+)\s*回\s*(.+)$/);
+    if (duplicateLeading) {
+      const number = duplicateLeading[1];
+      const rest = duplicateLeading[2].trim();
+      const hasSameLabelLater = new RegExp(`(第\\s*${number}\\s*回|#\\s*${number})`, "i").test(rest);
+      if (hasSameLabelLater) {
+        return rest;
+      }
+    }
+    return title;
+  }
+
+  return `第${displayedNumber}回 ${title}`;
 }
 
 function renderRanking(ranking) {
@@ -332,8 +388,8 @@ function renderRankingTitle(keyword) {
   rankingTitle.textContent = `${keyword}の共演者ランキング`;
 }
 
-function renderRankingSection(ranking, keyword, isAndMode) {
-  if (isAndMode) {
+function renderRankingSection(ranking, keyword, hideRanking) {
+  if (hideRanking) {
     rankingSection.classList.add("hidden");
     return;
   }
@@ -343,12 +399,25 @@ function renderRankingSection(ranking, keyword, isAndMode) {
   renderRankingTitle(keyword);
 }
 
-function renderResultTitle(isAndMode) {
-  resultTitle.textContent = isAndMode ? "AND検索結果（最大3人）" : "検索結果";
+function renderResultTitle(isAndMode, hasFilter) {
+  if (!hasFilter) {
+    resultTitle.textContent = "動画一覧";
+    return;
+  }
+  if (isAndMode) {
+    resultTitle.textContent = "検索に指定した出演者をすべて含む放送回（最大5人）";
+    return;
+  }
+  if (quickFilterKeyword === OTHERS_FILTER_KEY) {
+    resultTitle.textContent = "その他の出演者を含む回";
+    return;
+  }
+  resultTitle.textContent = "検索結果";
 }
 
-function renderResultCount(count) {
-  resultCount.textContent = `検索結果: ${count}件`;
+function renderResultCount(count, hasFilter) {
+  const label = hasFilter ? "検索結果" : "動画一覧";
+  resultCount.textContent = `${label}: ${count}件`;
 }
 
 function toggleRankingVisibility() {
@@ -357,19 +426,55 @@ function toggleRankingVisibility() {
   toggleRankingButton.textContent = isRankingVisible ? "閉じる" : "表示する";
 }
 
+function toggleEpisodeListVisibility() {
+  isEpisodeListVisible = !isEpisodeListVisible;
+  render();
+}
+
+function updateEpisodeResultsVisibility(hasFilter) {
+  if (!episodeResultsCollapsible || !toggleEpisodeListButton) {
+    return;
+  }
+  if (hasFilter) {
+    episodeResultsCollapsible.classList.remove("hidden");
+    toggleEpisodeListButton.classList.add("hidden");
+    return;
+  }
+  toggleEpisodeListButton.classList.remove("hidden");
+  episodeResultsCollapsible.classList.toggle("hidden", !isEpisodeListVisible);
+  toggleEpisodeListButton.textContent = isEpisodeListVisible ? "閉じる" : "表示する";
+}
+
 function updateActiveQuickFilter() {
+  const isIndividualSelected = andFilterNames.length > 0;
   castQuickFilters.querySelectorAll(".cast-filter-button").forEach((button) => {
-    const key = button.dataset.filterKey;
+    const key = button.dataset.filterKey || "";
     const isActive = key === OTHERS_FILTER_KEY
       ? quickFilterKeyword === OTHERS_FILTER_KEY
-      : andFilterNames.includes(key || "");
+      : andFilterNames.includes(key);
+    const shouldDisableByLimit =
+      key !== OTHERS_FILTER_KEY &&
+      quickFilterKeyword !== OTHERS_FILTER_KEY &&
+      andFilterNames.length >= MAX_AND_CAST_SELECTION &&
+      !isActive;
+    const shouldDisableByIndividualSelection =
+      key === OTHERS_FILTER_KEY &&
+      isIndividualSelected &&
+      !isActive;
+    const shouldDisable = shouldDisableByLimit || shouldDisableByIndividualSelection;
+
     button.classList.toggle("is-active", isActive);
+    button.disabled = shouldDisable;
+    button.classList.toggle("is-disabled", shouldDisable);
   });
 }
 
 function updateActiveUnitFilter() {
+  const shouldDisable = andFilterNames.length > 0;
   unitQuickFilters.querySelectorAll(".unit-filter-button").forEach((button) => {
     button.classList.toggle("is-active", button.dataset.unitKey === activeUnitFilterKey);
+    button.disabled = shouldDisable;
+    button.classList.toggle("is-disabled", shouldDisable);
   });
 }
 
@@ -379,6 +484,16 @@ function updateResetButtonVisibility() {
     quickFilterKeyword === OTHERS_FILTER_KEY ||
     Boolean(activeUnitFilterKey);
   resetFiltersButton.classList.toggle("hidden", !shouldShow);
+}
+
+function updateCastSelectionNotice() {
+  if (!castSelectionNotice) {
+    return;
+  }
+  const show =
+    quickFilterKeyword !== OTHERS_FILTER_KEY &&
+    andFilterNames.length >= MAX_AND_CAST_SELECTION;
+  castSelectionNotice.classList.toggle("hidden", !show);
 }
 
 function resetFilters() {

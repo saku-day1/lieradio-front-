@@ -3,6 +3,7 @@
  * YouTube APIキーをサーバー側だけで利用し、フロントへ露出させない。
  */
 import { Redis } from "@upstash/redis";
+import { collectAbsentCastNames, isAbsenceAnnouncementLine } from "./absence-names.js";
 
 const YOUTUBE_API_BASE = "https://www.googleapis.com/youtube/v3/playlistItems";
 const CACHE_TTL_MS = Number(process.env.EPISODES_CACHE_TTL_MS || 10 * 60 * 1000);
@@ -16,10 +17,15 @@ const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || "";
 const CRON_SECRET = process.env.CRON_SECRET || "";
 const PERSIST_CACHE_KEY = process.env.EPISODES_CACHE_KEY || "episodes_cache_v1";
 const PERSIST_CACHE_TTL_SEC = Number(process.env.EPISODES_PERSIST_CACHE_TTL_SEC || 7 * 24 * 60 * 60);
+const CACHE_SCHEMA_VERSION =
+  process.env.EPISODES_CACHE_SCHEMA_VERSION ||
+  process.env.VERCEL_GIT_COMMIT_SHA ||
+  "v2";
 
 let episodesCache = {
   data: null,
-  fetchedAt: 0
+  fetchedAt: 0,
+  version: CACHE_SCHEMA_VERSION
 };
 const ipRateState = new Map();
 let redisClient = null;
@@ -164,6 +170,9 @@ function hydrateInMemoryCache(persistentCache) {
   if (!persistentCache?.data || !persistentCache?.fetchedAt) {
     return;
   }
+  if (persistentCache.version !== CACHE_SCHEMA_VERSION) {
+    return;
+  }
 
   if (episodesCache.fetchedAt >= persistentCache.fetchedAt) {
     return;
@@ -187,6 +196,9 @@ async function readPersistentCache() {
     if (!Array.isArray(value.data) || typeof value.fetchedAt !== "number") {
       return null;
     }
+    if (value.version !== CACHE_SCHEMA_VERSION) {
+      return null;
+    }
 
     return value;
   } catch (error) {
@@ -202,7 +214,11 @@ async function writePersistentCache(cacheValue) {
   }
 
   try {
-    await redis.set(PERSIST_CACHE_KEY, cacheValue, { ex: PERSIST_CACHE_TTL_SEC });
+    await redis.set(
+      PERSIST_CACHE_KEY,
+      { ...cacheValue, version: CACHE_SCHEMA_VERSION },
+      { ex: PERSIST_CACHE_TTL_SEC }
+    );
   } catch (error) {
     console.error("Failed to write persistent cache.", error);
   }
@@ -491,14 +507,17 @@ function toEpisode(item, episodeNumber) {
   const rawPublishedAt = contentDetails.videoPublishedAt || snippet.publishedAt || "";
   const publishedAt = toJstDate(rawPublishedAt);
   const { mainCast, guests } = extractCastFromDescription(description, title);
-  const castMembers = uniqueNames([...mainCast, ...guests]);
+  const absent = collectAbsentCastNames(description, ALLOWED_CAST_MEMBERS, title);
+  const mainCastFiltered = mainCast.filter((name) => !absent.has(name));
+  const guestsFiltered = guests.filter((name) => !absent.has(name));
+  const castMembers = uniqueNames([...mainCastFiltered, ...guestsFiltered]);
 
   return {
     episodeNumber,
     broadcastNumber: extractBroadcastNumber(title),
     title,
-    mainCast,
-    guests,
+    mainCast: mainCastFiltered,
+    guests: guestsFiltered,
     castMembers,
     youtubeUrl: `https://www.youtube.com/watch?v=${videoId}`,
     publishedAt
@@ -580,6 +599,10 @@ function extractCastFromDescription(description, title = "") {
       continue;
     }
 
+    if (isAbsenceAnnouncementLine(line)) {
+      continue;
+    }
+
     const names = splitAndCleanNames(line);
     if (names.length === 0) {
       continue;
@@ -627,8 +650,8 @@ function cleanName(rawLine) {
     .replace(/^[・\-ー◆🎤🌟🌈\s　]+/, "")
     .replace(/^※\s*/, "");
 
-  // "坂倉 花（鬼塚冬毬役）" -> "坂倉 花"
-  const nameOnly = withoutPrefix.split("（")[0].trim();
+  // "坂倉 花（鬼塚冬毬役）" / "伊達さゆり(澁谷かのん役)" -> 役名の手前まで
+  const nameOnly = withoutPrefix.split(/[（(]/)[0].trim();
 
   if (!nameOnly) {
     return "";
