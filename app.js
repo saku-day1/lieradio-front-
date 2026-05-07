@@ -325,7 +325,9 @@ function renderEpisodeList(episodes, isAndMode = false) {
     .map((episode) => {
       const allCast = getAllCastMembers(episode).join(" / ");
       const displayedNumber = episode.broadcastNumber ?? episode.episodeNumber;
-      const titleText = isAndMode ? episode.title : `第${displayedNumber}回 ${episode.title}`;
+      const titleText = isAndMode
+        ? episode.title
+        : formatEpisodeHeading(displayedNumber, episode.title);
       return `
         <li class="episode-item">
           <h3>${titleText}</h3>
@@ -336,6 +338,25 @@ function renderEpisodeList(episodes, isAndMode = false) {
       `;
     })
     .join("");
+}
+
+function formatEpisodeHeading(displayedNumber, rawTitle) {
+  const title = String(rawTitle || "").trim();
+  if (!title) {
+    return `第${displayedNumber}回`;
+  }
+
+  // 公開録音はタイトル先頭の「第◯回」を外して表示する。
+  if (/公開録音|公録/.test(title)) {
+    return title.replace(/^第\s*\d+\s*回\s*/, "").trim();
+  }
+
+  // タイトル側に既に回番号が含まれる場合は重複表示を避ける。
+  if (/^(第\s*\d+\s*回|#\s*\d+)/i.test(title)) {
+    return title;
+  }
+
+  return `第${displayedNumber}回 ${title}`;
 }
 
 function renderRanking(ranking) {
