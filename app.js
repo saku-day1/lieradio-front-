@@ -446,16 +446,22 @@ function updateEpisodeResultsVisibility(hasFilter) {
 }
 
 function updateActiveQuickFilter() {
+  const isIndividualSelected = andFilterNames.length > 0;
   castQuickFilters.querySelectorAll(".cast-filter-button").forEach((button) => {
     const key = button.dataset.filterKey || "";
     const isActive = key === OTHERS_FILTER_KEY
       ? quickFilterKeyword === OTHERS_FILTER_KEY
       : andFilterNames.includes(key);
-    const shouldDisable =
+    const shouldDisableByLimit =
       key !== OTHERS_FILTER_KEY &&
       quickFilterKeyword !== OTHERS_FILTER_KEY &&
       andFilterNames.length >= MAX_AND_CAST_SELECTION &&
       !isActive;
+    const shouldDisableByIndividualSelection =
+      key === OTHERS_FILTER_KEY &&
+      isIndividualSelected &&
+      !isActive;
+    const shouldDisable = shouldDisableByLimit || shouldDisableByIndividualSelection;
 
     button.classList.toggle("is-active", isActive);
     button.disabled = shouldDisable;
@@ -464,8 +470,11 @@ function updateActiveQuickFilter() {
 }
 
 function updateActiveUnitFilter() {
+  const shouldDisable = andFilterNames.length > 0;
   unitQuickFilters.querySelectorAll(".unit-filter-button").forEach((button) => {
     button.classList.toggle("is-active", button.dataset.unitKey === activeUnitFilterKey);
+    button.disabled = shouldDisable;
+    button.classList.toggle("is-disabled", shouldDisable);
   });
 }
 
