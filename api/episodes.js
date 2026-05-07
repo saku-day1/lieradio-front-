@@ -3,6 +3,7 @@
  * YouTube APIキーをサーバー側だけで利用し、フロントへ露出させない。
  */
 import { Redis } from "@upstash/redis";
+import { collectAbsentCastNames } from "./absence-names.js";
 
 const YOUTUBE_API_BASE = "https://www.googleapis.com/youtube/v3/playlistItems";
 const CACHE_TTL_MS = Number(process.env.EPISODES_CACHE_TTL_MS || 10 * 60 * 1000);
@@ -491,14 +492,17 @@ function toEpisode(item, episodeNumber) {
   const rawPublishedAt = contentDetails.videoPublishedAt || snippet.publishedAt || "";
   const publishedAt = toJstDate(rawPublishedAt);
   const { mainCast, guests } = extractCastFromDescription(description, title);
-  const castMembers = uniqueNames([...mainCast, ...guests]);
+  const absent = collectAbsentCastNames(description, ALLOWED_CAST_MEMBERS);
+  const mainCastFiltered = mainCast.filter((name) => !absent.has(name));
+  const guestsFiltered = guests.filter((name) => !absent.has(name));
+  const castMembers = uniqueNames([...mainCastFiltered, ...guestsFiltered]);
 
   return {
     episodeNumber,
     broadcastNumber: extractBroadcastNumber(title),
     title,
-    mainCast,
-    guests,
+    mainCast: mainCastFiltered,
+    guests: guestsFiltered,
     castMembers,
     youtubeUrl: `https://www.youtube.com/watch?v=${videoId}`,
     publishedAt
@@ -627,8 +631,8 @@ function cleanName(rawLine) {
     .replace(/^[・\-ー◆🎤🌟🌈\s　]+/, "")
     .replace(/^※\s*/, "");
 
-  // "坂倉 花（鬼塚冬毬役）" -> "坂倉 花"
-  const nameOnly = withoutPrefix.split("（")[0].trim();
+  // "坂倉 花（鬼塚冬毬役）" / "伊達さゆり(澁谷かのん役)" -> 役名の手前まで
+  const nameOnly = withoutPrefix.split(/[（(]/)[0].trim();
 
   if (!nameOnly) {
     return "";

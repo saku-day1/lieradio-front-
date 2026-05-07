@@ -271,6 +271,24 @@ h2 {
   display: none;
 }
 
+.site-footer {
+  max-width: 900px;
+  margin: 24px auto 32px;
+  padding: 16px 20px;
+  font-size: 0.8rem;
+  line-height: 1.55;
+  color: var(--muted);
+  text-align: center;
+}
+
+.site-footer p {
+  margin: 0 0 10px;
+}
+
+.site-footer p:last-child {
+  margin-bottom: 0;
+}
+
 @media (max-width: 640px) {
   .controls {
     grid-template-columns: 1fr;

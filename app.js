@@ -15,7 +15,11 @@ const toggleRankingButton = document.getElementById("toggleRankingButton");
 const resultTitle = document.getElementById("resultTitle");
 const episodeList = document.getElementById("episodeList");
 const resultCount = document.getElementById("resultCount");
+const episodeResultsCollapsible = document.getElementById("episodeResultsCollapsible");
+const toggleEpisodeListButton = document.getElementById("toggleEpisodeListButton");
 let isRankingVisible = false;
+let isEpisodeListVisible = false;
+let lastRenderHadFilter = false;
 let quickFilterKeyword = "";
 let andFilterNames = [];
 let activeUnitFilterKey = "";
@@ -55,10 +59,11 @@ async function init() {
     bindEvents();
     render();
   } catch (error) {
-    // 失敗したときに最低限のエラーメッセージを表示
     episodeList.innerHTML = "<li class='empty-message'>データの読み込みに失敗しました。</li>";
     resultCount.textContent = "";
     rankingList.innerHTML = "<li>ランキングを表示できませんでした</li>";
+    episodeResultsCollapsible.classList.remove("hidden");
+    toggleEpisodeListButton.classList.add("hidden");
     console.error(error);
   }
 }
@@ -89,7 +94,16 @@ async function fetchEpisodes() {
 function bindEvents() {
   sortSelect.addEventListener("change", render);
   toggleRankingButton.addEventListener("click", toggleRankingVisibility);
+  toggleEpisodeListButton.addEventListener("click", toggleEpisodeListVisibility);
   resetFiltersButton.addEventListener("click", resetFilters);
+}
+
+function isAnyFilterActive() {
+  return (
+    andFilterNames.length > 0 ||
+    quickFilterKeyword === OTHERS_FILTER_KEY ||
+    Boolean(activeUnitFilterKey)
+  );
 }
 
 function renderCastQuickFilters(episodes) {
@@ -160,6 +174,10 @@ function handleQuickFilterClick(filterKey) {
   }
 
   if (filterKey === OTHERS_FILTER_KEY) {
+    if (quickFilterKeyword === OTHERS_FILTER_KEY) {
+      quickFilterKeyword = "";
+      return;
+    }
     andFilterNames = [];
     quickFilterKeyword = OTHERS_FILTER_KEY;
     activeUnitFilterKey = "";
@@ -183,10 +201,17 @@ function handleQuickFilterClick(filterKey) {
 
 // 画面の再描画を1つの関数にまとめる
 function render() {
+  const hasFilter = isAnyFilterActive();
+  if (lastRenderHadFilter && !hasFilter) {
+    isEpisodeListVisible = false;
+  }
+  lastRenderHadFilter = hasFilter;
+
   const keyword = quickFilterKeyword;
   const isAndMode = andFilterNames.length >= 2;
   const isUnitMode = Boolean(activeUnitFilterKey);
-  const shouldHideRanking = isAndMode || isUnitMode;
+  const hideRanking =
+    isAndMode || isUnitMode || keyword === OTHERS_FILTER_KEY;
   const sortOrder = sortSelect.value;
 
   const filteredEpisodes = filterEpisodes(allEpisodes, keyword, andFilterNames, activeUnitFilterKey);
@@ -194,12 +219,13 @@ function render() {
   const ranking = buildRanking(filteredEpisodes, keyword);
 
   renderEpisodeList(sortedEpisodes, isAndMode);
-  renderRankingSection(ranking, keyword, shouldHideRanking);
+  renderRankingSection(ranking, keyword, hideRanking);
   renderResultTitle(isAndMode);
   renderResultCount(sortedEpisodes.length);
   updateActiveQuickFilter();
   updateActiveUnitFilter();
   updateResetButtonVisibility();
+  updateEpisodeResultsVisibility(hasFilter);
 }
 
 // 出演者（メインMC + ゲスト）の部分一致検索
@@ -332,8 +358,8 @@ function renderRankingTitle(keyword) {
   rankingTitle.textContent = `${keyword}の共演者ランキング`;
 }
 
-function renderRankingSection(ranking, keyword, isAndMode) {
-  if (isAndMode) {
+function renderRankingSection(ranking, keyword, hideRanking) {
+  if (hideRanking) {
     rankingSection.classList.add("hidden");
     return;
   }
@@ -344,7 +370,15 @@ function renderRankingSection(ranking, keyword, isAndMode) {
 }
 
 function renderResultTitle(isAndMode) {
-  resultTitle.textContent = isAndMode ? "AND検索結果（最大3人）" : "検索結果";
+  if (isAndMode) {
+    resultTitle.textContent = "AND検索結果（最大3人）";
+    return;
+  }
+  if (quickFilterKeyword === OTHERS_FILTER_KEY) {
+    resultTitle.textContent = "その他の出演者を含む回";
+    return;
+  }
+  resultTitle.textContent = "検索結果";
 }
 
 function renderResultCount(count) {
@@ -355,6 +389,25 @@ function toggleRankingVisibility() {
   isRankingVisible = !isRankingVisible;
   rankingList.classList.toggle("hidden", !isRankingVisible);
   toggleRankingButton.textContent = isRankingVisible ? "閉じる" : "表示する";
+}
+
+function toggleEpisodeListVisibility() {
+  isEpisodeListVisible = !isEpisodeListVisible;
+  render();
+}
+
+function updateEpisodeResultsVisibility(hasFilter) {
+  if (!episodeResultsCollapsible || !toggleEpisodeListButton) {
+    return;
+  }
+  if (hasFilter) {
+    episodeResultsCollapsible.classList.remove("hidden");
+    toggleEpisodeListButton.classList.add("hidden");
+    return;
+  }
+  toggleEpisodeListButton.classList.remove("hidden");
+  episodeResultsCollapsible.classList.toggle("hidden", !isEpisodeListVisible);
+  toggleEpisodeListButton.textContent = isEpisodeListVisible ? "閉じる" : "表示する";
 }
 
 function updateActiveQuickFilter() {

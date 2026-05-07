@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "verify-absence": "node scripts/verify-absence.mjs"
+  },
   "dependencies": {
     "@upstash/redis": "^1.38.0"
   }

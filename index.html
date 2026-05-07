@@ -12,7 +12,8 @@
     <p class="subtitle">
       3人まで指定して検索できます。<br>
       ユニットを選択した場合はそのユニット内メンバーが全員出演している回を検索します。<br>
-      ランキングは通常検索時のみ表示され、AND検索・ユニット検索時は非表示です。
+      ランキングは1人選択のときのみ表示され、AND検索・ユニット検索・「その他」検索時は非表示です。<br>
+      出演者・ユニットを選んでいないときは、放送回一覧は「表示する」から開けます。
     </p>
   </header>
 
@@ -42,12 +43,27 @@
       <ol id="rankingList" class="ranking-list hidden"></ol>
     </section>
 
-    <section class="card">
-      <h2 id="resultTitle">検索結果</h2>
-      <p id="resultCount" class="result-count"></p>
-      <ul id="episodeList" class="episode-list"></ul>
+    <section id="resultsSection" class="card">
+      <div class="section-header">
+        <h2 id="resultTitle">検索結果</h2>
+        <button id="toggleEpisodeListButton" type="button" class="toggle-button">表示する</button>
+      </div>
+      <div id="episodeResultsCollapsible" class="episode-results-collapsible hidden">
+        <p id="resultCount" class="result-count"></p>
+        <ul id="episodeList" class="episode-list"></ul>
+      </div>
     </section>
   </main>
+
+  <!-- 文言は運営側で必要に応じて調整してください -->
+  <footer class="site-footer">
+    <p>
+      本サイトはファンによる非公式の検索・索引サイトです。公式および関連会社とは一切関係ありません。
+    </p>
+    <p>
+      番組・キャラクター・楽曲等に関する権利は各権利者に帰属します。動画の視聴はリンク先（YouTube 等）の規約および各コンテンツの権利者に従ってください。
+    </p>
+  </footer>
 
   <script src="./app.js" defer></script>
 </body>
