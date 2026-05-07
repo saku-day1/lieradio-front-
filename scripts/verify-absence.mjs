@@ -39,4 +39,26 @@ const allowed = ["伊達さゆり", "坂倉花", "岬なこ", "Liyuu"];
   assert.equal(absent.size, 0);
 }
 
+{
+  const text = "伊達さゆり(澁谷かのん役)\nは、収録時体調不良のためお休みとなります。";
+  const absent = collectAbsentCastNames(text, allowed);
+  assert.ok(absent.has("伊達さゆり"));
+}
+
+{
+  const text = "本回\n伊達さゆりは欠席です。";
+  const absent = collectAbsentCastNames(text, allowed);
+  assert.ok(absent.has("伊達さゆり"));
+}
+
+{
+  const text = `🎤メインMC
+　伊達さゆり（澁谷かのん役）
+　坂倉 花（鬼塚冬毬役）
+※伊達さゆり(澁谷かのん役)は、収録時体調不良ためお休みとなります。`;
+  const absent = collectAbsentCastNames(text, allowed);
+  assert.ok(absent.has("伊達さゆり"));
+  assert.ok(!absent.has("坂倉花"));
+}
+
 console.log("verify-absence: OK");

@@ -492,7 +492,7 @@ function toEpisode(item, episodeNumber) {
   const rawPublishedAt = contentDetails.videoPublishedAt || snippet.publishedAt || "";
   const publishedAt = toJstDate(rawPublishedAt);
   const { mainCast, guests } = extractCastFromDescription(description, title);
-  const absent = collectAbsentCastNames(description, ALLOWED_CAST_MEMBERS);
+  const absent = collectAbsentCastNames(description, ALLOWED_CAST_MEMBERS, title);
   const mainCastFiltered = mainCast.filter((name) => !absent.has(name));
   const guestsFiltered = guests.filter((name) => !absent.has(name));
   const castMembers = uniqueNames([...mainCastFiltered, ...guestsFiltered]);
