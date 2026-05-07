@@ -27,14 +27,6 @@
         <div id="unitQuickFilters" class="unit-quick-filters"></div>
         <button id="resetFiltersButton" type="button" class="reset-filters-button hidden">検索リセット</button>
       </div>
-
-      <div class="control-group">
-        <label for="sortSelect">並び順</label>
-        <select id="sortSelect">
-          <option value="desc">新しい順</option>
-          <option value="asc">古い順</option>
-        </select>
-      </div>
     </section>
 
     <section id="rankingSection" class="card">
@@ -48,7 +40,16 @@
     <section id="resultsSection" class="card">
       <div class="section-header">
         <h2 id="resultTitle">検索結果</h2>
-        <button id="toggleEpisodeListButton" type="button" class="toggle-button">表示する</button>
+        <div class="results-header-actions">
+          <div class="results-sort-control">
+            <label for="sortSelect">並び順</label>
+            <select id="sortSelect">
+              <option value="desc">新しい順</option>
+              <option value="asc">古い順</option>
+            </select>
+          </div>
+          <button id="toggleEpisodeListButton" type="button" class="toggle-button">表示する</button>
+        </div>
       </div>
       <div id="episodeResultsCollapsible" class="episode-results-collapsible hidden">
         <p id="resultCount" class="result-count"></p>
