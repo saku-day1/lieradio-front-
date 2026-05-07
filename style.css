@@ -93,6 +93,12 @@ body {
   border-color: var(--accent);
 }
 
+.selection-notice {
+  margin: 8px 0 0;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
 .cast-filter-button {
   border: 1px solid #3a4661;
   border-radius: 999px;
@@ -106,6 +112,12 @@ body {
 
 .cast-filter-button:hover {
   border-color: var(--accent);
+}
+
+.cast-filter-button.is-disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+  filter: grayscale(0.5);
 }
 
 .cast-filter-button-others {

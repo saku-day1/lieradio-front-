@@ -10,10 +10,11 @@
   <header class="site-header">
     <h1>リエラジ出演者検索</h1>
     <p class="subtitle">
-      3人まで指定して検索できます。<br>
-      ユニットを選択した場合はそのユニット内メンバーが全員出演している回を検索します。<br>
-      ランキングは1人選択のときのみ表示され、AND検索・ユニット検索・「その他」検索時は非表示です。<br>
-      出演者・ユニットを選んでいないときは、放送回一覧は「表示する」から開けます。
+      出演者・ユニットを選択して、リエラジの放送回を検索できます。<br>
+      出演者は最大5人まで指定でき、複数選択時は全員が出演している回を検索します。<br>
+      <br>
+      ユニットを選択した場合は、そのユニット内メンバーが全員出演している回を検索します。<br>
+      共演者ランキングは出演者を1人選択した場合のみ表示され、AND検索・ユニット検索・「その他」検索時は非表示です。
     </p>
   </header>
 
@@ -22,6 +23,7 @@
       <div class="control-group">
         <label>出演者ボタンで検索</label>
         <div id="castQuickFilters" class="cast-quick-filters"></div>
+        <p id="castSelectionNotice" class="selection-notice hidden">出演者は最大5人まで選択できます。</p>
         <div id="unitQuickFilters" class="unit-quick-filters"></div>
         <button id="resetFiltersButton" type="button" class="reset-filters-button hidden">検索リセット</button>
       </div>

@@ -15,6 +15,7 @@ const toggleRankingButton = document.getElementById("toggleRankingButton");
 const resultTitle = document.getElementById("resultTitle");
 const episodeList = document.getElementById("episodeList");
 const resultCount = document.getElementById("resultCount");
+const castSelectionNotice = document.getElementById("castSelectionNotice");
 const episodeResultsCollapsible = document.getElementById("episodeResultsCollapsible");
 const toggleEpisodeListButton = document.getElementById("toggleEpisodeListButton");
 let isRankingVisible = false;
@@ -38,6 +39,7 @@ const PRIORITY_CAST_FILTERS = [
   { name: "坂倉花", color: "#22c55e" } // 緑
 ];
 const OTHERS_FILTER_KEY = "__others__";
+const MAX_AND_CAST_SELECTION = 5;
 const UNIT_FILTERS = [
   { key: "catchu", label: "CatChu!", color: "#ef4444", members: ["伊達さゆり", "ペイトン尚未", "薮島朱音"] },
   { key: "kaleidoscore", label: "KALEIDOSCORE", color: "#3b82f6", members: ["Liyuu", "青山なぎさ", "結那"] },
@@ -192,7 +194,7 @@ function handleQuickFilterClick(filterKey) {
   const existingIndex = andFilterNames.indexOf(filterKey);
   if (existingIndex >= 0) {
     andFilterNames.splice(existingIndex, 1);
-  } else if (andFilterNames.length < 3) {
+  } else if (andFilterNames.length < MAX_AND_CAST_SELECTION) {
     andFilterNames.push(filterKey);
   }
 
@@ -225,6 +227,7 @@ function render() {
   updateActiveQuickFilter();
   updateActiveUnitFilter();
   updateResetButtonVisibility();
+  updateCastSelectionNotice();
   updateEpisodeResultsVisibility(hasFilter);
 }
 
@@ -402,7 +405,7 @@ function renderResultTitle(isAndMode, hasFilter) {
     return;
   }
   if (isAndMode) {
-    resultTitle.textContent = "検索に指定した出演者をすべて含む放送回（最大3人）";
+    resultTitle.textContent = "検索に指定した出演者をすべて含む放送回（最大5人）";
     return;
   }
   if (quickFilterKeyword === OTHERS_FILTER_KEY) {
@@ -444,11 +447,19 @@ function updateEpisodeResultsVisibility(hasFilter) {
 
 function updateActiveQuickFilter() {
   castQuickFilters.querySelectorAll(".cast-filter-button").forEach((button) => {
-    const key = button.dataset.filterKey;
+    const key = button.dataset.filterKey || "";
     const isActive = key === OTHERS_FILTER_KEY
       ? quickFilterKeyword === OTHERS_FILTER_KEY
-      : andFilterNames.includes(key || "");
+      : andFilterNames.includes(key);
+    const shouldDisable =
+      key !== OTHERS_FILTER_KEY &&
+      quickFilterKeyword !== OTHERS_FILTER_KEY &&
+      andFilterNames.length >= MAX_AND_CAST_SELECTION &&
+      !isActive;
+
     button.classList.toggle("is-active", isActive);
+    button.disabled = shouldDisable;
+    button.classList.toggle("is-disabled", shouldDisable);
   });
 }
 
@@ -464,6 +475,16 @@ function updateResetButtonVisibility() {
     quickFilterKeyword === OTHERS_FILTER_KEY ||
     Boolean(activeUnitFilterKey);
   resetFiltersButton.classList.toggle("hidden", !shouldShow);
+}
+
+function updateCastSelectionNotice() {
+  if (!castSelectionNotice) {
+    return;
+  }
+  const show =
+    quickFilterKeyword !== OTHERS_FILTER_KEY &&
+    andFilterNames.length >= MAX_AND_CAST_SELECTION;
+  castSelectionNotice.classList.toggle("hidden", !show);
 }
 
 function resetFilters() {
