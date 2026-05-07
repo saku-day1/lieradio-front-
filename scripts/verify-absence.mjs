@@ -61,4 +61,11 @@ const allowed = ["伊達さゆり", "坂倉花", "岬なこ", "Liyuu"];
   assert.ok(!absent.has("坂倉花"));
 }
 
+{
+  const text =
+    "※伊達さゆり(澁谷かのん役)は、収録時体調不良ためお休みとなります。\r";
+  const absent = collectAbsentCastNames(text, allowed);
+  assert.ok(absent.has("伊達さゆり"));
+}
+
 console.log("verify-absence: OK");

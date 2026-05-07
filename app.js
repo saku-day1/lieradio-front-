@@ -220,8 +220,8 @@ function render() {
 
   renderEpisodeList(sortedEpisodes, isAndMode);
   renderRankingSection(ranking, keyword, hideRanking);
-  renderResultTitle(isAndMode);
-  renderResultCount(sortedEpisodes.length);
+  renderResultTitle(isAndMode, hasFilter);
+  renderResultCount(sortedEpisodes.length, hasFilter);
   updateActiveQuickFilter();
   updateActiveUnitFilter();
   updateResetButtonVisibility();
@@ -369,9 +369,13 @@ function renderRankingSection(ranking, keyword, hideRanking) {
   renderRankingTitle(keyword);
 }
 
-function renderResultTitle(isAndMode) {
+function renderResultTitle(isAndMode, hasFilter) {
+  if (!hasFilter) {
+    resultTitle.textContent = "動画一覧";
+    return;
+  }
   if (isAndMode) {
-    resultTitle.textContent = "AND検索結果（最大3人）";
+    resultTitle.textContent = "検索に指定した出演者をすべて含む放送回（最大3人）";
     return;
   }
   if (quickFilterKeyword === OTHERS_FILTER_KEY) {
@@ -381,8 +385,9 @@ function renderResultTitle(isAndMode) {
   resultTitle.textContent = "検索結果";
 }
 
-function renderResultCount(count) {
-  resultCount.textContent = `検索結果: ${count}件`;
+function renderResultCount(count, hasFilter) {
+  const label = hasFilter ? "検索結果" : "動画一覧";
+  resultCount.textContent = `${label}: ${count}件`;
 }
 
 function toggleRankingVisibility() {

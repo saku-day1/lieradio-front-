@@ -3,7 +3,7 @@
  * YouTube APIキーをサーバー側だけで利用し、フロントへ露出させない。
  */
 import { Redis } from "@upstash/redis";
-import { collectAbsentCastNames } from "./absence-names.js";
+import { collectAbsentCastNames, isAbsenceAnnouncementLine } from "./absence-names.js";
 
 const YOUTUBE_API_BASE = "https://www.googleapis.com/youtube/v3/playlistItems";
 const CACHE_TTL_MS = Number(process.env.EPISODES_CACHE_TTL_MS || 10 * 60 * 1000);
@@ -581,6 +581,10 @@ function extractCastFromDescription(description, title = "") {
     }
 
     if (!section) {
+      continue;
+    }
+
+    if (isAbsenceAnnouncementLine(line)) {
       continue;
     }
 
