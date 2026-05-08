@@ -196,6 +196,7 @@ h2 {
 .results-sort-control label {
   color: var(--muted);
   font-size: 0.85rem;
+  white-space: nowrap;
 }
 
 .results-sort-control select {
@@ -340,10 +341,13 @@ h2 {
   }
 
   .results-sort-control {
-    flex: 1;
+    flex: 0 1 auto;
+    gap: 4px;
   }
 
   .results-sort-control select {
-    width: 100%;
+    width: auto;
+    min-width: 96px;
+    padding: 6px 8px;
   }
 }
