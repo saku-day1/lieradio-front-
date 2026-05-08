@@ -349,6 +349,11 @@ function formatEpisodeHeading(displayedNumber, rawTitle) {
     return `第${displayedNumber}回`;
   }
 
+  // 公開録音回は先頭に回数を付与せず、タイトルをそのまま表示する。
+  if (isPublicRecordingTitle(title)) {
+    return title;
+  }
+
   const hasEpisodeLabel = /(第\s*\d+\s*回|#\s*\d+)/i.test(title);
   if (hasEpisodeLabel) {
     // タイトル中に回数表記がある場合は、先頭への回数付与をしない。
@@ -366,6 +371,10 @@ function formatEpisodeHeading(displayedNumber, rawTitle) {
   }
 
   return `第${displayedNumber}回 ${title}`;
+}
+
+function isPublicRecordingTitle(title) {
+  return /公開録音|公録/.test(title);
 }
 
 function renderRanking(ranking) {
