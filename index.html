@@ -32,13 +32,7 @@
     <section id="rankingSection" class="card">
       <div class="section-header">
         <h2 id="rankingTitle">出演回数ランキング</h2>
-        <div class="visibility-control">
-          <label for="rankingVisibilitySelect">表示</label>
-          <select id="rankingVisibilitySelect">
-            <option value="hide" selected>しない</option>
-            <option value="show">する</option>
-          </select>
-        </div>
+        <button id="toggleRankingButton" type="button" class="toggle-button">表示する</button>
       </div>
       <ol id="rankingList" class="ranking-list hidden"></ol>
     </section>
@@ -54,13 +48,7 @@
               <option value="asc">古い順</option>
             </select>
           </div>
-          <div class="visibility-control">
-            <label for="episodeVisibilitySelect">表示</label>
-            <select id="episodeVisibilitySelect">
-              <option value="hide" selected>しない</option>
-              <option value="show">する</option>
-            </select>
-          </div>
+          <button id="toggleEpisodeListButton" type="button" class="toggle-button">表示する</button>
         </div>
       </div>
       <div id="episodeResultsCollapsible" class="episode-results-collapsible hidden">

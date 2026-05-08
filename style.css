@@ -206,26 +206,22 @@ h2 {
 
 .results-sort-control select {
   width: auto;
-  min-width: 120px;
+  min-width: 100px;
+  padding: 6px 8px;
+}
+
+.toggle-button {
+  border: 1px solid #3a4661;
+  border-radius: 10px;
   padding: 6px 10px;
-}
-
-.visibility-control {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.visibility-control label {
-  color: var(--muted);
-  font-size: 0.85rem;
+  color: var(--text);
+  background: #141a25;
+  cursor: pointer;
   white-space: nowrap;
 }
 
-.visibility-control select {
-  width: auto;
-  min-width: 90px;
-  padding: 6px 8px;
+.toggle-button:hover {
+  border-color: var(--accent);
 }
 
 .ranking-list {
@@ -340,6 +336,22 @@ h2 {
 }
 
 @media (max-width: 640px) {
+  #resultsSection .section-header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 8px;
+  }
+
+  #resultsSection .section-header h2 {
+    grid-column: 1;
+    min-width: 0;
+  }
+
+  #resultsSection .section-header .results-header-actions {
+    grid-column: 2;
+  }
+
   .section-header {
     flex-direction: row;
     align-items: center;
@@ -361,11 +373,7 @@ h2 {
 
   .results-sort-control select {
     width: auto;
-    min-width: 96px;
-    padding: 6px 8px;
-  }
-
-  .visibility-control select {
-    min-width: 76px;
+    min-width: 88px;
+    padding: 6px 6px;
   }
 }

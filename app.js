@@ -11,13 +11,13 @@ const sortSelect = document.getElementById("sortSelect");
 const rankingSection = document.getElementById("rankingSection");
 const rankingTitle = document.getElementById("rankingTitle");
 const rankingList = document.getElementById("rankingList");
-const rankingVisibilitySelect = document.getElementById("rankingVisibilitySelect");
+const toggleRankingButton = document.getElementById("toggleRankingButton");
 const resultTitle = document.getElementById("resultTitle");
 const episodeList = document.getElementById("episodeList");
 const resultCount = document.getElementById("resultCount");
 const castSelectionNotice = document.getElementById("castSelectionNotice");
 const episodeResultsCollapsible = document.getElementById("episodeResultsCollapsible");
-const episodeVisibilitySelect = document.getElementById("episodeVisibilitySelect");
+const toggleEpisodeListButton = document.getElementById("toggleEpisodeListButton");
 let isRankingVisible = false;
 let isEpisodeListVisible = false;
 let lastRenderHadFilter = false;
@@ -77,9 +77,7 @@ async function init() {
     resultCount.textContent = "";
     rankingList.innerHTML = "<li>ランキングを表示できませんでした</li>";
     episodeResultsCollapsible.classList.remove("hidden");
-    if (episodeVisibilitySelect) {
-      episodeVisibilitySelect.value = "show";
-    }
+    toggleEpisodeListButton.classList.add("hidden");
     console.error(error);
   }
 }
@@ -109,8 +107,8 @@ async function fetchEpisodes() {
 // 入力値変更イベントを登録
 function bindEvents() {
   sortSelect.addEventListener("change", render);
-  rankingVisibilitySelect?.addEventListener("change", onRankingVisibilityChange);
-  episodeVisibilitySelect?.addEventListener("change", onEpisodeVisibilityChange);
+  toggleRankingButton.addEventListener("click", toggleRankingVisibility);
+  toggleEpisodeListButton.addEventListener("click", toggleEpisodeListVisibility);
   resetFiltersButton.addEventListener("click", resetFilters);
 }
 
@@ -424,9 +422,7 @@ function renderRankingSection(ranking, keyword, hideRanking) {
   renderRanking(ranking);
   renderRankingTitle(keyword);
   rankingList.classList.toggle("hidden", !isRankingVisible);
-  if (rankingVisibilitySelect) {
-    rankingVisibilitySelect.value = isRankingVisible ? "show" : "hide";
-  }
+  toggleRankingButton.textContent = isRankingVisible ? "閉じる" : "表示する";
 }
 
 function renderResultTitle(isAndMode, hasFilter) {
@@ -450,13 +446,13 @@ function renderResultCount(count, hasFilter) {
   resultCount.textContent = `${label}: ${count}件`;
 }
 
-function onRankingVisibilityChange(event) {
-  isRankingVisible = event.target.value === "show";
+function toggleRankingVisibility() {
+  isRankingVisible = !isRankingVisible;
   render();
 }
 
-function onEpisodeVisibilityChange(event) {
-  isEpisodeListVisible = event.target.value === "show";
+function toggleEpisodeListVisibility() {
+  isEpisodeListVisible = !isEpisodeListVisible;
   render();
 }
 
@@ -465,9 +461,7 @@ function updateEpisodeResultsVisibility() {
     return;
   }
   episodeResultsCollapsible.classList.toggle("hidden", !isEpisodeListVisible);
-  if (episodeVisibilitySelect) {
-    episodeVisibilitySelect.value = isEpisodeListVisible ? "show" : "hide";
-  }
+  toggleEpisodeListButton.textContent = isEpisodeListVisible ? "閉じる" : "表示する";
 }
 
 function updateActiveQuickFilter() {
