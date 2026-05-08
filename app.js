@@ -41,6 +41,18 @@ const PRIORITY_CAST_FILTERS = [
 const OTHERS_FILTER_KEY = "__others__";
 const MAX_AND_CAST_SELECTION = 5;
 const UNIT_FILTERS = [
+  {
+    key: "kuuka",
+    label: "クーカー",
+    color: "linear-gradient(90deg, #5bc0de 0 50%, #f39c12 50% 100%)",
+    members: ["伊達さゆり", "Liyuu"]
+  },
+  {
+    key: "tomakanote",
+    label: "トマカノーテ",
+    color: "linear-gradient(90deg, #22c55e 0 33.333%, #f39c12 33.333% 66.666%, #a855f7 66.666% 100%)",
+    members: ["伊達さゆり", "結那", "坂倉花"]
+  },
   { key: "catchu", label: "CatChu!", color: "#ef4444", members: ["伊達さゆり", "ペイトン尚未", "薮島朱音"] },
   { key: "kaleidoscore", label: "KALEIDOSCORE", color: "#3b82f6", members: ["Liyuu", "青山なぎさ", "結那"] },
   { key: "syncri5e", label: "5yncri5e!", color: "#facc15", members: ["岬なこ", "鈴原希実", "大熊和奏", "絵森彩", "坂倉花"] },
@@ -204,6 +216,9 @@ function handleQuickFilterClick(filterKey) {
 // 画面の再描画を1つの関数にまとめる
 function render() {
   const hasFilter = isAnyFilterActive();
+  if (!lastRenderHadFilter && hasFilter) {
+    isEpisodeListVisible = true;
+  }
   if (lastRenderHadFilter && !hasFilter) {
     isEpisodeListVisible = false;
   }
@@ -228,7 +243,7 @@ function render() {
   updateActiveUnitFilter();
   updateResetButtonVisibility();
   updateCastSelectionNotice();
-  updateEpisodeResultsVisibility(hasFilter);
+  updateEpisodeResultsVisibility();
 }
 
 // 出演者（メインMC + ゲスト）の部分一致検索
@@ -406,6 +421,8 @@ function renderRankingSection(ranking, keyword, hideRanking) {
   rankingSection.classList.remove("hidden");
   renderRanking(ranking);
   renderRankingTitle(keyword);
+  rankingList.classList.toggle("hidden", !isRankingVisible);
+  toggleRankingButton.textContent = isRankingVisible ? "閉じる" : "表示する";
 }
 
 function renderResultTitle(isAndMode, hasFilter) {
@@ -431,8 +448,7 @@ function renderResultCount(count, hasFilter) {
 
 function toggleRankingVisibility() {
   isRankingVisible = !isRankingVisible;
-  rankingList.classList.toggle("hidden", !isRankingVisible);
-  toggleRankingButton.textContent = isRankingVisible ? "閉じる" : "表示する";
+  render();
 }
 
 function toggleEpisodeListVisibility() {
@@ -440,16 +456,10 @@ function toggleEpisodeListVisibility() {
   render();
 }
 
-function updateEpisodeResultsVisibility(hasFilter) {
-  if (!episodeResultsCollapsible || !toggleEpisodeListButton) {
+function updateEpisodeResultsVisibility() {
+  if (!episodeResultsCollapsible) {
     return;
   }
-  if (hasFilter) {
-    episodeResultsCollapsible.classList.remove("hidden");
-    toggleEpisodeListButton.classList.add("hidden");
-    return;
-  }
-  toggleEpisodeListButton.classList.remove("hidden");
   episodeResultsCollapsible.classList.toggle("hidden", !isEpisodeListVisible);
   toggleEpisodeListButton.textContent = isEpisodeListVisible ? "閉じる" : "表示する";
 }
