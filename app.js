@@ -41,6 +41,18 @@ const PRIORITY_CAST_FILTERS = [
 const OTHERS_FILTER_KEY = "__others__";
 const MAX_AND_CAST_SELECTION = 5;
 const UNIT_FILTERS = [
+  {
+    key: "kuuka",
+    label: "クーカー",
+    color: "linear-gradient(90deg, #f39c12 0 50%, #5bc0de 50% 100%)",
+    members: ["伊達さゆり", "Liyuu"]
+  },
+  {
+    key: "tomakanote",
+    label: "トマカノーテ",
+    color: "linear-gradient(90deg, #f39c12 0 33.333%, #a855f7 33.333% 66.666%, #22c55e 66.666% 100%)",
+    members: ["伊達さゆり", "結那", "坂倉花"]
+  },
   { key: "catchu", label: "CatChu!", color: "#ef4444", members: ["伊達さゆり", "ペイトン尚未", "薮島朱音"] },
   { key: "kaleidoscore", label: "KALEIDOSCORE", color: "#3b82f6", members: ["Liyuu", "青山なぎさ", "結那"] },
   { key: "syncri5e", label: "5yncri5e!", color: "#facc15", members: ["岬なこ", "鈴原希実", "大熊和奏", "絵森彩", "坂倉花"] },
