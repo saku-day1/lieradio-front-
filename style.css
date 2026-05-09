@@ -48,7 +48,7 @@ body {
 
 .feature-list li {
   color: var(--muted);
-  font-size: 0.82rem;
+  font-size: 0.9rem;
   display: flex;
   align-items: center;
 }
