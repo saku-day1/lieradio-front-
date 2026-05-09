@@ -376,6 +376,9 @@ function sortEpisodes(episodes, sortOrder) {
 function buildRanking(episodes, keyword = "") {
   const excludedNames = getExcludedRankingNames(keyword);
   const countMap = episodes.reduce((acc, episode) => {
+    if (isCompilationTitle(episode.title)) {
+      return acc;
+    }
     episode.castMembers.forEach((member) => {
       if (excludedNames.has(member)) {
         return;
@@ -446,7 +449,7 @@ function renderEpisodeList(episodes, isAndMode = false, favorites = new Set(), w
         : "";
 
       const castBadgesHtml = renderCastBadgesHtml(castMembers);
-      const unitBadgesHtml = renderUnitBadgesHtml(castMembers);
+      const unitBadgesHtml = isCompilationTitle(episode.title) ? "" : renderUnitBadgesHtml(castMembers);
       const favBtn = videoId
         ? `<button type="button" class="fav-button${isFav ? " is-fav" : ""}" data-video-id="${videoId}" aria-label="${isFav ? "お気に入りを解除" : "お気に入りに追加"}" aria-pressed="${isFav}">${isFav ? "♥" : "♡"}</button>`
         : "";
@@ -562,6 +565,10 @@ function formatEpisodeHeading(displayedNumber, rawTitle) {
 
 function isPublicRecordingTitle(title) {
   return /公開録音|公録/.test(title);
+}
+
+function isCompilationTitle(title) {
+  return /総集編/.test(String(title || ""));
 }
 
 function renderRanking(ranking) {
