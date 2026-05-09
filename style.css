@@ -90,18 +90,50 @@ body {
   font-size: 0.9rem;
 }
 
-.cast-quick-filters {
+.cast-quick-filters,
+.unit-quick-filters {
   margin-top: 10px;
+}
+
+.filter-group-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.filter-group-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--muted);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.unit-more-toggle {
+  background: none;
+  border: none;
+  color: var(--accent);
+  font-size: 0.78rem;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+.unit-more-toggle:hover {
+  text-decoration: underline;
+}
+
+.cast-buttons-wrap,
+.unit-buttons-wrap,
+.unit-more-wrap {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
 }
 
-.unit-quick-filters {
-  margin-top: 10px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+.unit-more-wrap {
+  margin-top: 8px;
 }
 
 .favorites-filter-button {

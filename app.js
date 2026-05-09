@@ -65,6 +65,7 @@ const UNIT_FILTERS = [
 ];
 const FAVORITES_KEY = "lieradio_favorites";
 let isFavoritesFilterActive = false;
+let isUnitSectionExpanded = false;
 
 // ページ初期化
 init();
@@ -132,7 +133,7 @@ function isAnyFilterActive() {
 }
 
 function renderCastQuickFilters() {
-  castQuickFilters.innerHTML = PRIORITY_CAST_FILTERS.map((item) => `
+  const buttonsHtml = PRIORITY_CAST_FILTERS.map((item) => `
     <button
       type="button"
       class="cast-filter-button"
@@ -142,6 +143,13 @@ function renderCastQuickFilters() {
       ${item.name}
     </button>
   `).join("");
+
+  castQuickFilters.innerHTML = `
+    <div class="filter-group-header">
+      <span class="filter-group-label">Liella!</span>
+    </div>
+    <div class="cast-buttons-wrap">${buttonsHtml}</div>
+  `;
 
   castQuickFilters.querySelectorAll(".cast-filter-button").forEach((button) => {
     button.addEventListener("click", () => {
@@ -153,16 +161,33 @@ function renderCastQuickFilters() {
 }
 
 function renderUnitQuickFilters() {
-  unitQuickFilters.innerHTML = UNIT_FILTERS.map((unit) => `
+  const PINNED_KEY = "yuisaku";
+  const pinned = UNIT_FILTERS.filter((u) => u.key === PINNED_KEY);
+  const rest = UNIT_FILTERS.filter((u) => u.key !== PINNED_KEY);
+
+  const makeBtn = (unit) => `
     <button
       type="button"
       class="unit-filter-button"
       data-unit-key="${unit.key}"
       style="--unit-color: ${unit.color};"
-    >
-      ${unit.label}
-    </button>
-  `).join("");
+    >${unit.label}</button>
+  `;
+
+  unitQuickFilters.innerHTML = `
+    <div class="filter-group-header">
+      <span class="filter-group-label">ユニット / グループ</span>
+      <button type="button" class="unit-more-toggle" id="unitMoreToggle">
+        ${isUnitSectionExpanded ? "閉じる ▴" : "もっと見る ▾"}
+      </button>
+    </div>
+    <div class="unit-buttons-wrap">
+      ${pinned.map(makeBtn).join("")}
+    </div>
+    <div class="unit-more-wrap${isUnitSectionExpanded ? "" : " hidden"}">
+      ${rest.map(makeBtn).join("")}
+    </div>
+  `;
 
   unitQuickFilters.querySelectorAll(".unit-filter-button").forEach((button) => {
     button.addEventListener("click", () => {
@@ -172,6 +197,12 @@ function renderUnitQuickFilters() {
       andFilterNames = [];
       render();
     });
+  });
+
+  document.getElementById("unitMoreToggle")?.addEventListener("click", () => {
+    isUnitSectionExpanded = !isUnitSectionExpanded;
+    renderUnitQuickFilters();
+    updateActiveUnitFilter();
   });
 }
 
