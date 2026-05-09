@@ -133,7 +133,17 @@ function isAnyFilterActive() {
 }
 
 function renderCastQuickFilters() {
-  const buttonsHtml = PRIORITY_CAST_FILTERS.map((item) => `
+  const yuisaku = UNIT_FILTERS.find((u) => u.key === "yuisaku");
+  const yuisakuBtn = yuisaku ? `
+    <button
+      type="button"
+      class="unit-filter-button"
+      data-unit-key="${yuisaku.key}"
+      style="--unit-color: ${yuisaku.color};"
+    >${yuisaku.label}</button>
+  ` : "";
+
+  const castButtonsHtml = PRIORITY_CAST_FILTERS.map((item) => `
     <button
       type="button"
       class="cast-filter-button"
@@ -145,10 +155,7 @@ function renderCastQuickFilters() {
   `).join("");
 
   castQuickFilters.innerHTML = `
-    <div class="filter-group-header">
-      <span class="filter-group-label">Liella!</span>
-    </div>
-    <div class="cast-buttons-wrap">${buttonsHtml}</div>
+    <div class="cast-buttons-wrap">${castButtonsHtml}${yuisakuBtn}</div>
   `;
 
   castQuickFilters.querySelectorAll(".cast-filter-button").forEach((button) => {
@@ -158,12 +165,20 @@ function renderCastQuickFilters() {
       render();
     });
   });
+
+  castQuickFilters.querySelectorAll(".unit-filter-button").forEach((button) => {
+    button.addEventListener("click", () => {
+      const selected = button.dataset.unitKey || "";
+      activeUnitFilterKey = activeUnitFilterKey === selected ? "" : selected;
+      quickFilterKeyword = "";
+      andFilterNames = [];
+      render();
+    });
+  });
 }
 
 function renderUnitQuickFilters() {
-  const PINNED_KEY = "yuisaku";
-  const pinned = UNIT_FILTERS.filter((u) => u.key === PINNED_KEY);
-  const rest = UNIT_FILTERS.filter((u) => u.key !== PINNED_KEY);
+  const units = UNIT_FILTERS.filter((u) => u.key !== "yuisaku");
 
   const makeBtn = (unit) => `
     <button
@@ -181,11 +196,8 @@ function renderUnitQuickFilters() {
         ${isUnitSectionExpanded ? "閉じる ▴" : "もっと見る ▾"}
       </button>
     </div>
-    <div class="unit-buttons-wrap">
-      ${pinned.map(makeBtn).join("")}
-    </div>
     <div class="unit-more-wrap${isUnitSectionExpanded ? "" : " hidden"}">
-      ${rest.map(makeBtn).join("")}
+      ${units.map(makeBtn).join("")}
     </div>
   `;
 
@@ -575,10 +587,12 @@ function updateActiveQuickFilter() {
 
 function updateActiveUnitFilter() {
   const shouldDisable = andFilterNames.length > 0;
-  unitQuickFilters.querySelectorAll(".unit-filter-button").forEach((button) => {
-    button.classList.toggle("is-active", button.dataset.unitKey === activeUnitFilterKey);
-    button.disabled = shouldDisable;
-    button.classList.toggle("is-disabled", shouldDisable);
+  [castQuickFilters, unitQuickFilters].forEach((container) => {
+    container.querySelectorAll(".unit-filter-button").forEach((button) => {
+      button.classList.toggle("is-active", button.dataset.unitKey === activeUnitFilterKey);
+      button.disabled = shouldDisable;
+      button.classList.toggle("is-disabled", shouldDisable);
+    });
   });
 }
 
