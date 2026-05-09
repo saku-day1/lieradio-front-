@@ -380,7 +380,7 @@ function buildRanking(episodes, keyword = "") {
       return acc;
     }
     episode.castMembers.forEach((member) => {
-      if (excludedNames.has(member)) {
+      if (excludedNames.has(member) || member === "出演者情報未設定") {
         return;
       }
       acc[member] = (acc[member] || 0) + 1;
