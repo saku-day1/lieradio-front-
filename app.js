@@ -448,7 +448,7 @@ function renderEpisodeList(episodes, isAndMode = false, favorites = new Set(), w
         `
         : "";
 
-      const castBadgesHtml = renderCastBadgesHtml(castMembers);
+      const castBadgesHtml = isCompilationTitle(episode.title) ? "" : renderCastBadgesHtml(castMembers);
       const unitBadgesHtml = isCompilationTitle(episode.title) ? "" : renderUnitBadgesHtml(castMembers);
       const favBtn = videoId
         ? `<button type="button" class="fav-button${isFav ? " is-fav" : ""}" data-video-id="${videoId}" aria-label="${isFav ? "お気に入りを解除" : "お気に入りに追加"}" aria-pressed="${isFav}">${isFav ? "♥" : "♡"}</button>`
@@ -539,8 +539,8 @@ function formatEpisodeHeading(displayedNumber, rawTitle) {
     return `第${displayedNumber}回`;
   }
 
-  // 公開録音回は先頭に回数を付与せず、タイトルをそのまま表示する。
-  if (isPublicRecordingTitle(title)) {
+  // 公開録音回・その他の動画（耐久・総集編）は先頭に回数を付与せず、タイトルをそのまま表示する。
+  if (isPublicRecordingTitle(title) || isOtherVideoTitle(title)) {
     return title;
   }
 
@@ -569,6 +569,10 @@ function isPublicRecordingTitle(title) {
 
 function isCompilationTitle(title) {
   return /総集編/.test(String(title || ""));
+}
+
+function isOtherVideoTitle(title) {
+  return OTHER_VIDEO_TITLE_KEYWORDS.some((kw) => String(title || "").includes(kw));
 }
 
 function renderRanking(ranking) {
