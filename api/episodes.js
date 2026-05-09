@@ -273,8 +273,9 @@ function normalizeEpisodes(episodes) {
   // 公開日の古い順で回番号を振り直す（第1回が一番古い想定）
   return episodes
     .filter((episode) => {
+      // 耐久・総集編はキャスト情報がなくてもフロントの「その他の動画」フィルタで表示するため含める
       if (shouldExcludeFromAggregation(episode.title)) {
-        return false;
+        return true;
       }
       if (episode.castMembers.length === 0) {
         return false;

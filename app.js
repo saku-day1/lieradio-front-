@@ -21,12 +21,17 @@ const toggleEpisodeListButton = document.getElementById("toggleEpisodeListButton
 const favoritesFilterButton = document.getElementById("favoritesFilterButton");
 const watchedFilterButton = document.getElementById("watchedFilterButton");
 const unwatchedFilterButton = document.getElementById("unwatchedFilterButton");
+const otherVideoFilterButton = document.getElementById("otherVideoFilterButton");
 let isRankingVisible = false;
 let isEpisodeListVisible = false;
 let lastRenderHadFilter = false;
 let quickFilterKeyword = "";
 let andFilterNames = [];
 let activeUnitFilterKey = "";
+let isOtherVideoFilterActive = false;
+
+// タイトルに「総集編」または「耐久」を含む動画をその他の動画フィルタで表示する
+const OTHER_VIDEO_TITLE_KEYWORDS = ["総集編", "耐久"];
 
 const PRIORITY_CAST_FILTERS = [
   { name: "伊達さゆり", color: "#f39c12" }, // オレンジ
@@ -137,6 +142,12 @@ function bindEvents() {
       render();
     });
   }
+  if (otherVideoFilterButton) {
+    otherVideoFilterButton.addEventListener("click", () => {
+      isOtherVideoFilterActive = !isOtherVideoFilterActive;
+      render();
+    });
+  }
 }
 
 function isAnyFilterActive() {
@@ -145,7 +156,8 @@ function isAnyFilterActive() {
     Boolean(quickFilterKeyword) ||
     Boolean(activeUnitFilterKey) ||
     isFavoritesFilterActive ||
-    Boolean(watchedFilterMode)
+    Boolean(watchedFilterMode) ||
+    isOtherVideoFilterActive
   );
 }
 
@@ -266,12 +278,12 @@ function render() {
   const keyword = quickFilterKeyword;
   const isAndMode = andFilterNames.length >= 2;
   const isUnitMode = Boolean(activeUnitFilterKey);
-  const hideRanking = isAndMode || isUnitMode;
+  const hideRanking = isAndMode || isUnitMode || isOtherVideoFilterActive;
   const sortOrder = sortSelect.value;
 
   const favorites = loadFavorites();
   const watched = loadWatched();
-  const filteredEpisodes = filterEpisodes(allEpisodes, keyword, andFilterNames, activeUnitFilterKey, isFavoritesFilterActive, favorites, watchedFilterMode, watched);
+  const filteredEpisodes = filterEpisodes(allEpisodes, keyword, andFilterNames, activeUnitFilterKey, isFavoritesFilterActive, favorites, watchedFilterMode, watched, isOtherVideoFilterActive);
   const sortedEpisodes = sortEpisodes(filteredEpisodes, sortOrder);
   const ranking = buildRanking(filteredEpisodes, keyword);
 
@@ -286,11 +298,12 @@ function render() {
   updateEpisodeResultsVisibility();
   updateFavoritesFilterButton();
   updateWatchedFilterButtons();
+  updateOtherVideoFilterButton();
 }
 
 // 出演者（メインMC + ゲスト）の部分一致検索
 // APIデータに castMembers が無い場合は mainCast + guests を結合して扱う
-function filterEpisodes(episodes, keyword, andNames = [], unitKey = "", favoritesOnly = false, favorites = new Set(), watchedMode = "", watched = new Set()) {
+function filterEpisodes(episodes, keyword, andNames = [], unitKey = "", favoritesOnly = false, favorites = new Set(), watchedMode = "", watched = new Set(), otherVideoOnly = false) {
   let result = episodes.map((episode) => ({
     ...episode,
     castMembers: getAllCastMembers(episode)
@@ -312,6 +325,13 @@ function filterEpisodes(episodes, keyword, andNames = [], unitKey = "", favorite
     result = result.filter((episode) => {
       const videoId = extractYoutubeVideoId(episode.youtubeUrl);
       return !videoId || !watched.has(videoId);
+    });
+  }
+
+  if (otherVideoOnly) {
+    result = result.filter((episode) => {
+      const title = String(episode.title || "");
+      return OTHER_VIDEO_TITLE_KEYWORDS.some((kw) => title.includes(kw));
     });
   }
 
@@ -356,8 +376,11 @@ function sortEpisodes(episodes, sortOrder) {
 function buildRanking(episodes, keyword = "") {
   const excludedNames = getExcludedRankingNames(keyword);
   const countMap = episodes.reduce((acc, episode) => {
+    if (isCompilationTitle(episode.title)) {
+      return acc;
+    }
     episode.castMembers.forEach((member) => {
-      if (excludedNames.has(member)) {
+      if (excludedNames.has(member) || member === "出演者情報未設定") {
         return;
       }
       acc[member] = (acc[member] || 0) + 1;
@@ -425,8 +448,8 @@ function renderEpisodeList(episodes, isAndMode = false, favorites = new Set(), w
         `
         : "";
 
-      const castBadgesHtml = renderCastBadgesHtml(castMembers);
-      const unitBadgesHtml = renderUnitBadgesHtml(castMembers);
+      const castBadgesHtml = isCompilationTitle(episode.title) ? "" : renderCastBadgesHtml(castMembers);
+      const unitBadgesHtml = isCompilationTitle(episode.title) ? "" : renderUnitBadgesHtml(castMembers);
       const favBtn = videoId
         ? `<button type="button" class="fav-button${isFav ? " is-fav" : ""}" data-video-id="${videoId}" aria-label="${isFav ? "お気に入りを解除" : "お気に入りに追加"}" aria-pressed="${isFav}">${isFav ? "♥" : "♡"}</button>`
         : "";
@@ -516,8 +539,8 @@ function formatEpisodeHeading(displayedNumber, rawTitle) {
     return `第${displayedNumber}回`;
   }
 
-  // 公開録音回は先頭に回数を付与せず、タイトルをそのまま表示する。
-  if (isPublicRecordingTitle(title)) {
+  // 公開録音回・その他の動画（耐久・総集編）は先頭に回数を付与せず、タイトルをそのまま表示する。
+  if (isPublicRecordingTitle(title) || isOtherVideoTitle(title)) {
     return title;
   }
 
@@ -542,6 +565,14 @@ function formatEpisodeHeading(displayedNumber, rawTitle) {
 
 function isPublicRecordingTitle(title) {
   return /公開録音|公録/.test(title);
+}
+
+function isCompilationTitle(title) {
+  return /総集編/.test(String(title || ""));
+}
+
+function isOtherVideoTitle(title) {
+  return OTHER_VIDEO_TITLE_KEYWORDS.some((kw) => String(title || "").includes(kw));
 }
 
 function renderRanking(ranking) {
@@ -588,6 +619,10 @@ function renderResultTitle(isAndMode, hasFilter) {
   }
   if (isFavoritesFilterActive) {
     resultTitle.textContent = "お気に入りの放送回";
+    return;
+  }
+  if (isOtherVideoFilterActive) {
+    resultTitle.textContent = "その他の動画（総集編・耐久）";
     return;
   }
   resultTitle.textContent = "検索結果";
@@ -670,12 +705,19 @@ function updateWatchedFilterButtons() {
   }
 }
 
+function updateOtherVideoFilterButton() {
+  if (!otherVideoFilterButton) return;
+  otherVideoFilterButton.classList.toggle("is-active", isOtherVideoFilterActive);
+  otherVideoFilterButton.textContent = isOtherVideoFilterActive ? "📼 その他の動画 表示中" : "📼 その他の動画";
+}
+
 function resetFilters() {
   andFilterNames = [];
   quickFilterKeyword = "";
   activeUnitFilterKey = "";
   isFavoritesFilterActive = false;
   watchedFilterMode = "";
+  isOtherVideoFilterActive = false;
   render();
 }
 
