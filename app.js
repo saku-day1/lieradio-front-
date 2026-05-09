@@ -21,12 +21,17 @@ const toggleEpisodeListButton = document.getElementById("toggleEpisodeListButton
 const favoritesFilterButton = document.getElementById("favoritesFilterButton");
 const watchedFilterButton = document.getElementById("watchedFilterButton");
 const unwatchedFilterButton = document.getElementById("unwatchedFilterButton");
+const otherVideoFilterButton = document.getElementById("otherVideoFilterButton");
 let isRankingVisible = false;
 let isEpisodeListVisible = false;
 let lastRenderHadFilter = false;
 let quickFilterKeyword = "";
 let andFilterNames = [];
 let activeUnitFilterKey = "";
+let isOtherVideoFilterActive = false;
+
+// タイトルに「総集編」または「耐久」を含む動画をその他の動画フィルタで表示する
+const OTHER_VIDEO_TITLE_KEYWORDS = ["総集編", "耐久"];
 
 const PRIORITY_CAST_FILTERS = [
   { name: "伊達さゆり", color: "#f39c12" }, // オレンジ
@@ -137,6 +142,12 @@ function bindEvents() {
       render();
     });
   }
+  if (otherVideoFilterButton) {
+    otherVideoFilterButton.addEventListener("click", () => {
+      isOtherVideoFilterActive = !isOtherVideoFilterActive;
+      render();
+    });
+  }
 }
 
 function isAnyFilterActive() {
@@ -145,7 +156,8 @@ function isAnyFilterActive() {
     Boolean(quickFilterKeyword) ||
     Boolean(activeUnitFilterKey) ||
     isFavoritesFilterActive ||
-    Boolean(watchedFilterMode)
+    Boolean(watchedFilterMode) ||
+    isOtherVideoFilterActive
   );
 }
 
@@ -271,7 +283,7 @@ function render() {
 
   const favorites = loadFavorites();
   const watched = loadWatched();
-  const filteredEpisodes = filterEpisodes(allEpisodes, keyword, andFilterNames, activeUnitFilterKey, isFavoritesFilterActive, favorites, watchedFilterMode, watched);
+  const filteredEpisodes = filterEpisodes(allEpisodes, keyword, andFilterNames, activeUnitFilterKey, isFavoritesFilterActive, favorites, watchedFilterMode, watched, isOtherVideoFilterActive);
   const sortedEpisodes = sortEpisodes(filteredEpisodes, sortOrder);
   const ranking = buildRanking(filteredEpisodes, keyword);
 
@@ -286,11 +298,12 @@ function render() {
   updateEpisodeResultsVisibility();
   updateFavoritesFilterButton();
   updateWatchedFilterButtons();
+  updateOtherVideoFilterButton();
 }
 
 // 出演者（メインMC + ゲスト）の部分一致検索
 // APIデータに castMembers が無い場合は mainCast + guests を結合して扱う
-function filterEpisodes(episodes, keyword, andNames = [], unitKey = "", favoritesOnly = false, favorites = new Set(), watchedMode = "", watched = new Set()) {
+function filterEpisodes(episodes, keyword, andNames = [], unitKey = "", favoritesOnly = false, favorites = new Set(), watchedMode = "", watched = new Set(), otherVideoOnly = false) {
   let result = episodes.map((episode) => ({
     ...episode,
     castMembers: getAllCastMembers(episode)
@@ -312,6 +325,13 @@ function filterEpisodes(episodes, keyword, andNames = [], unitKey = "", favorite
     result = result.filter((episode) => {
       const videoId = extractYoutubeVideoId(episode.youtubeUrl);
       return !videoId || !watched.has(videoId);
+    });
+  }
+
+  if (otherVideoOnly) {
+    result = result.filter((episode) => {
+      const title = String(episode.title || "");
+      return OTHER_VIDEO_TITLE_KEYWORDS.some((kw) => title.includes(kw));
     });
   }
 
@@ -590,6 +610,10 @@ function renderResultTitle(isAndMode, hasFilter) {
     resultTitle.textContent = "お気に入りの放送回";
     return;
   }
+  if (isOtherVideoFilterActive) {
+    resultTitle.textContent = "その他の動画（総集編・耐久）";
+    return;
+  }
   resultTitle.textContent = "検索結果";
 }
 
@@ -670,12 +694,19 @@ function updateWatchedFilterButtons() {
   }
 }
 
+function updateOtherVideoFilterButton() {
+  if (!otherVideoFilterButton) return;
+  otherVideoFilterButton.classList.toggle("is-active", isOtherVideoFilterActive);
+  otherVideoFilterButton.textContent = isOtherVideoFilterActive ? "📼 その他の動画 表示中" : "📼 その他の動画";
+}
+
 function resetFilters() {
   andFilterNames = [];
   quickFilterKeyword = "";
   activeUnitFilterKey = "";
   isFavoritesFilterActive = false;
   watchedFilterMode = "";
+  isOtherVideoFilterActive = false;
   render();
 }
 
