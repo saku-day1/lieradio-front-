@@ -77,6 +77,28 @@ body {
   gap: 8px;
 }
 
+.favorites-filter-button {
+  margin-top: 10px;
+  border: 1px solid #3a4661;
+  border-radius: 10px;
+  padding: 6px 14px;
+  color: var(--text);
+  background: #1f2937;
+  cursor: pointer;
+  font-size: 0.88rem;
+  transition: border-color 120ms ease, background 120ms ease;
+}
+
+.favorites-filter-button:hover {
+  border-color: #f472b6;
+}
+
+.favorites-filter-button.is-active {
+  background: #3b1535;
+  border-color: #f472b6;
+  color: #f9a8d4;
+}
+
 .reset-filters-button {
   margin-top: 10px;
   border: 1px solid #3a4661;
@@ -345,10 +367,66 @@ h2 {
   min-width: 0;
 }
 
+.episode-title-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.episode-title-row h3 {
+  margin: 0;
+  font-size: 1rem;
+  word-break: break-word;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
 .episode-item h3 {
   margin: 0 0 8px;
   font-size: 1rem;
   word-break: break-word;
+}
+
+.fav-button {
+  flex: 0 0 auto;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: #94a3b8;
+  padding: 0 2px;
+  line-height: 1;
+  transition: color 120ms ease, transform 120ms ease;
+}
+
+.fav-button:hover {
+  color: #f472b6;
+  transform: scale(1.2);
+}
+
+.fav-button.is-fav {
+  color: #f472b6;
+}
+
+.unit-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin: 4px 0 8px;
+}
+
+.unit-badge {
+  display: inline-block;
+  border-radius: 6px;
+  padding: 1px 8px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1.6;
+  color: #0f172a;
+  background: var(--unit-color, #475569);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  white-space: nowrap;
 }
 
 .meta {
