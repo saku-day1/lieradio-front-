@@ -286,15 +286,105 @@ h2 {
   background: #131a27;
 }
 
+.episode-item-layout {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.episode-thumb {
+  position: relative;
+  flex: 0 0 auto;
+  width: 200px;
+  aspect-ratio: 16 / 9;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #0b1220;
+  display: block;
+  text-decoration: none;
+  border: 1px solid transparent;
+  transition: border-color 120ms ease, transform 120ms ease;
+}
+
+.episode-thumb:hover,
+.episode-thumb:focus-visible {
+  border-color: var(--accent);
+  transform: translateY(-1px);
+  outline: none;
+}
+
+.episode-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.episode-thumb-play {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.4rem;
+  color: rgba(255, 255, 255, 0.92);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.55);
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 40%, rgba(0, 0, 0, 0.35));
+  opacity: 0.85;
+  transition: opacity 120ms ease;
+  pointer-events: none;
+}
+
+.episode-thumb:hover .episode-thumb-play,
+.episode-thumb:focus-visible .episode-thumb-play {
+  opacity: 1;
+}
+
+.episode-content {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
 .episode-item h3 {
   margin: 0 0 8px;
   font-size: 1rem;
+  word-break: break-word;
 }
 
 .meta {
   margin: 4px 0;
   color: var(--muted);
   font-size: 0.92rem;
+}
+
+.cast-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 6px 0 8px;
+}
+
+.cast-badge {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 2px 9px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.6;
+  color: #0f172a;
+  background: var(--cast-color, #475569);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  white-space: nowrap;
+}
+
+.cast-badge--others {
+  color: var(--text);
+  background: #475569;
+}
+
+.cast-fallback {
+  font-size: 0.85rem;
+  color: var(--muted);
 }
 
 .episode-item a {
@@ -306,6 +396,12 @@ h2 {
 
 .episode-item a:hover {
   text-decoration: underline;
+}
+
+/* サムネのリンクには下線アニメを付けない（カード内テキストリンクのみ対象にする） */
+.episode-thumb,
+.episode-thumb:hover {
+  text-decoration: none;
 }
 
 .empty-message {
@@ -336,6 +432,15 @@ h2 {
 }
 
 @media (max-width: 640px) {
+  .episode-item-layout {
+    flex-direction: column;
+  }
+
+  .episode-thumb {
+    width: 100%;
+  }
+
+
   #resultsSection .section-header {
     display: grid;
     grid-template-columns: minmax(0, 1fr);

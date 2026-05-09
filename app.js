@@ -341,19 +341,73 @@ function renderEpisodeList(episodes, isAndMode = false) {
 
   episodeList.innerHTML = episodes
     .map((episode) => {
-      const allCast = getAllCastMembers(episode).join(" / ");
+      const castMembers = getAllCastMembers(episode);
       const displayedNumber = episode.broadcastNumber ?? episode.episodeNumber;
       const titleText = isAndMode
         ? episode.title
         : formatEpisodeHeading(displayedNumber, episode.title);
+
+      const videoId = extractYoutubeVideoId(episode.youtubeUrl);
+      const thumbUrl = getThumbnailUrl(videoId);
+      const safeTitle = escapeHtml(titleText);
+      const safeYoutubeUrl = escapeHtml(episode.youtubeUrl || "");
+      const safePublishedAt = escapeHtml(episode.publishedAt || "");
+
+      const thumbHtml = thumbUrl
+        ? `
+          <a class="episode-thumb" href="${safeYoutubeUrl}" target="_blank" rel="noopener noreferrer" aria-label="YouTubeで「${safeTitle}」を見る">
+            <img
+              src="${thumbUrl}"
+              alt=""
+              loading="lazy"
+              decoding="async"
+              width="320"
+              height="180"
+            >
+            <span class="episode-thumb-play" aria-hidden="true">▶</span>
+          </a>
+        `
+        : "";
+
+      const castBadgesHtml = renderCastBadgesHtml(castMembers);
+
       return `
         <li class="episode-item">
-          <h3>${titleText}</h3>
-          <p class="meta">出演者: ${allCast}</p>
-          <p class="meta">公開日: ${episode.publishedAt}</p>
-          <a href="${episode.youtubeUrl}" target="_blank" rel="noopener noreferrer">YouTubeで見る</a>
+          <div class="episode-item-layout">
+            ${thumbHtml}
+            <div class="episode-content">
+              <h3>${safeTitle}</h3>
+              <div class="cast-badges" aria-label="出演者">${castBadgesHtml}</div>
+              <p class="meta">公開日: ${safePublishedAt}</p>
+              <a href="${safeYoutubeUrl}" target="_blank" rel="noopener noreferrer">YouTubeで見る</a>
+            </div>
+          </div>
         </li>
       `;
+    })
+    .join("");
+}
+
+// 出演者バッジ群のHTMLを生成する。プライオリティに含まれる人はその色、それ以外はグレー。
+function renderCastBadgesHtml(castMembers) {
+  if (!Array.isArray(castMembers) || castMembers.length === 0) {
+    return `<span class="cast-fallback">出演者情報未設定</span>`;
+  }
+
+  if (castMembers.length === 1 && castMembers[0] === "出演者情報未設定") {
+    return `<span class="cast-fallback">出演者情報未設定</span>`;
+  }
+
+  return castMembers
+    .map((name) => {
+      const safeName = escapeHtml(name);
+      const color = getCastColor(name);
+      if (color) {
+        // CSSのbackgroundに値を直接渡すため、念のためダブルクォートをエスケープしておく
+        const safeColor = String(color).replace(/"/g, "");
+        return `<span class="cast-badge" style="--cast-color: ${safeColor};">${safeName}</span>`;
+      }
+      return `<span class="cast-badge cast-badge--others">${safeName}</span>`;
     })
     .join("");
 }
@@ -536,4 +590,42 @@ function getAllCastMembers(episode) {
 
 function normalizeSearchText(text) {
   return String(text).replace(/\s+/g, "").toLowerCase();
+}
+
+// PRIORITY_CAST_FILTERS から名前 → 色のマップを一度だけ構築する
+const CAST_COLOR_MAP = PRIORITY_CAST_FILTERS.reduce((acc, item) => {
+  acc[item.name] = item.color;
+  return acc;
+}, {});
+
+// YouTubeのURLからvideoIdを取り出す。許可されている文字以外は弾く（XSS/混入対策）
+function extractYoutubeVideoId(url) {
+  if (typeof url !== "string") {
+    return "";
+  }
+  const match = url.match(/[?&]v=([A-Za-z0-9_-]{11})/);
+  return match ? match[1] : "";
+}
+
+// サムネイルURLを返す。videoIdが取れないときは空文字
+function getThumbnailUrl(videoId) {
+  if (!videoId) {
+    return "";
+  }
+  return `https://i.ytimg.com/vi/${videoId}/mqdefault.jpg`;
+}
+
+// 出演者バッジの背景色（PRIORITYに無い人はnull = グレーで描画）
+function getCastColor(name) {
+  return CAST_COLOR_MAP[name] || null;
+}
+
+// innerHTML経由で名前等を出すため、最低限のHTMLエスケープを行う
+function escapeHtml(text) {
+  return String(text)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
 }
