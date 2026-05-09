@@ -122,6 +122,7 @@ body {
 .cast-filter-button {
   border: 1px solid #3a4661;
   border-radius: 999px;
+  overflow: hidden;
   padding: 4px 10px;
   color: #0f172a;
   background: var(--cast-color, #141a25);
@@ -152,6 +153,7 @@ body {
 .unit-filter-button {
   border: 1px solid #3a4661;
   border-radius: 999px;
+  overflow: hidden;
   padding: 4px 10px;
   color: #0f172a;
   background: var(--unit-color, #334155);
