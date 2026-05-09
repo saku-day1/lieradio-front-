@@ -620,8 +620,16 @@ function toggleFavorite(videoId) {
   }
 }
 
-// PRIORITY_CAST_FILTERS から名前 → 色のマップを一度だけ構築する
-const CAST_COLOR_MAP = PRIORITY_CAST_FILTERS.reduce((acc, item) => {
+// ボタンは持たないがバッジに色を付けるメンバー
+const CAST_COLOR_EXTRAS = [
+  { name: "吉武千颯", color: "#fbbf24" }, // 黄色
+  { name: "相良茉優", color: "#facc15" }, // 黄色
+  { name: "田中ちえ美", color: "#f8fafc" }, // 白
+  { name: "結木ゆな", color: "#c084fc" }  // 紫
+];
+
+// PRIORITY_CAST_FILTERS + CAST_COLOR_EXTRAS から名前 → 色のマップを構築する
+const CAST_COLOR_MAP = [...PRIORITY_CAST_FILTERS, ...CAST_COLOR_EXTRAS].reduce((acc, item) => {
   acc[item.name] = item.color;
   return acc;
 }, {});
