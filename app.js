@@ -278,7 +278,7 @@ function render() {
   const keyword = quickFilterKeyword;
   const isAndMode = andFilterNames.length >= 2;
   const isUnitMode = Boolean(activeUnitFilterKey);
-  const hideRanking = isAndMode || isUnitMode;
+  const hideRanking = isAndMode || isUnitMode || isOtherVideoFilterActive;
   const sortOrder = sortSelect.value;
 
   const favorites = loadFavorites();
