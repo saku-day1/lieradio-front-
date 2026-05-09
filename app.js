@@ -18,6 +18,9 @@ const resultCount = document.getElementById("resultCount");
 const castSelectionNotice = document.getElementById("castSelectionNotice");
 const episodeResultsCollapsible = document.getElementById("episodeResultsCollapsible");
 const toggleEpisodeListButton = document.getElementById("toggleEpisodeListButton");
+const favoritesFilterButton = document.getElementById("favoritesFilterButton");
+const watchedFilterButton = document.getElementById("watchedFilterButton");
+const unwatchedFilterButton = document.getElementById("unwatchedFilterButton");
 let isRankingVisible = false;
 let isEpisodeListVisible = false;
 let lastRenderHadFilter = false;
@@ -38,19 +41,18 @@ const PRIORITY_CAST_FILTERS = [
   { name: "結那", color: "#a855f7" }, // 紫
   { name: "坂倉花", color: "#22c55e" } // 緑
 ];
-const OTHERS_FILTER_KEY = "__others__";
 const MAX_AND_CAST_SELECTION = 5;
 const UNIT_FILTERS = [
   {
     key: "kuuka",
     label: "クーカー",
-    color: "linear-gradient(90deg, #5bc0de 0 50%, #f39c12 50% 100%)",
+    color: "linear-gradient(90deg, #5bc0de 0 48%, #f39c12 52% 100%)",
     members: ["伊達さゆり", "Liyuu"]
   },
   {
     key: "tomakanote",
     label: "トマカノーテ",
-    color: "linear-gradient(90deg, #22c55e 0 33.333%, #f39c12 33.333% 66.666%, #a855f7 66.666% 100%)",
+    color: "linear-gradient(90deg, #22c55e 0 31.333%, #f39c12 35.333% 64.666%, #a855f7 68.666% 100%)",
     members: ["伊達さゆり", "結那", "坂倉花"]
   },
   { key: "catchu", label: "CatChu!", color: "#ef4444", members: ["伊達さゆり", "ペイトン尚未", "薮島朱音"] },
@@ -59,8 +61,15 @@ const UNIT_FILTERS = [
   { key: "team-kodomo", label: "チームこども", color: "#ef4444", members: ["伊達さゆり", "Liyuu", "鈴原希実", "絵森彩"] },
   { key: "team-sports", label: "チームスポーツ", color: "#3b82f6", members: ["岬なこ", "ペイトン尚未", "薮島朱音", "結那"] },
   { key: "team-midori", label: "チームみどり", color: "#22c55e", members: ["青山なぎさ", "大熊和奏", "坂倉花"] },
-  { key: "yuisaku", label: "ゆいさく", color: "#ff7eb6", members: ["結那", "坂倉花"] }
+  { key: "yuisaku", label: "ゆいさく", color: "#ff7eb6", members: ["結那", "坂倉花"] },
+  { key: "sunnypassion", label: "Sunny Passion", color: "#f59e0b", members: ["吉武千颯", "結木ゆな"] },
+  { key: "nijigasaki", label: "虹ヶ咲", color: "#fde047", members: ["相良茉優", "田中ちえ美"] }
 ];
+const FAVORITES_KEY = "lieradio_favorites";
+const WATCHED_KEY = "lieradio_watched";
+let isFavoritesFilterActive = false;
+let watchedFilterMode = ""; // "" | "watched" | "unwatched"
+let isUnitSectionExpanded = false;
 
 // ページ初期化
 init();
@@ -68,7 +77,7 @@ init();
 async function init() {
   try {
     allEpisodes = await fetchEpisodes();
-    renderCastQuickFilters(allEpisodes);
+    renderCastQuickFilters();
     renderUnitQuickFilters();
     bindEvents();
     render();
@@ -110,26 +119,48 @@ function bindEvents() {
   toggleRankingButton.addEventListener("click", toggleRankingVisibility);
   toggleEpisodeListButton.addEventListener("click", toggleEpisodeListVisibility);
   resetFiltersButton.addEventListener("click", resetFilters);
+  if (favoritesFilterButton) {
+    favoritesFilterButton.addEventListener("click", () => {
+      isFavoritesFilterActive = !isFavoritesFilterActive;
+      render();
+    });
+  }
+  if (watchedFilterButton) {
+    watchedFilterButton.addEventListener("click", () => {
+      watchedFilterMode = watchedFilterMode === "watched" ? "" : "watched";
+      render();
+    });
+  }
+  if (unwatchedFilterButton) {
+    unwatchedFilterButton.addEventListener("click", () => {
+      watchedFilterMode = watchedFilterMode === "unwatched" ? "" : "unwatched";
+      render();
+    });
+  }
 }
 
 function isAnyFilterActive() {
   return (
     andFilterNames.length > 0 ||
-    quickFilterKeyword === OTHERS_FILTER_KEY ||
-    Boolean(activeUnitFilterKey)
+    Boolean(quickFilterKeyword) ||
+    Boolean(activeUnitFilterKey) ||
+    isFavoritesFilterActive ||
+    Boolean(watchedFilterMode)
   );
 }
 
-function renderCastQuickFilters(episodes) {
-  const existingCastNames = new Set(
-    episodes.flatMap((episode) => getAllCastMembers(episode))
-  );
-  existingCastNames.delete("出演者情報未設定");
+function renderCastQuickFilters() {
+  const yuisaku = UNIT_FILTERS.find((u) => u.key === "yuisaku");
+  const yuisakuBtn = yuisaku ? `
+    <button
+      type="button"
+      class="unit-filter-button"
+      data-unit-key="${yuisaku.key}"
+      style="--unit-color: ${yuisaku.color};"
+    >${yuisaku.label}</button>
+  ` : "";
 
-  const priorityNames = new Set(PRIORITY_CAST_FILTERS.map((item) => item.name));
-  const hasOthers = [...existingCastNames].some((name) => !priorityNames.has(name));
-
-  const castButtons = PRIORITY_CAST_FILTERS.map((item) => `
+  const castButtonsHtml = PRIORITY_CAST_FILTERS.map((item) => `
     <button
       type="button"
       class="cast-filter-button"
@@ -138,17 +169,11 @@ function renderCastQuickFilters(episodes) {
     >
       ${item.name}
     </button>
-  `);
+  `).join("");
 
-  if (hasOthers) {
-    castButtons.push(`
-      <button type="button" class="cast-filter-button cast-filter-button-others" data-filter-key="${OTHERS_FILTER_KEY}">
-        その他
-      </button>
-    `);
-  }
-
-  castQuickFilters.innerHTML = castButtons.join("");
+  castQuickFilters.innerHTML = `
+    <div class="cast-buttons-wrap">${castButtonsHtml}${yuisakuBtn}</div>
+  `;
 
   castQuickFilters.querySelectorAll(".cast-filter-button").forEach((button) => {
     button.addEventListener("click", () => {
@@ -157,21 +182,8 @@ function renderCastQuickFilters(episodes) {
       render();
     });
   });
-}
 
-function renderUnitQuickFilters() {
-  unitQuickFilters.innerHTML = UNIT_FILTERS.map((unit) => `
-    <button
-      type="button"
-      class="unit-filter-button"
-      data-unit-key="${unit.key}"
-      style="--unit-color: ${unit.color};"
-    >
-      ${unit.label}
-    </button>
-  `).join("");
-
-  unitQuickFilters.querySelectorAll(".unit-filter-button").forEach((button) => {
+  castQuickFilters.querySelectorAll(".unit-filter-button").forEach((button) => {
     button.addEventListener("click", () => {
       const selected = button.dataset.unitKey || "";
       activeUnitFilterKey = activeUnitFilterKey === selected ? "" : selected;
@@ -182,25 +194,52 @@ function renderUnitQuickFilters() {
   });
 }
 
+function renderUnitQuickFilters() {
+  const units = UNIT_FILTERS.filter((u) => u.key !== "yuisaku");
+
+  const makeBtn = (unit) => `
+    <button
+      type="button"
+      class="unit-filter-button"
+      data-unit-key="${unit.key}"
+      style="--unit-color: ${unit.color};"
+    >${unit.label}</button>
+  `;
+
+  unitQuickFilters.innerHTML = `
+    <div class="filter-group-header">
+      <span class="filter-group-label">ユニット / グループ</span>
+      <button type="button" class="unit-more-toggle" id="unitMoreToggle">
+        ${isUnitSectionExpanded ? "閉じる ▴" : "もっと見る ▾"}
+      </button>
+    </div>
+    <div class="unit-more-wrap${isUnitSectionExpanded ? "" : " hidden"}">
+      ${units.map(makeBtn).join("")}
+    </div>
+  `;
+
+  unitQuickFilters.querySelectorAll(".unit-filter-button").forEach((button) => {
+    button.addEventListener("click", () => {
+      const selected = button.dataset.unitKey || "";
+      activeUnitFilterKey = activeUnitFilterKey === selected ? "" : selected;
+      quickFilterKeyword = "";
+      andFilterNames = [];
+      render();
+    });
+  });
+
+  document.getElementById("unitMoreToggle")?.addEventListener("click", () => {
+    isUnitSectionExpanded = !isUnitSectionExpanded;
+    renderUnitQuickFilters();
+    updateActiveUnitFilter();
+  });
+}
+
 function handleQuickFilterClick(filterKey) {
   if (!filterKey) {
     return;
   }
 
-  if (filterKey === OTHERS_FILTER_KEY) {
-    if (quickFilterKeyword === OTHERS_FILTER_KEY) {
-      quickFilterKeyword = "";
-      return;
-    }
-    andFilterNames = [];
-    quickFilterKeyword = OTHERS_FILTER_KEY;
-    activeUnitFilterKey = "";
-    return;
-  }
-
-  if (quickFilterKeyword === OTHERS_FILTER_KEY) {
-    quickFilterKeyword = "";
-  }
   activeUnitFilterKey = "";
 
   const existingIndex = andFilterNames.indexOf(filterKey);
@@ -227,15 +266,16 @@ function render() {
   const keyword = quickFilterKeyword;
   const isAndMode = andFilterNames.length >= 2;
   const isUnitMode = Boolean(activeUnitFilterKey);
-  const hideRanking =
-    isAndMode || isUnitMode || keyword === OTHERS_FILTER_KEY;
+  const hideRanking = isAndMode || isUnitMode;
   const sortOrder = sortSelect.value;
 
-  const filteredEpisodes = filterEpisodes(allEpisodes, keyword, andFilterNames, activeUnitFilterKey);
+  const favorites = loadFavorites();
+  const watched = loadWatched();
+  const filteredEpisodes = filterEpisodes(allEpisodes, keyword, andFilterNames, activeUnitFilterKey, isFavoritesFilterActive, favorites, watchedFilterMode, watched);
   const sortedEpisodes = sortEpisodes(filteredEpisodes, sortOrder);
   const ranking = buildRanking(filteredEpisodes, keyword);
 
-  renderEpisodeList(sortedEpisodes, isAndMode);
+  renderEpisodeList(sortedEpisodes, isAndMode, favorites, watched);
   renderRankingSection(ranking, keyword, hideRanking);
   renderResultTitle(isAndMode, hasFilter);
   renderResultCount(sortedEpisodes.length, hasFilter);
@@ -244,45 +284,59 @@ function render() {
   updateResetButtonVisibility();
   updateCastSelectionNotice();
   updateEpisodeResultsVisibility();
+  updateFavoritesFilterButton();
+  updateWatchedFilterButtons();
 }
 
 // 出演者（メインMC + ゲスト）の部分一致検索
 // APIデータに castMembers が無い場合は mainCast + guests を結合して扱う
-function filterEpisodes(episodes, keyword, andNames = [], unitKey = "") {
-  const normalizedEpisodes = episodes.map((episode) => ({
+function filterEpisodes(episodes, keyword, andNames = [], unitKey = "", favoritesOnly = false, favorites = new Set(), watchedMode = "", watched = new Set()) {
+  let result = episodes.map((episode) => ({
     ...episode,
     castMembers: getAllCastMembers(episode)
   }));
 
+  if (favoritesOnly) {
+    result = result.filter((episode) => {
+      const videoId = extractYoutubeVideoId(episode.youtubeUrl);
+      return videoId && favorites.has(videoId);
+    });
+  }
+
+  if (watchedMode === "watched") {
+    result = result.filter((episode) => {
+      const videoId = extractYoutubeVideoId(episode.youtubeUrl);
+      return videoId && watched.has(videoId);
+    });
+  } else if (watchedMode === "unwatched") {
+    result = result.filter((episode) => {
+      const videoId = extractYoutubeVideoId(episode.youtubeUrl);
+      return !videoId || !watched.has(videoId);
+    });
+  }
+
   if (unitKey) {
     const unit = UNIT_FILTERS.find((item) => item.key === unitKey);
     if (!unit) {
-      return normalizedEpisodes;
+      return result;
     }
-    return normalizedEpisodes.filter((episode) =>
+    return result.filter((episode) =>
       unit.members.every((member) => episode.castMembers.includes(member))
     );
   }
 
   if (andNames.length >= 2) {
-    return normalizedEpisodes.filter((episode) =>
+    return result.filter((episode) =>
       andNames.every((name) => episode.castMembers.includes(name))
     );
   }
 
   if (!keyword) {
-    return normalizedEpisodes;
-  }
-
-  if (keyword === OTHERS_FILTER_KEY) {
-    const priorityNames = new Set(PRIORITY_CAST_FILTERS.map((item) => item.name));
-    return normalizedEpisodes.filter((episode) =>
-      episode.castMembers.some((member) => !priorityNames.has(member))
-    );
+    return result;
   }
 
   const normalizedKeyword = normalizeSearchText(keyword);
-  return normalizedEpisodes.filter((episode) =>
+  return result.filter((episode) =>
     episode.castMembers.some((member) =>
       normalizeSearchText(member).includes(normalizedKeyword)
     )
@@ -317,11 +371,11 @@ function buildRanking(episodes, keyword = "") {
 }
 
 function getExcludedRankingNames(keyword) {
-  if (!keyword || keyword === OTHERS_FILTER_KEY) {
+  if (!keyword) {
     return new Set();
   }
 
-  if (quickFilterKeyword && quickFilterKeyword !== OTHERS_FILTER_KEY) {
+  if (quickFilterKeyword) {
     return new Set([quickFilterKeyword]);
   }
 
@@ -333,7 +387,7 @@ function getExcludedRankingNames(keyword) {
   return new Set(matched);
 }
 
-function renderEpisodeList(episodes, isAndMode = false) {
+function renderEpisodeList(episodes, isAndMode = false, favorites = new Set(), watched = new Set()) {
   if (episodes.length === 0) {
     episodeList.innerHTML = "<li class='empty-message'>該当する放送回がありません。</li>";
     return;
@@ -341,19 +395,117 @@ function renderEpisodeList(episodes, isAndMode = false) {
 
   episodeList.innerHTML = episodes
     .map((episode) => {
-      const allCast = getAllCastMembers(episode).join(" / ");
+      const castMembers = getAllCastMembers(episode);
       const displayedNumber = episode.broadcastNumber ?? episode.episodeNumber;
       const titleText = isAndMode
         ? episode.title
         : formatEpisodeHeading(displayedNumber, episode.title);
+
+      const videoId = extractYoutubeVideoId(episode.youtubeUrl);
+      const thumbUrl = getThumbnailUrl(videoId);
+      const safeTitle = escapeHtml(titleText);
+      const safeYoutubeUrl = escapeHtml(episode.youtubeUrl || "");
+      const safePublishedAt = escapeHtml(episode.publishedAt || "");
+      const isFav = videoId ? favorites.has(videoId) : false;
+      const isWatched = videoId ? watched.has(videoId) : false;
+
+      const thumbHtml = thumbUrl
+        ? `
+          <a class="episode-thumb" href="${safeYoutubeUrl}" target="_blank" rel="noopener noreferrer" aria-label="YouTubeで「${safeTitle}」を見る">
+            <img
+              src="${thumbUrl}"
+              alt=""
+              loading="lazy"
+              decoding="async"
+              width="320"
+              height="180"
+            >
+            <span class="episode-thumb-play" aria-hidden="true">▶</span>
+          </a>
+        `
+        : "";
+
+      const castBadgesHtml = renderCastBadgesHtml(castMembers);
+      const unitBadgesHtml = renderUnitBadgesHtml(castMembers);
+      const favBtn = videoId
+        ? `<button type="button" class="fav-button${isFav ? " is-fav" : ""}" data-video-id="${videoId}" aria-label="${isFav ? "お気に入りを解除" : "お気に入りに追加"}" aria-pressed="${isFav}">${isFav ? "♥" : "♡"}</button>`
+        : "";
+      const watchedBtn = videoId
+        ? `<button type="button" class="watched-button${isWatched ? " is-watched" : ""}" data-video-id="${videoId}" aria-label="${isWatched ? "視聴済みを解除" : "視聴済みにする"}" aria-pressed="${isWatched}">${isWatched ? "✓" : "○"}</button>`
+        : "";
+
       return `
         <li class="episode-item">
-          <h3>${titleText}</h3>
-          <p class="meta">出演者: ${allCast}</p>
-          <p class="meta">公開日: ${episode.publishedAt}</p>
-          <a href="${episode.youtubeUrl}" target="_blank" rel="noopener noreferrer">YouTubeで見る</a>
+          <div class="episode-item-layout">
+            ${thumbHtml}
+            <div class="episode-content">
+              <div class="episode-title-row">
+                <h3>${safeTitle}</h3>
+                ${watchedBtn}${favBtn}
+              </div>
+              <div class="cast-badges" aria-label="出演者">${castBadgesHtml}</div>
+              ${unitBadgesHtml ? `<div class="unit-badges" aria-label="ユニット">${unitBadgesHtml}</div>` : ""}
+              <p class="meta">公開日: ${safePublishedAt}</p>
+              <a href="${safeYoutubeUrl}" target="_blank" rel="noopener noreferrer">YouTubeで見る</a>
+            </div>
+          </div>
         </li>
       `;
+    })
+    .join("");
+
+  episodeList.querySelectorAll(".fav-button").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const videoId = btn.dataset.videoId;
+      if (!videoId) return;
+      toggleFavorite(videoId);
+      render();
+    });
+  });
+
+  episodeList.querySelectorAll(".watched-button").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const videoId = btn.dataset.videoId;
+      if (!videoId) return;
+      toggleWatched(videoId);
+      render();
+    });
+  });
+}
+
+// 出演者バッジ群のHTMLを生成する。プライオリティに含まれる人はその色、それ以外はグレー。
+function renderCastBadgesHtml(castMembers) {
+  if (!Array.isArray(castMembers) || castMembers.length === 0) {
+    return `<span class="cast-fallback">出演者情報未設定</span>`;
+  }
+
+  if (castMembers.length === 1 && castMembers[0] === "出演者情報未設定") {
+    return `<span class="cast-fallback">出演者情報未設定</span>`;
+  }
+
+  return castMembers
+    .map((name) => {
+      const safeName = escapeHtml(name);
+      const color = getCastColor(name);
+      if (color) {
+        // CSSのbackgroundに値を直接渡すため、念のためダブルクォートをエスケープしておく
+        const safeColor = String(color).replace(/"/g, "");
+        return `<span class="cast-badge" style="--cast-color: ${safeColor};">${safeName}</span>`;
+      }
+      return `<span class="cast-badge cast-badge--others">${safeName}</span>`;
+    })
+    .join("");
+}
+
+// 出演メンバーから全員揃っているユニットを検出してバッジHTMLを返す
+function renderUnitBadgesHtml(castMembers) {
+  const castSet = new Set(castMembers);
+  return UNIT_FILTERS
+    .filter((unit) => unit.members.every((m) => castSet.has(m)))
+    .map((unit) => {
+      const safeLabel = escapeHtml(unit.label);
+      const safeColor = String(unit.color).replace(/"/g, "");
+      return `<span class="unit-badge" style="--unit-color: ${safeColor};">${safeLabel}</span>`;
     })
     .join("");
 }
@@ -404,7 +556,7 @@ function renderRanking(ranking) {
 }
 
 function renderRankingTitle(keyword) {
-  if (!keyword || keyword === OTHERS_FILTER_KEY) {
+  if (!keyword) {
     rankingTitle.textContent = "出演回数ランキング";
     return;
   }
@@ -434,8 +586,8 @@ function renderResultTitle(isAndMode, hasFilter) {
     resultTitle.textContent = "検索に指定した出演者をすべて含む放送回（最大5人）";
     return;
   }
-  if (quickFilterKeyword === OTHERS_FILTER_KEY) {
-    resultTitle.textContent = "その他の出演者を含む回";
+  if (isFavoritesFilterActive) {
+    resultTitle.textContent = "お気に入りの放送回";
     return;
   }
   resultTitle.textContent = "検索結果";
@@ -465,22 +617,11 @@ function updateEpisodeResultsVisibility() {
 }
 
 function updateActiveQuickFilter() {
-  const isIndividualSelected = andFilterNames.length > 0;
   castQuickFilters.querySelectorAll(".cast-filter-button").forEach((button) => {
     const key = button.dataset.filterKey || "";
-    const isActive = key === OTHERS_FILTER_KEY
-      ? quickFilterKeyword === OTHERS_FILTER_KEY
-      : andFilterNames.includes(key);
-    const shouldDisableByLimit =
-      key !== OTHERS_FILTER_KEY &&
-      quickFilterKeyword !== OTHERS_FILTER_KEY &&
-      andFilterNames.length >= MAX_AND_CAST_SELECTION &&
-      !isActive;
-    const shouldDisableByIndividualSelection =
-      key === OTHERS_FILTER_KEY &&
-      isIndividualSelected &&
-      !isActive;
-    const shouldDisable = shouldDisableByLimit || shouldDisableByIndividualSelection;
+    const isActive = andFilterNames.includes(key);
+    const shouldDisable =
+      andFilterNames.length >= MAX_AND_CAST_SELECTION && !isActive;
 
     button.classList.toggle("is-active", isActive);
     button.disabled = shouldDisable;
@@ -490,17 +631,19 @@ function updateActiveQuickFilter() {
 
 function updateActiveUnitFilter() {
   const shouldDisable = andFilterNames.length > 0;
-  unitQuickFilters.querySelectorAll(".unit-filter-button").forEach((button) => {
-    button.classList.toggle("is-active", button.dataset.unitKey === activeUnitFilterKey);
-    button.disabled = shouldDisable;
-    button.classList.toggle("is-disabled", shouldDisable);
+  [castQuickFilters, unitQuickFilters].forEach((container) => {
+    container.querySelectorAll(".unit-filter-button").forEach((button) => {
+      button.classList.toggle("is-active", button.dataset.unitKey === activeUnitFilterKey);
+      button.disabled = shouldDisable;
+      button.classList.toggle("is-disabled", shouldDisable);
+    });
   });
 }
 
 function updateResetButtonVisibility() {
   const shouldShow =
     andFilterNames.length > 0 ||
-    quickFilterKeyword === OTHERS_FILTER_KEY ||
+    Boolean(quickFilterKeyword) ||
     Boolean(activeUnitFilterKey);
   resetFiltersButton.classList.toggle("hidden", !shouldShow);
 }
@@ -509,16 +652,30 @@ function updateCastSelectionNotice() {
   if (!castSelectionNotice) {
     return;
   }
-  const show =
-    quickFilterKeyword !== OTHERS_FILTER_KEY &&
-    andFilterNames.length >= MAX_AND_CAST_SELECTION;
-  castSelectionNotice.classList.toggle("hidden", !show);
+  castSelectionNotice.classList.toggle("hidden", andFilterNames.length < MAX_AND_CAST_SELECTION);
+}
+
+function updateFavoritesFilterButton() {
+  if (!favoritesFilterButton) return;
+  favoritesFilterButton.classList.toggle("is-active", isFavoritesFilterActive);
+  favoritesFilterButton.textContent = isFavoritesFilterActive ? "♥ お気に入り表示中" : "♡ お気に入り";
+}
+
+function updateWatchedFilterButtons() {
+  if (watchedFilterButton) {
+    watchedFilterButton.classList.toggle("is-active", watchedFilterMode === "watched");
+  }
+  if (unwatchedFilterButton) {
+    unwatchedFilterButton.classList.toggle("is-active", watchedFilterMode === "unwatched");
+  }
 }
 
 function resetFilters() {
   andFilterNames = [];
   quickFilterKeyword = "";
   activeUnitFilterKey = "";
+  isFavoritesFilterActive = false;
+  watchedFilterMode = "";
   render();
 }
 
@@ -536,4 +693,97 @@ function getAllCastMembers(episode) {
 
 function normalizeSearchText(text) {
   return String(text).replace(/\s+/g, "").toLowerCase();
+}
+
+// お気に入り: localStorageへの読み書き
+function loadFavorites() {
+  try {
+    const data = localStorage.getItem(FAVORITES_KEY);
+    return data ? new Set(JSON.parse(data)) : new Set();
+  } catch {
+    return new Set();
+  }
+}
+
+function loadWatched() {
+  try {
+    const data = localStorage.getItem(WATCHED_KEY);
+    return data ? new Set(JSON.parse(data)) : new Set();
+  } catch {
+    return new Set();
+  }
+}
+
+function toggleWatched(videoId) {
+  const watched = loadWatched();
+  if (watched.has(videoId)) {
+    watched.delete(videoId);
+  } else {
+    watched.add(videoId);
+  }
+  try {
+    localStorage.setItem(WATCHED_KEY, JSON.stringify([...watched]));
+  } catch {
+    // localStorage が使えない環境では無視
+  }
+}
+
+function toggleFavorite(videoId) {
+  const favorites = loadFavorites();
+  if (favorites.has(videoId)) {
+    favorites.delete(videoId);
+  } else {
+    favorites.add(videoId);
+  }
+  try {
+    localStorage.setItem(FAVORITES_KEY, JSON.stringify([...favorites]));
+  } catch {
+    // localStorage が使えない環境では無視
+  }
+}
+
+// ボタンは持たないがバッジに色を付けるメンバー
+const CAST_COLOR_EXTRAS = [
+  { name: "吉武千颯", color: "#fbbf24" }, // 黄色
+  { name: "相良茉優", color: "#facc15" }, // 黄色
+  { name: "田中ちえ美", color: "#f8fafc" }, // 白
+  { name: "結木ゆな", color: "#c084fc" }  // 紫
+];
+
+// PRIORITY_CAST_FILTERS + CAST_COLOR_EXTRAS から名前 → 色のマップを構築する
+const CAST_COLOR_MAP = [...PRIORITY_CAST_FILTERS, ...CAST_COLOR_EXTRAS].reduce((acc, item) => {
+  acc[item.name] = item.color;
+  return acc;
+}, {});
+
+// YouTubeのURLからvideoIdを取り出す。許可されている文字以外は弾く（XSS/混入対策）
+function extractYoutubeVideoId(url) {
+  if (typeof url !== "string") {
+    return "";
+  }
+  const match = url.match(/[?&]v=([A-Za-z0-9_-]{11})/);
+  return match ? match[1] : "";
+}
+
+// サムネイルURLを返す。videoIdが取れないときは空文字
+function getThumbnailUrl(videoId) {
+  if (!videoId) {
+    return "";
+  }
+  return `https://i.ytimg.com/vi/${videoId}/mqdefault.jpg`;
+}
+
+// 出演者バッジの背景色（PRIORITYに無い人はnull = グレーで描画）
+function getCastColor(name) {
+  return CAST_COLOR_MAP[name] || null;
+}
+
+// innerHTML経由で名前等を出すため、最低限のHTMLエスケープを行う
+function escapeHtml(text) {
+  return String(text)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
 }

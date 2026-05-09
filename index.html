@@ -9,22 +9,25 @@
 <body>
   <header class="site-header">
     <h1>リエラジ出演者検索</h1>
-    <p class="subtitle">
-      出演者・ユニットを選択して、リエラジの放送回を検索できます。<br>
-      出演者は最大5人まで指定でき、複数選択時は全員が出演している回を検索します。<br>
-      <br>
-      ユニットを選択した場合は、そのユニット内メンバーが全員出演している回を検索します。<br>
-      共演者ランキングは出演者を1人選択した場合のみ表示され、AND検索・ユニット検索・「その他」検索時は非表示です。
-    </p>
+    <p class="subtitle">あなたの好きな回を見つけよう！</p>
+    <ul class="feature-list">
+      <li>メンバー選択</li>
+      <li>ユニット検索</li>
+      <li>AND絞り込み（最大5人）</li>
+      <li>出演回数・共演者ランキング</li>
+      <li>♡ お気に入り / ✓ 視聴済み管理</li>
+    </ul>
   </header>
 
   <main class="container">
     <section class="controls card">
       <div class="control-group">
-        <label>出演者ボタンで検索</label>
         <div id="castQuickFilters" class="cast-quick-filters"></div>
         <p id="castSelectionNotice" class="selection-notice hidden">出演者は最大5人まで選択できます。</p>
         <div id="unitQuickFilters" class="unit-quick-filters"></div>
+        <button id="favoritesFilterButton" type="button" class="favorites-filter-button">♡ お気に入り</button>
+        <button id="watchedFilterButton" type="button" class="watched-filter-button">✓ 視聴済み</button>
+        <button id="unwatchedFilterButton" type="button" class="watched-filter-button">○ 未視聴</button>
         <button id="resetFiltersButton" type="button" class="reset-filters-button hidden">検索リセット</button>
       </div>
     </section>

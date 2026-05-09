@@ -31,9 +31,36 @@ body {
 }
 
 .subtitle {
-  margin-top: 6px;
+  margin: 6px 0 0;
   color: var(--accent-soft);
   font-size: 0.95rem;
+}
+
+.feature-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 0;
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+}
+
+.feature-list li {
+  color: var(--muted);
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+}
+
+.feature-list li::before {
+  content: "/";
+  margin: 0 8px;
+  opacity: 0.35;
+}
+
+.feature-list li:first-child::before {
+  display: none;
 }
 
 .container {
@@ -63,18 +90,94 @@ body {
   font-size: 0.9rem;
 }
 
-.cast-quick-filters {
+.cast-quick-filters,
+.unit-quick-filters {
   margin-top: 10px;
+}
+
+.filter-group-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.filter-group-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--muted);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.unit-more-toggle {
+  background: none;
+  border: none;
+  color: var(--accent);
+  font-size: 0.78rem;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+.unit-more-toggle:hover {
+  text-decoration: underline;
+}
+
+.cast-buttons-wrap,
+.unit-buttons-wrap,
+.unit-more-wrap {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
 }
 
-.unit-quick-filters {
+.unit-more-wrap {
+  margin-top: 8px;
+}
+
+.favorites-filter-button {
   margin-top: 10px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+  border: 1px solid #3a4661;
+  border-radius: 10px;
+  padding: 6px 14px;
+  color: var(--text);
+  background: #1f2937;
+  cursor: pointer;
+  font-size: 0.88rem;
+  transition: border-color 120ms ease, background 120ms ease;
+}
+
+.favorites-filter-button:hover {
+  border-color: #f472b6;
+}
+
+.favorites-filter-button.is-active {
+  background: #3b1535;
+  border-color: #f472b6;
+  color: #f9a8d4;
+}
+
+.watched-filter-button {
+  margin-top: 10px;
+  border: 1px solid #3a4661;
+  border-radius: 10px;
+  padding: 6px 14px;
+  color: var(--text);
+  background: #1f2937;
+  cursor: pointer;
+  font-size: 0.88rem;
+  transition: border-color 120ms ease, background 120ms ease;
+}
+
+.watched-filter-button:hover {
+  border-color: #4ade80;
+}
+
+.watched-filter-button.is-active {
+  background: #14332a;
+  border-color: #4ade80;
+  color: #86efac;
 }
 
 .reset-filters-button {
@@ -100,6 +203,7 @@ body {
 .cast-filter-button {
   border: 1px solid #3a4661;
   border-radius: 999px;
+  overflow: hidden;
   padding: 4px 10px;
   color: #0f172a;
   background: var(--cast-color, #141a25);
@@ -130,6 +234,7 @@ body {
 .unit-filter-button {
   border: 1px solid #3a4661;
   border-radius: 999px;
+  overflow: hidden;
   padding: 4px 10px;
   color: #0f172a;
   background: var(--unit-color, #334155);
@@ -286,15 +391,171 @@ h2 {
   background: #131a27;
 }
 
+.episode-item-layout {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.episode-thumb {
+  position: relative;
+  flex: 0 0 auto;
+  width: 200px;
+  aspect-ratio: 16 / 9;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #0b1220;
+  display: block;
+  text-decoration: none;
+  border: 1px solid transparent;
+  transition: border-color 120ms ease, transform 120ms ease;
+}
+
+.episode-thumb:hover,
+.episode-thumb:focus-visible {
+  border-color: var(--accent);
+  transform: translateY(-1px);
+  outline: none;
+}
+
+.episode-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.episode-thumb-play {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.4rem;
+  color: rgba(255, 255, 255, 0.92);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.55);
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 40%, rgba(0, 0, 0, 0.35));
+  opacity: 0.85;
+  transition: opacity 120ms ease;
+  pointer-events: none;
+}
+
+.episode-thumb:hover .episode-thumb-play,
+.episode-thumb:focus-visible .episode-thumb-play {
+  opacity: 1;
+}
+
+.episode-content {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.episode-title-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.episode-title-row h3 {
+  margin: 0;
+  font-size: 1rem;
+  word-break: break-word;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
 .episode-item h3 {
   margin: 0 0 8px;
   font-size: 1rem;
+  word-break: break-word;
+}
+
+.fav-button,
+.watched-button {
+  flex: 0 0 auto;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1rem;
+  color: #94a3b8;
+  padding: 0 2px;
+  line-height: 1;
+  transition: color 120ms ease, transform 120ms ease;
+}
+
+.fav-button:hover {
+  color: #f472b6;
+  transform: scale(1.2);
+}
+
+.fav-button.is-fav {
+  color: #f472b6;
+}
+
+.watched-button:hover {
+  color: #4ade80;
+  transform: scale(1.2);
+}
+
+.watched-button.is-watched {
+  color: #4ade80;
+}
+
+.unit-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin: 4px 0 8px;
+}
+
+.unit-badge {
+  display: inline-block;
+  border-radius: 6px;
+  padding: 1px 8px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1.6;
+  color: #0f172a;
+  background: var(--unit-color, #475569);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  white-space: nowrap;
 }
 
 .meta {
   margin: 4px 0;
   color: var(--muted);
   font-size: 0.92rem;
+}
+
+.cast-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 6px 0 8px;
+}
+
+.cast-badge {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 2px 9px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.6;
+  color: #0f172a;
+  background: var(--cast-color, #475569);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  white-space: nowrap;
+}
+
+.cast-badge--others {
+  color: var(--text);
+  background: #475569;
+}
+
+.cast-fallback {
+  font-size: 0.85rem;
+  color: var(--muted);
 }
 
 .episode-item a {
@@ -306,6 +567,12 @@ h2 {
 
 .episode-item a:hover {
   text-decoration: underline;
+}
+
+/* サムネのリンクには下線アニメを付けない（カード内テキストリンクのみ対象にする） */
+.episode-thumb,
+.episode-thumb:hover {
+  text-decoration: none;
 }
 
 .empty-message {
@@ -336,6 +603,15 @@ h2 {
 }
 
 @media (max-width: 640px) {
+  .episode-item-layout {
+    flex-direction: column;
+  }
+
+  .episode-thumb {
+    width: 100%;
+  }
+
+
   #resultsSection .section-header {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
