@@ -44,13 +44,13 @@ const UNIT_FILTERS = [
   {
     key: "kuuka",
     label: "クーカー",
-    color: "linear-gradient(90deg, #5bc0de 0 50%, #f39c12 50% 100%)",
+    color: "linear-gradient(90deg, #5bc0de 0 48%, #f39c12 52% 100%)",
     members: ["伊達さゆり", "Liyuu"]
   },
   {
     key: "tomakanote",
     label: "トマカノーテ",
-    color: "linear-gradient(90deg, #22c55e 0 33.333%, #f39c12 33.333% 66.666%, #a855f7 66.666% 100%)",
+    color: "linear-gradient(90deg, #22c55e 0 31.333%, #f39c12 35.333% 64.666%, #a855f7 68.666% 100%)",
     members: ["伊達さゆり", "結那", "坂倉花"]
   },
   { key: "catchu", label: "CatChu!", color: "#ef4444", members: ["伊達さゆり", "ペイトン尚未", "薮島朱音"] },
