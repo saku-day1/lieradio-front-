@@ -1,5 +1,4 @@
-node_modules/
-.env
+# Vercel CLI が生成する環境変数ファイル（APIキーが含まれるため絶対にコミットしない）
 .env.local
-.env.production
-.env.preview
+.env*.local
+.vercel
