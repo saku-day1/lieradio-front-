@@ -1,5 +1,26 @@
 "use strict";
 
+import {
+  fetchEpisodes,
+  filterEpisodes,
+  sortEpisodes,
+  buildRanking,
+  getAllCastMembers,
+  extractYoutubeVideoId,
+  normalizeSearchText,
+  isPublicRecordingTitle,
+  isCompilationTitle,
+  isOtherVideoTitle,
+  OTHER_VIDEO_TITLE_KEYWORDS
+} from "./js/model/EpisodeRepository.js";
+
+import {
+  loadFavorites,
+  loadWatched,
+  toggleFavorite,
+  toggleWatched
+} from "./js/model/UserPreferences.js";
+
 // 取得した全エピソードデータを保持する
 let allEpisodes = [];
 
@@ -29,9 +50,6 @@ let quickFilterKeyword = "";
 let andFilterNames = [];
 let activeUnitFilterKey = "";
 let isOtherVideoFilterActive = false;
-
-// タイトルに「総集編」または「耐久」を含む動画をその他の動画フィルタで表示する
-const OTHER_VIDEO_TITLE_KEYWORDS = ["総集編", "耐久"];
 
 const PRIORITY_CAST_FILTERS = [
   { name: "伊達さゆり", color: "#f39c12" }, // オレンジ
@@ -70,8 +88,6 @@ const UNIT_FILTERS = [
   { key: "sunnypassion", label: "Sunny Passion", color: "#f59e0b", members: ["吉武千颯", "結木ゆな"] },
   { key: "nijigasaki", label: "虹ヶ咲", color: "#fde047", members: ["相良茉優", "田中ちえ美"] }
 ];
-const FAVORITES_KEY = "lieradio_favorites";
-const WATCHED_KEY = "lieradio_watched";
 let isFavoritesFilterActive = false;
 let watchedFilterMode = ""; // "" | "watched" | "unwatched"
 let isUnitSectionExpanded = false;
@@ -94,28 +110,6 @@ async function init() {
     toggleEpisodeListButton.classList.add("hidden");
     console.error(error);
   }
-}
-
-// データを取得して返す
-// 1) /api/episodes (サーバーレス) を優先
-// 2) 失敗した場合はローカルJSONへフォールバック
-async function fetchEpisodes() {
-  try {
-    const apiResponse = await fetch("./api/episodes");
-    if (apiResponse.ok) {
-      return apiResponse.json();
-    }
-  } catch (error) {
-    // API未起動などはローカルJSONで継続する
-    console.warn("API fetch failed. Fallback to local JSON.", error);
-  }
-
-  const localResponse = await fetch("./data/episodes.json");
-  if (!localResponse.ok) {
-    throw new Error(`Fetch failed: ${localResponse.status}`);
-  }
-
-  return localResponse.json();
 }
 
 // 入力値変更イベントを登録
@@ -283,9 +277,20 @@ function render() {
 
   const favorites = loadFavorites();
   const watched = loadWatched();
-  const filteredEpisodes = filterEpisodes(allEpisodes, keyword, andFilterNames, activeUnitFilterKey, isFavoritesFilterActive, favorites, watchedFilterMode, watched, isOtherVideoFilterActive);
+  const filteredEpisodes = filterEpisodes(
+    allEpisodes,
+    keyword,
+    andFilterNames,
+    activeUnitFilterKey,
+    isFavoritesFilterActive,
+    favorites,
+    watchedFilterMode,
+    watched,
+    isOtherVideoFilterActive,
+    UNIT_FILTERS
+  );
   const sortedEpisodes = sortEpisodes(filteredEpisodes, sortOrder);
-  const ranking = buildRanking(filteredEpisodes, keyword);
+  const ranking = buildRanking(filteredEpisodes, keyword, quickFilterKeyword, PRIORITY_CAST_FILTERS);
 
   renderEpisodeList(sortedEpisodes, isAndMode, favorites, watched);
   renderRankingSection(ranking, keyword, hideRanking);
@@ -299,115 +304,6 @@ function render() {
   updateFavoritesFilterButton();
   updateWatchedFilterButtons();
   updateOtherVideoFilterButton();
-}
-
-// 出演者（メインMC + ゲスト）の部分一致検索
-// APIデータに castMembers が無い場合は mainCast + guests を結合して扱う
-function filterEpisodes(episodes, keyword, andNames = [], unitKey = "", favoritesOnly = false, favorites = new Set(), watchedMode = "", watched = new Set(), otherVideoOnly = false) {
-  let result = episodes.map((episode) => ({
-    ...episode,
-    castMembers: getAllCastMembers(episode)
-  }));
-
-  if (favoritesOnly) {
-    result = result.filter((episode) => {
-      const videoId = extractYoutubeVideoId(episode.youtubeUrl);
-      return videoId && favorites.has(videoId);
-    });
-  }
-
-  if (watchedMode === "watched") {
-    result = result.filter((episode) => {
-      const videoId = extractYoutubeVideoId(episode.youtubeUrl);
-      return videoId && watched.has(videoId);
-    });
-  } else if (watchedMode === "unwatched") {
-    result = result.filter((episode) => {
-      const videoId = extractYoutubeVideoId(episode.youtubeUrl);
-      return !videoId || !watched.has(videoId);
-    });
-  }
-
-  if (otherVideoOnly) {
-    result = result.filter((episode) => {
-      const title = String(episode.title || "");
-      return OTHER_VIDEO_TITLE_KEYWORDS.some((kw) => title.includes(kw));
-    });
-  }
-
-  if (unitKey) {
-    const unit = UNIT_FILTERS.find((item) => item.key === unitKey);
-    if (!unit) {
-      return result;
-    }
-    return result.filter((episode) =>
-      unit.members.every((member) => episode.castMembers.includes(member))
-    );
-  }
-
-  if (andNames.length >= 2) {
-    return result.filter((episode) =>
-      andNames.every((name) => episode.castMembers.includes(name))
-    );
-  }
-
-  if (!keyword) {
-    return result;
-  }
-
-  const normalizedKeyword = normalizeSearchText(keyword);
-  return result.filter((episode) =>
-    episode.castMembers.some((member) =>
-      normalizeSearchText(member).includes(normalizedKeyword)
-    )
-  );
-}
-
-// 公開日で新しい順 / 古い順に並べ替える
-function sortEpisodes(episodes, sortOrder) {
-  return [...episodes].sort((a, b) => {
-    const timeA = new Date(a.publishedAt).getTime();
-    const timeB = new Date(b.publishedAt).getTime();
-    return sortOrder === "asc" ? timeA - timeB : timeB - timeA;
-  });
-}
-
-// castMembersを集計してランキング配列を作る
-function buildRanking(episodes, keyword = "") {
-  const excludedNames = getExcludedRankingNames(keyword);
-  const countMap = episodes.reduce((acc, episode) => {
-    if (isCompilationTitle(episode.title)) {
-      return acc;
-    }
-    episode.castMembers.forEach((member) => {
-      if (excludedNames.has(member) || member === "出演者情報未設定") {
-        return;
-      }
-      acc[member] = (acc[member] || 0) + 1;
-    });
-    return acc;
-  }, {});
-
-  return Object.entries(countMap)
-    .map(([name, count]) => ({ name, count }))
-    .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name, "ja"));
-}
-
-function getExcludedRankingNames(keyword) {
-  if (!keyword) {
-    return new Set();
-  }
-
-  if (quickFilterKeyword) {
-    return new Set([quickFilterKeyword]);
-  }
-
-  const normalizedKeyword = normalizeSearchText(keyword);
-  const matched = PRIORITY_CAST_FILTERS
-    .map((item) => item.name)
-    .filter((name) => normalizeSearchText(name) === normalizedKeyword);
-
-  return new Set(matched);
 }
 
 function renderEpisodeList(episodes, isAndMode = false, favorites = new Set(), watched = new Set()) {
@@ -563,18 +459,6 @@ function formatEpisodeHeading(displayedNumber, rawTitle) {
   return `第${displayedNumber}回 ${title}`;
 }
 
-function isPublicRecordingTitle(title) {
-  return /公開録音|公録/.test(title);
-}
-
-function isCompilationTitle(title) {
-  return /総集編/.test(String(title || ""));
-}
-
-function isOtherVideoTitle(title) {
-  return OTHER_VIDEO_TITLE_KEYWORDS.some((kw) => String(title || "").includes(kw));
-}
-
 function renderRanking(ranking) {
   if (ranking.length === 0) {
     rankingList.innerHTML = "<li>該当データなし</li>";
@@ -721,69 +605,6 @@ function resetFilters() {
   render();
 }
 
-function getAllCastMembers(episode) {
-  if (Array.isArray(episode.castMembers) && episode.castMembers.length > 0) {
-    return episode.castMembers;
-  }
-
-  const mainCast = Array.isArray(episode.mainCast) ? episode.mainCast : [];
-  const guests = Array.isArray(episode.guests) ? episode.guests : [];
-  const merged = [...mainCast, ...guests];
-
-  return merged.length > 0 ? [...new Set(merged)] : ["出演者情報未設定"];
-}
-
-function normalizeSearchText(text) {
-  return String(text).replace(/\s+/g, "").toLowerCase();
-}
-
-// お気に入り: localStorageへの読み書き
-function loadFavorites() {
-  try {
-    const data = localStorage.getItem(FAVORITES_KEY);
-    return data ? new Set(JSON.parse(data)) : new Set();
-  } catch {
-    return new Set();
-  }
-}
-
-function loadWatched() {
-  try {
-    const data = localStorage.getItem(WATCHED_KEY);
-    return data ? new Set(JSON.parse(data)) : new Set();
-  } catch {
-    return new Set();
-  }
-}
-
-function toggleWatched(videoId) {
-  const watched = loadWatched();
-  if (watched.has(videoId)) {
-    watched.delete(videoId);
-  } else {
-    watched.add(videoId);
-  }
-  try {
-    localStorage.setItem(WATCHED_KEY, JSON.stringify([...watched]));
-  } catch {
-    // localStorage が使えない環境では無視
-  }
-}
-
-function toggleFavorite(videoId) {
-  const favorites = loadFavorites();
-  if (favorites.has(videoId)) {
-    favorites.delete(videoId);
-  } else {
-    favorites.add(videoId);
-  }
-  try {
-    localStorage.setItem(FAVORITES_KEY, JSON.stringify([...favorites]));
-  } catch {
-    // localStorage が使えない環境では無視
-  }
-}
-
 // ボタンは持たないがバッジに色を付けるメンバー
 const CAST_COLOR_EXTRAS = [
   { name: "吉武千颯", color: "#fbbf24" }, // 黄色
@@ -797,15 +618,6 @@ const CAST_COLOR_MAP = [...PRIORITY_CAST_FILTERS, ...CAST_COLOR_EXTRAS].reduce((
   acc[item.name] = item.color;
   return acc;
 }, {});
-
-// YouTubeのURLからvideoIdを取り出す。許可されている文字以外は弾く（XSS/混入対策）
-function extractYoutubeVideoId(url) {
-  if (typeof url !== "string") {
-    return "";
-  }
-  const match = url.match(/[?&]v=([A-Za-z0-9_-]{11})/);
-  return match ? match[1] : "";
-}
 
 // サムネイルURLを返す。videoIdが取れないときは空文字
 function getThumbnailUrl(videoId) {
