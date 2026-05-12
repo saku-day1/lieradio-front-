@@ -52,14 +52,11 @@ function metaDetailsHtml(manualMeta) {
   const body = rows
     .map((tag) => {
       const category = META_TYPE_LABELS[tag.type] || tag.type || "情報";
-      const flags = [`検索:${tag.searchable ? "対象" : "除外"}`, `一覧:${tag.visibleInList ? "表示" : "非表示"}`];
-      const flagText = `<span class="meta-tag-flag">${escapeHtml(flags.join(" / "))}</span>`;
       return `<li>
         <div class="meta-tag-row-main">
           <span class="meta-tag-type">${escapeHtml(category)}</span>
           <span class="meta-tag-value">${escapeHtml(tag.name)}</span>
         </div>
-        ${flagText}
       </li>`;
     })
     .join("");
