@@ -21,10 +21,23 @@
   </header>
 
   <main class="container">
+    <section class="controls card">
+      <div class="control-group">
+        <div id="castQuickFilters" class="cast-quick-filters"></div>
+        <p id="castSelectionNotice" class="selection-notice hidden">出演者は最大5人まで選択できます。</p>
+        <div id="unitQuickFilters" class="unit-quick-filters"></div>
+        <button id="favoritesFilterButton" type="button" class="favorites-filter-button">♡ お気に入り</button>
+        <button id="watchedFilterButton" type="button" class="watched-filter-button">✓ 視聴済み</button>
+        <button id="unwatchedFilterButton" type="button" class="watched-filter-button">○ 未視聴</button>
+        <button id="otherVideoFilterButton" type="button" class="other-video-filter-button">📼 その他の動画</button>
+        <button id="resetFiltersButton" type="button" class="reset-filters-button hidden">検索リセット</button>
+      </div>
+    </section>
+
     <section id="discoveryPanel" class="card search-discovery-card">
       <div class="search-discovery-header">
-        <h2 class="discovery-title">コンテンツから探す</h2>
-        <p class="discovery-hint">まず項目を決め、その中からさらに絞り込めます（出演者は下のボタンで選んでください）。</p>
+        <h2 class="discovery-title">詳細検索</h2>
+        <p class="discovery-hint">まず項目を決め、その中からさらに絞り込めます（出演者は上のボタンで選んでください）。</p>
       </div>
       <div class="discovery-grid">
         <label class="search-field-label" for="facetPrimarySelect">項目</label>
@@ -58,19 +71,6 @@
             placeholder="タイトルの一部だけでも検索できます">
           <button type="button" id="clearSongPartialButton" class="tiny-button">クリア</button>
         </div>
-      </div>
-    </section>
-
-    <section class="controls card">
-      <div class="control-group">
-        <div id="castQuickFilters" class="cast-quick-filters"></div>
-        <p id="castSelectionNotice" class="selection-notice hidden">出演者は最大5人まで選択できます。</p>
-        <div id="unitQuickFilters" class="unit-quick-filters"></div>
-        <button id="favoritesFilterButton" type="button" class="favorites-filter-button">♡ お気に入り</button>
-        <button id="watchedFilterButton" type="button" class="watched-filter-button">✓ 視聴済み</button>
-        <button id="unwatchedFilterButton" type="button" class="watched-filter-button">○ 未視聴</button>
-        <button id="otherVideoFilterButton" type="button" class="other-video-filter-button">📼 その他の動画</button>
-        <button id="resetFiltersButton" type="button" class="reset-filters-button hidden">検索リセット</button>
       </div>
     </section>
 

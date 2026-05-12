@@ -131,6 +131,7 @@ function main() {
       tags.push(tagObj(lunch, "lunchSong", true, true, 95));
     }
 
+    // 誕生日祝い列（3列）: classifyRemark で birthday 型に分類
     for (const idx of [4, 5, 6]) {
       const raw = String(row[idx] ?? "").trim();
       if (!raw) continue;
@@ -139,18 +140,33 @@ function main() {
       tags.push(tagObj(raw, cls.type, cls.searchable, cls.visibleInList, cls.priority));
     }
 
-    for (const idx of [7, 8]) {
+    // 出来事・事件列 (index 7)
+    const incidentText = String(row[7] ?? "").trim();
+    if (incidentText) {
+      tags.push(tagObj(incidentText, "incident", true, false, 8));
+    }
+
+    // 公開録音列 (index 8)
+    const publicRecText = String(row[8] ?? "").trim();
+    if (publicRecText) {
+      tags.push(tagObj(publicRecText, "publicRecordingNote", true, false, 22));
+    }
+
+    // ライブ感想列（2列: index 9, 10）
+    for (const idx of [9, 10]) {
       const raw = String(row[idx] ?? "").trim();
       if (!raw) continue;
       tags.push(tagObj(raw, "liveImpression", true, false, 30));
     }
 
-    const eventText = String(row[9] ?? "").trim();
+    // イベント感想列 (index 11)
+    const eventText = String(row[11] ?? "").trim();
     if (eventText) {
       tags.push(tagObj(eventText, "eventImpression", true, false, 28));
     }
 
-    const animeText = String(row[10] ?? "").trim();
+    // アニメ感想列 (index 12)
+    const animeText = String(row[12] ?? "").trim();
     if (animeText) {
       tags.push(tagObj(animeText, "animeImpression", true, false, 28));
     }
