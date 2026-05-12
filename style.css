@@ -961,3 +961,39 @@ h2 {
     padding: 6px 6px;
   }
 }
+
+/* ページネーション */
+.pagination-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 16px 0 4px;
+}
+
+.page-button {
+  background: var(--card);
+  color: var(--text);
+  border: 1px solid var(--card-border);
+  border-radius: 6px;
+  padding: 7px 16px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.page-button:hover:not(:disabled) {
+  background: var(--card-border);
+}
+
+.page-button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.page-indicator {
+  font-size: 0.9rem;
+  color: var(--text-muted, #8899bb);
+  min-width: 90px;
+  text-align: center;
+}

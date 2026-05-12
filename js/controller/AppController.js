@@ -92,6 +92,13 @@ export default class AppController {
     this.facetSecondaryValue   = "";
     this.songPartialQuery      = "";
     this._facetCatalog         = null;
+
+    this.currentPage           = 1;
+    this._lastFilterKey        = "";
+    this.paginationBar         = document.getElementById("paginationBar");
+    this.pagePrevButton        = document.getElementById("pagePrevButton");
+    this.pageNextButton        = document.getElementById("pageNextButton");
+    this.pageIndicator         = document.getElementById("pageIndicator");
   }
 
   // -------------------------------------------------------------------------
@@ -190,6 +197,20 @@ export default class AppController {
     this.cornerPickClearButton?.addEventListener("click", () => {
       this.facetSecondaryValue = "";
       this.render();
+    });
+
+    this.pagePrevButton?.addEventListener("click", () => {
+      if (this.currentPage > 1) {
+        this.currentPage -= 1;
+        this.render();
+        this.episodeList?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    });
+
+    this.pageNextButton?.addEventListener("click", () => {
+      this.currentPage += 1;
+      this.render();
+      this.episodeList?.scrollIntoView({ behavior: "smooth", block: "start" });
     });
   }
 
@@ -455,10 +476,24 @@ export default class AppController {
     const sortedEpisodes = sortEpisodes(narrowedEpisodes, sortOrder);
     const ranking = buildRanking(narrowedEpisodes, keyword, this.quickFilterKeyword, PRIORITY_CAST_FILTERS);
 
+    // フィルター変更時はページを1に戻す
+    const filterKey = JSON.stringify({ keyword, andNames: this.andFilterNames, unitKey: this.activeUnitFilterKey, fav: this.isFavoritesFilterActive, watched: this.watchedFilterMode, other: this.isOtherVideoFilterActive, facet: this.facetPrimaryKey, secondary: this.facetSecondaryValue, song: this.songPartialQuery, sort: sortOrder });
+    if (filterKey !== this._lastFilterKey) {
+      this.currentPage = 1;
+      this._lastFilterKey = filterKey;
+    }
+
+    const PAGE_SIZE = 50;
+    const totalCount = sortedEpisodes.length;
+    const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
+    if (this.currentPage > totalPages) this.currentPage = totalPages;
+    const pageStart = (this.currentPage - 1) * PAGE_SIZE;
+    const pageEpisodes = sortedEpisodes.slice(pageStart, pageStart + PAGE_SIZE);
+
     // View に描画を委譲
     renderEpisodeList(
       this.episodeList,
-      sortedEpisodes,
+      pageEpisodes,
       isAndMode,
       favorites,
       watched,
@@ -475,7 +510,8 @@ export default class AppController {
     renderRankingSection(this.rankingElements, ranking, keyword, hideRanking, this.isRankingVisible);
 
     this._renderResultTitle(isAndMode, hasFilter);
-    this._renderResultCount(sortedEpisodes.length, hasFilter);
+    this._renderResultCount(totalCount, hasFilter, pageStart + 1, Math.min(pageStart + PAGE_SIZE, totalCount));
+    this._updatePagination(totalCount, totalPages);
     this._updateActiveQuickFilter();
     this._updateActiveUnitFilter();
     this._updateResetButtonVisibility();
@@ -510,9 +546,25 @@ export default class AppController {
     this.resultTitle.textContent = "検索結果";
   }
 
-  _renderResultCount(count, hasFilter) {
+  _renderResultCount(total, hasFilter, from, to) {
     const label = hasFilter ? "検索結果" : "動画一覧";
-    this.resultCount.textContent = `${label}: ${count}件`;
+    if (total > 50) {
+      this.resultCount.textContent = `${label}: ${total}件中 ${from}〜${to}件を表示`;
+    } else {
+      this.resultCount.textContent = `${label}: ${total}件`;
+    }
+  }
+
+  _updatePagination(total, totalPages) {
+    if (!this.paginationBar) return;
+    const show = totalPages > 1;
+    this.paginationBar.classList.toggle("hidden", !show);
+    if (!show) return;
+    if (this.pageIndicator) {
+      this.pageIndicator.textContent = `${this.currentPage} / ${totalPages}ページ`;
+    }
+    if (this.pagePrevButton) this.pagePrevButton.disabled = this.currentPage <= 1;
+    if (this.pageNextButton) this.pageNextButton.disabled = this.currentPage >= totalPages;
   }
 
   // -------------------------------------------------------------------------
