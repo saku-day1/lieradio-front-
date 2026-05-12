@@ -778,7 +778,10 @@ export default class AppController {
     renderRankingSection(this.rankingElements, ranking, keyword, hideRanking, this.isRankingVisible);
 
     const isSongSearch = this.facetPrimaryKey === "lunchSong";
-    const songRanking = isSongSearch ? buildSongRanking(narrowedEpisodes) : [];
+    const songRankingBase = isSongSearch
+      ? (this.songPartialQuery ? narrowedEpisodes : memoFiltered)
+      : [];
+    const songRanking = isSongSearch ? buildSongRanking(songRankingBase) : [];
     renderSongRankingSection(
       this.songRankingElements,
       songRanking,
