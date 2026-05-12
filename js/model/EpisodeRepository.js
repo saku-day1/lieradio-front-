@@ -297,6 +297,28 @@ export function buildRanking(episodes, keyword = "", quickFilterKeyword = "", pr
     .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name, "ja"));
 }
 
+export function buildSongRanking(episodes, limit = 3) {
+  const countMap = {};
+  for (const episode of episodes) {
+    if (isCompilationTitle(episode.title)) continue;
+    const meta = episode.manualMeta || {};
+    const songs = [];
+    if (meta.lunchTimeRequestSong) songs.push(meta.lunchTimeRequestSong);
+    const tags = Array.isArray(meta.tags) ? meta.tags : [];
+    for (const tag of tags) {
+      if (tag.type === "lunchSong" && tag.name) songs.push(tag.name);
+    }
+    for (const song of songs) {
+      const key = song.trim();
+      if (key) countMap[key] = (countMap[key] || 0) + 1;
+    }
+  }
+  return Object.entries(countMap)
+    .map(([name, count]) => ({ name, count }))
+    .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name, "ja"))
+    .slice(0, limit);
+}
+
 function getExcludedRankingNames(keyword, quickFilterKeyword, priorityCastFilters) {
   if (!keyword) {
     return new Set();

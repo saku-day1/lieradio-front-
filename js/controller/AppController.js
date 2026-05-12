@@ -10,7 +10,8 @@ import {
   fetchEpisodes,
   filterEpisodes,
   sortEpisodes,
-  buildRanking
+  buildRanking,
+  buildSongRanking
 } from "../model/EpisodeRepository.js";
 
 import {
@@ -27,7 +28,7 @@ import {
 import { extractYoutubeVideoId } from "../model/EpisodeRepository.js";
 
 import { renderEpisodeList } from "../view/EpisodeListView.js";
-import { renderRankingSection } from "../view/RankingView.js";
+import { renderRankingSection, renderSongRankingSection } from "../view/RankingView.js";
 
 import {
   PRIORITY_CAST_FILTERS,
@@ -120,6 +121,17 @@ export default class AppController {
     this.exportDataButton      = document.getElementById("exportDataButton");
     this.importDataInput       = document.getElementById("importDataInput");
     this.shareButton           = document.getElementById("shareButton");
+
+    this.songRankingSection       = document.getElementById("songRankingSection");
+    this.songRankingList          = document.getElementById("songRankingList");
+    this.toggleSongRankingButton  = document.getElementById("toggleSongRankingButton");
+    this.isSongRankingVisible     = false;
+
+    this.songRankingElements = {
+      section:      this.songRankingSection,
+      list:         this.songRankingList,
+      toggleButton: this.toggleSongRankingButton
+    };
   }
 
   // -------------------------------------------------------------------------
@@ -251,6 +263,11 @@ export default class AppController {
     this.exportDataButton?.addEventListener("click", () => this._handleExport());
     this.importDataInput?.addEventListener("change", (ev) => this._handleImport(ev));
     this.shareButton?.addEventListener("click", () => this._handleShare());
+
+    this.toggleSongRankingButton?.addEventListener("click", () => {
+      this.isSongRankingVisible = !this.isSongRankingVisible;
+      this.render();
+    });
   }
 
   _applyUrlParams() {
@@ -759,6 +776,20 @@ export default class AppController {
       (videoId, text) => saveMemo(videoId, text)
     );
     renderRankingSection(this.rankingElements, ranking, keyword, hideRanking, this.isRankingVisible);
+
+    const isSongSearch = this.facetPrimaryKey === "lunchSong";
+    const songRanking = isSongSearch ? buildSongRanking(narrowedEpisodes) : [];
+    renderSongRankingSection(
+      this.songRankingElements,
+      songRanking,
+      this.isSongRankingVisible,
+      isSongSearch,
+      (songName) => {
+        this.songPartialQuery = songName;
+        if (this.songPartialInput) this.songPartialInput.value = songName;
+        this.render();
+      }
+    );
 
     this._renderResultTitle(isAndMode, hasFilter);
     this._renderResultCount(totalCount, hasFilter, pageStart + 1, Math.min(pageStart + PAGE_SIZE, totalCount));

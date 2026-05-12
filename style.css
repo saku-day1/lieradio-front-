@@ -766,6 +766,21 @@ h2 {
   opacity: 0.6;
 }
 
+.song-ranking-item {
+  background: none;
+  border: none;
+  color: var(--accent);
+  cursor: pointer;
+  font-size: inherit;
+  padding: 0;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.song-ranking-item:hover {
+  opacity: 0.75;
+}
+
 .data-transfer-row {
   display: flex;
   justify-content: center;

@@ -48,3 +48,48 @@ function renderRankingTitle(rankingTitleEl, keyword) {
     ? `${keyword}の共演者ランキング`
     : "出演回数ランキング";
 }
+
+/**
+ * リクエスト曲ランキングセクションを描画する。
+ * 曲検索時のみ表示し、曲名クリックで onSongClick(songName) を呼ぶ。
+ *
+ * @param {object}   elements
+ * @param {Element}  elements.section
+ * @param {Element}  elements.list
+ * @param {Element}  elements.toggleButton
+ * @param {object[]} songRanking [{name, count}]
+ * @param {boolean}  isVisible
+ * @param {boolean}  show
+ * @param {function} onSongClick
+ */
+export function renderSongRankingSection(elements, songRanking, isVisible, show, onSongClick) {
+  const { section, list, toggleButton } = elements;
+
+  if (!show) {
+    section.classList.add("hidden");
+    return;
+  }
+
+  section.classList.remove("hidden");
+  list.classList.toggle("hidden", !isVisible);
+  toggleButton.textContent = isVisible ? "閉じる" : "表示する";
+
+  if (!isVisible) return;
+
+  if (songRanking.length === 0) {
+    list.innerHTML = "<li>該当データなし</li>";
+    return;
+  }
+
+  list.replaceChildren();
+  for (const item of songRanking) {
+    const li = document.createElement("li");
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "song-ranking-item";
+    btn.textContent = `${item.name}（${item.count}回）`;
+    btn.addEventListener("click", () => onSongClick(item.name));
+    li.appendChild(btn);
+    list.appendChild(li);
+  }
+}
