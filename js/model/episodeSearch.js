@@ -116,6 +116,15 @@ export function episodeMatchesFacetSecondary(episode, facetPrimary, rawValue) {
           return tn.startsWith(liellaNorm) && !tn.startsWith(liellaSpecialNorm);
         });
       }
+      // Li絵lla!日記:キャスト名 の場合、複数人回も含めてキャスト名部分を部分一致で検索
+      if (needleNorm.startsWith(liellaNorm + ":")) {
+        const castNeedle = needleNorm.slice(liellaNorm.length + 1);
+        return cornerStrings(episode).some((t) => {
+          const tn = normalizeSearchText(t);
+          if (!tn.startsWith(liellaNorm + ":")) return false;
+          return tn.slice(liellaNorm.length + 1).includes(castNeedle);
+        });
+      }
       return cornerStrings(episode).some((t) => normEq(t, needle));
     }
     case "liveImpression":
