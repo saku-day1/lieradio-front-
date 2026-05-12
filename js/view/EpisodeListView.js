@@ -20,7 +20,7 @@ const META_TYPE_LABELS = {
   corner: "コーナー",
   lunchSong: "リクエスト曲",
   birthday: "誕生日祝い",
-  incident: "事件",
+  incident: "出来事",
   externalShow: "外部番組・メディア",
   eventName: "イベント",
   animeSeasonTag: "アニメ期タグ",

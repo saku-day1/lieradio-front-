@@ -314,7 +314,7 @@ export default class AppController {
       case "birthday":
         return "誰の誕生日か（メンバー）";
       case "incident":
-        return "どの事件・ネタ備考か";
+        return "どの出来事・ネタ備考か";
       default:
         return "さらに指定";
     }
