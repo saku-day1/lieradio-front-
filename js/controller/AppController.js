@@ -288,7 +288,7 @@ export default class AppController {
 
     const allOpt = document.createElement("option");
     allOpt.value = "";
-    allOpt.textContent = "（このカテゴリのすべて）";
+    allOpt.textContent = this._facetSecondaryPlaceholderText(this.facetPrimaryKey);
     selectEl.appendChild(allOpt);
 
     for (const label of values) {
@@ -301,22 +301,22 @@ export default class AppController {
     selectEl.value = "";
   }
 
-  _facetSecondaryHeadingText(primaryKey) {
+  _facetSecondaryHeadingText(_primaryKey) {
+    return "絞り込み";
+  }
+
+  _facetSecondaryPlaceholderText(primaryKey) {
     switch (primaryKey) {
-      case "publicRecording":
-        return "備考・タグにある表記で絞り込む";
       case "liveImpression":
-        return "どのライブか（テキストを選択）";
+        return "どのライブ？";
       case "eventImpression":
-        return "どのイベントか（テキストを選択）";
-      case "animeImpression":
-        return "どのアニメ回か（テキストを選択）";
+        return "どのイベント？";
       case "birthday":
-        return "誰の誕生日か（メンバー）";
+        return "メンバーのお祝い回を選んでください";
       case "incident":
-        return "どの出来事・ネタ備考か";
+        return "どの出来事？";
       default:
-        return "さらに指定";
+        return "（このカテゴリのすべて）";
     }
   }
 
