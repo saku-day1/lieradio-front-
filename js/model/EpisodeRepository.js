@@ -101,7 +101,7 @@ export function mergeManualMetaIntoEpisodes(episodes, manualMetaRecords) {
   }
 
   return episodes.map((episode) => {
-    if (isOtherVideoTitle(episode.title)) {
+    if (isOtherVideoTitle(episode.title) || isPublicRecordingTitle(episode.title)) {
       return { ...episode };
     }
     const num = episode.broadcastNumber ?? episode.episodeNumber;
