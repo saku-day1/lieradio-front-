@@ -103,8 +103,14 @@ export function episodeMatchesFacetSecondary(episode, facetPrimary, rawValue) {
   if (!needle) return true;
 
   switch (facetPrimary) {
-    case "corner":
+    case "corner": {
+      const needleNorm = normalizeSearchText(needle);
+      const liellaNorm = normalizeSearchText("Li絵lla!日記");
+      if (needleNorm === liellaNorm) {
+        return cornerStrings(episode).some((t) => normalizeSearchText(t).startsWith(liellaNorm));
+      }
       return cornerStrings(episode).some((t) => normEq(t, needle));
+    }
     case "liveImpression":
       return tagNamesByTypes(episode, ["liveImpression"]).some((t) => normEq(t, needle));
     case "eventImpression":

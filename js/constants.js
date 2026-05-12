@@ -56,3 +56,11 @@ export const CAST_COLOR_MAP = [...PRIORITY_CAST_FILTERS, ...CAST_COLOR_EXTRAS].r
   acc[item.name] = item.color;
   return acc;
 }, {});
+
+/** 誕生日祝い・Li絵lla!日記の検索リスト表示順 */
+export const BIRTHDAY_CAST_ORDER = [
+  "澁谷かのん", "唐可可", "嵐千砂都", "平安名すみれ", "葉月恋",
+  "桜小路きな子", "米女メイ", "若菜四季", "鬼塚夏美", "ウィーン・マルガレーテ",
+  "鬼塚冬毬", "伊達さゆり", "Liyuu", "岬なこ", "ペイトン尚未",
+  "青山なぎさ", "鈴原希実", "薮島朱音", "大熊和奏", "絵森彩", "結那", "坂倉花"
+];

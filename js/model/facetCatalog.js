@@ -3,6 +3,9 @@
  */
 
 import { normalizeSearchText } from "./EpisodeRepository.js";
+import { BIRTHDAY_CAST_ORDER } from "../constants.js";
+
+const LIELLA_DIARY_PREFIX = "Li絵lla!日記";
 
 /**
  * @typedef {{
@@ -12,7 +15,8 @@ import { normalizeSearchText } from "./EpisodeRepository.js";
  *   animeImpressions: string[],
  *   incidents: string[],
  *   birthdayCastNames: string[],
- *   publicRecordingMemos: string[]
+ *   publicRecordingMemos: string[],
+ *   liellaDiaryCasts: string[]
  * }} FacetCatalog
  */
 
@@ -28,6 +32,18 @@ function isPublicRecordingMemoTag(tag) {
 /** @param {Map<string,string>} bucket */
 function sortedUniqueValues(bucket) {
   return [...bucket.values()].sort((a, b) => a.localeCompare(b, "ja"));
+}
+
+/** BIRTHDAY_CAST_ORDER 順にソートし、未定義の名前は末尾にアルファベット順で追加 */
+function sortByCastOrder(names) {
+  return [...names].sort((a, b) => {
+    const ia = BIRTHDAY_CAST_ORDER.indexOf(a);
+    const ib = BIRTHDAY_CAST_ORDER.indexOf(b);
+    if (ia !== -1 && ib !== -1) return ia - ib;
+    if (ia !== -1) return -1;
+    if (ib !== -1) return 1;
+    return a.localeCompare(b, "ja");
+  });
 }
 
 /** @param {Map<string,string>} bucket @param {string} raw */
@@ -60,10 +76,27 @@ export function buildFacetCatalog(episodes) {
   const publicRecordingMemos = new Map();
   /** @type {Map<string,string>} */
   const birthdays = new Map();
+  /** @type {Set<string>} Li絵lla!日記に登場するキャスト名 */
+  const liellaDiaryCastsSet = new Set();
+  let hasLiellaDiary = false;
 
   for (const episode of episodes) {
     const meta = episode.manualMeta || {};
-    for (const c of meta.corners || []) addLabel(corners, c);
+
+    for (const c of meta.corners || []) {
+      if (String(c).startsWith(LIELLA_DIARY_PREFIX)) {
+        hasLiellaDiary = true;
+        const colonIdx = String(c).indexOf(":");
+        if (colonIdx !== -1) {
+          String(c).slice(colonIdx + 1).split("、").forEach((s) => {
+            const name = s.trim();
+            if (name) liellaDiaryCastsSet.add(name);
+          });
+        }
+      } else {
+        addLabel(corners, c);
+      }
+    }
 
     const tags = Array.isArray(meta.tags) ? meta.tags : [];
     for (const tag of tags) {
@@ -73,9 +106,21 @@ export function buildFacetCatalog(episodes) {
       }
 
       switch (tag.type) {
-        case "corner":
-          addLabel(corners, name);
+        case "corner": {
+          if (String(name).startsWith(LIELLA_DIARY_PREFIX)) {
+            hasLiellaDiary = true;
+            const colonIdx = String(name).indexOf(":");
+            if (colonIdx !== -1) {
+              String(name).slice(colonIdx + 1).split("、").forEach((s) => {
+                const n = s.trim();
+                if (n) liellaDiaryCastsSet.add(n);
+              });
+            }
+          } else {
+            addLabel(corners, name);
+          }
           break;
+        }
         case "liveImpression":
           addLabel(lives, name);
           break;
@@ -99,15 +144,27 @@ export function buildFacetCatalog(episodes) {
     }
   }
 
-  const birthdayCastNames = sortedUniqueValues(birthdays);
+  // Li絵lla!日記 を独立コーナータグとして先頭に追加
+  if (hasLiellaDiary) {
+    const sorted = sortedUniqueValues(corners);
+    corners.clear();
+    corners.set(normalizeSearchText(LIELLA_DIARY_PREFIX), LIELLA_DIARY_PREFIX);
+    for (const v of sorted) {
+      corners.set(normalizeSearchText(v), v);
+    }
+  }
+
+  const birthdayCastNames = sortByCastOrder([...birthdays.values()]);
+  const liellaDiaryCasts = sortByCastOrder([...liellaDiaryCastsSet]);
 
   return {
-    corners:             sortedUniqueValues(corners),
+    corners:             [...corners.values()],
     liveImpressions:     sortedUniqueValues(lives),
     events:              sortedUniqueValues(events),
     animeImpressions:    sortedUniqueValues(animes),
     incidents:           sortedUniqueValues(incidents),
     publicRecordingMemos: sortedUniqueValues(publicRecordingMemos),
-    birthdayCastNames
+    birthdayCastNames,
+    liellaDiaryCasts
   };
 }

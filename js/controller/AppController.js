@@ -66,6 +66,8 @@ export default class AppController {
     this.cornerPickWrap           = document.getElementById("cornerPickWrap");
     this.cornerPickList           = document.getElementById("cornerPickList");
     this.cornerPickClearButton    = document.getElementById("cornerPickClearButton");
+    this.liellaDiaryCastWrap      = document.getElementById("liellaDiaryCastWrap");
+    this.liellaDiaryCastList      = document.getElementById("liellaDiaryCastList");
 
     // ランキング View に渡す DOM まとめ
     this.rankingElements = {
@@ -317,16 +319,54 @@ export default class AppController {
 
     root.replaceChildren();
 
+    const LIELLA_PREFIX = "Li絵lla!日記";
     for (const label of catalog.corners) {
       const btn = document.createElement("button");
       btn.type = "button";
       btn.className = "corner-pick-item";
-      if (this.facetSecondaryValue === label) {
+      const isLiellaSelected =
+        label === LIELLA_PREFIX &&
+        String(this.facetSecondaryValue).startsWith(LIELLA_PREFIX);
+      if (this.facetSecondaryValue === label || isLiellaSelected) {
         btn.classList.add("is-selected");
       }
       btn.dataset.cornerPick = label;
       btn.textContent = label;
       root.appendChild(btn);
+    }
+
+    this._renderLiellaDiaryCastList(catalog);
+  }
+
+  _renderLiellaDiaryCastList(catalog) {
+    const wrap = this.liellaDiaryCastWrap;
+    const listEl = this.liellaDiaryCastList;
+    if (!wrap || !listEl || !catalog) return;
+
+    const LIELLA_PREFIX = "Li絵lla!日記";
+    const liellaActive = String(this.facetSecondaryValue).startsWith(LIELLA_PREFIX);
+
+    wrap.classList.toggle("hidden", !liellaActive);
+    if (!liellaActive) return;
+
+    listEl.replaceChildren();
+
+    for (const castName of catalog.liellaDiaryCasts || []) {
+      const fullValue = `${LIELLA_PREFIX}:${castName}`;
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "corner-pick-item";
+      if (this.facetSecondaryValue === fullValue) {
+        btn.classList.add("is-selected");
+      }
+      btn.dataset.liellaCast = castName;
+      btn.textContent = castName;
+      btn.addEventListener("click", () => {
+        this.facetSecondaryValue =
+          this.facetSecondaryValue === fullValue ? LIELLA_PREFIX : fullValue;
+        this.render();
+      });
+      listEl.appendChild(btn);
     }
   }
 
