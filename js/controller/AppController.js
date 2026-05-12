@@ -73,6 +73,7 @@ export default class AppController {
     this.animePickWrap            = document.getElementById("animePickWrap");
     this.animePickList            = document.getElementById("animePickList");
     this.animePickClearButton     = document.getElementById("animePickClearButton");
+    this.resetDiscoveryButton     = document.getElementById("resetDiscoveryButton");
 
     // ランキング View に渡す DOM まとめ
     this.rankingElements = {
@@ -150,6 +151,7 @@ export default class AppController {
     });
 
     this.resetFiltersButton.addEventListener("click", () => this._resetFilters());
+    this.resetDiscoveryButton?.addEventListener("click", () => this._resetDiscoveryFilters());
 
     this.favoritesFilterButton?.addEventListener("click", () => {
       this.isFavoritesFilterActive = !this.isFavoritesFilterActive;
@@ -751,6 +753,23 @@ export default class AppController {
     this.otherVideoFilterButton.textContent = this.isOtherVideoFilterActive
       ? "📼 その他の動画 表示中"
       : "📼 その他の動画";
+  }
+
+  _resetDiscoveryFilters() {
+    this.facetPrimaryKey     = FACET_PRIMARY_NONE;
+    this.facetSecondaryValue = "";
+    this.songPartialQuery    = "";
+    if (this.facetPrimarySelect) {
+      this.facetPrimarySelect.value = FACET_PRIMARY_NONE;
+    }
+    this._populateFacetSecondaryOptions();
+    if (this.facetSecondarySelect) {
+      this.facetSecondarySelect.value = "";
+    }
+    if (this.songPartialInput) {
+      this.songPartialInput.value = "";
+    }
+    this.render();
   }
 
   _resetFilters() {

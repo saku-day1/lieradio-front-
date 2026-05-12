@@ -216,6 +216,12 @@ body {
   border-color: var(--accent);
 }
 
+.discovery-reset-row {
+  margin-top: 12px;
+  display: flex;
+  justify-content: flex-end;
+}
+
 .selection-notice {
   margin: 8px 0 0;
   font-size: 0.82rem;
