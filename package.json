@@ -1,8 +1,12 @@
 {
   "scripts": {
-    "verify-absence": "node scripts/verify-absence.mjs"
+    "verify-absence": "node scripts/verify-absence.mjs",
+    "import-episode-meta": "node scripts/import-episode-meta.mjs"
   },
   "dependencies": {
     "@upstash/redis": "^1.38.0"
+  },
+  "devDependencies": {
+    "xlsx": "^0.18.5"
   }
 }

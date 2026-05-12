@@ -16,16 +16,63 @@ import {
 } from "../model/EpisodeRepository.js";
 import { UNIT_FILTERS, CAST_COLOR_MAP } from "../constants.js";
 
+const META_TYPE_LABELS = {
+  corner: "コーナー",
+  lunchSong: "リクエスト曲",
+  birthday: "誕生日祝い",
+  incident: "事件・ネタ備考",
+  externalShow: "外部番組・メディア",
+  eventName: "イベント",
+  animeSeasonTag: "アニメ期タグ",
+  netaTag: "タグ",
+  liveImpression: "ライブ感想",
+  eventImpression: "イベント感想",
+  animeImpression: "アニメ感想",
+  miscTag: "備考タグ",
+  remark: "備考",
+  generic: "メタ情報"
+};
+
+/**
+ * Excel 由来タグ一覧をユーザー向けの詳細リストに変換する。
+ */
+function metaDetailsHtml(manualMeta) {
+  if (!manualMeta || !Array.isArray(manualMeta.tags) || manualMeta.tags.length === 0) {
+    return "";
+  }
+
+  const rows = [...manualMeta.tags].sort(
+    (a, b) =>
+      Number(b.priority || 0) - Number(a.priority || 0) ||
+      String(META_TYPE_LABELS[a.type] || a.type).localeCompare(String(META_TYPE_LABELS[b.type] || b.type), "ja") ||
+      a.name.localeCompare(b.name, "ja")
+  );
+
+  const body = rows
+    .map((tag) => {
+      const category = META_TYPE_LABELS[tag.type] || tag.type || "情報";
+      const flags = [`検索:${tag.searchable ? "対象" : "除外"}`, `一覧:${tag.visibleInList ? "表示" : "非表示"}`, `優先:${tag.priority ?? 0}`];
+      const flagText = `<span class="meta-tag-flag">${escapeHtml(flags.join(" / "))}</span>`;
+      return `<li>
+        <div class="meta-tag-row-main">
+          <span class="meta-tag-type">${escapeHtml(category)}</span>
+          <span class="meta-tag-value">${escapeHtml(tag.name)}</span>
+        </div>
+        ${flagText}
+      </li>`;
+    })
+    .join("");
+
+  return `
+    <details class="episode-meta-details">
+      <summary>詳細（全タグ・備考）</summary>
+      <ol class="meta-tag-detail-list">${body}</ol>
+    </details>
+  `;
+}
+
 /**
  * エピソード一覧を描画する。
- *
- * @param {HTMLElement} episodeListEl  描画先の <ul> 要素
- * @param {object[]}    episodes       表示するエピソード配列
- * @param {boolean}     isAndMode      AND検索モードか否か
- * @param {Set}         favorites      お気に入り videoId セット
- * @param {Set}         watched        視聴済み videoId セット
- * @param {Function}    onFavToggle    お気に入りボタン押下時のコールバック (videoId) => void
- * @param {Function}    onWatchedToggle 視聴済みボタン押下時のコールバック (videoId) => void
  */
 export function renderEpisodeList(
   episodeListEl,
@@ -34,15 +81,18 @@ export function renderEpisodeList(
   favorites = new Set(),
   watched = new Set(),
   onFavToggle = () => {},
-  onWatchedToggle = () => {}
+  onWatchedToggle = () => {},
+  hitLabelsByVideoId = null
 ) {
+  const hitMap = hitLabelsByVideoId instanceof Map ? hitLabelsByVideoId : new Map();
+
   if (episodes.length === 0) {
     episodeListEl.innerHTML = "<li class='empty-message'>該当する放送回がありません。</li>";
     return;
   }
 
   episodeListEl.innerHTML = episodes
-    .map((episode) => buildEpisodeItemHtml(episode, isAndMode, favorites, watched))
+    .map((episode) => buildEpisodeItemHtml(episode, isAndMode, favorites, watched, hitMap))
     .join("");
 
   episodeListEl.querySelectorAll(".fav-button").forEach((btn) => {
@@ -64,12 +114,13 @@ export function renderEpisodeList(
 // 内部ヘルパー（このファイル内でのみ使用）
 // ---------------------------------------------------------------------------
 
-function buildEpisodeItemHtml(episode, isAndMode, favorites, watched) {
+/**
+ * @param {Map<string, string[]>} hitMap
+ */
+function buildEpisodeItemHtml(episode, isAndMode, favorites, watched, hitMap) {
   const castMembers = getAllCastMembers(episode);
   const displayedNumber = episode.broadcastNumber ?? episode.episodeNumber;
-  const titleText = isAndMode
-    ? episode.title
-    : formatEpisodeHeading(displayedNumber, episode.title);
+  const titleText = isAndMode ? episode.title : formatEpisodeHeading(displayedNumber, episode.title);
 
   const videoId = extractYoutubeVideoId(episode.youtubeUrl);
   const thumbUrl = getThumbnailUrl(videoId);
@@ -98,6 +149,41 @@ function buildEpisodeItemHtml(episode, isAndMode, favorites, watched) {
     ? `<button type="button" class="watched-button${isWatched ? " is-watched" : ""}" data-video-id="${videoId}" aria-label="${isWatched ? "視聴済みを解除" : "視聴済みにする"}" aria-pressed="${isWatched}">${isWatched ? "✓" : "○"}</button>`
     : "";
 
+  const manualMeta = episode.manualMeta;
+  const hitLines =
+    videoId && hitMap?.has(videoId)
+      ? (hitMap.get(videoId) || [])
+          .map((line) => `<li>${escapeHtml(line)}</li>`)
+          .join("")
+      : "";
+  const hitBlock = hitLines
+    ? `<ul class="episode-hit-lines" aria-label="検索ヒット詳細">${hitLines}</ul>`
+    : "";
+
+  const cornersLineHtml = manualMeta?.corners?.length
+    ? `<p class="meta-line episode-line-corners"><span class="meta-k">コーナー</span><span class="meta-v">${manualMeta.corners
+        .map((x) => escapeHtml(x))
+        .join(" / ")}</span></p>`
+    : "";
+
+  const lunchLineHtml = manualMeta?.lunchTimeRequestSong
+    ? `<p class="meta-line episode-line-lunch"><span class="meta-k">リクエスト曲</span><span class="meta-v">${escapeHtml(manualMeta.lunchTimeRequestSong)}</span></p>`
+    : "";
+
+  const primaryTags = manualMeta?.primaryTagsForList || [];
+  const primaryHtml = primaryTags.length
+    ? `<div class="primary-tag-row" aria-label="主要タグ">${primaryTags
+        .map(
+          (t) =>
+            `<span class="primary-tag-chip" title="${escapeHtml(META_TYPE_LABELS[t.type] || t.type)}">${escapeHtml(
+              t.name
+            )}</span>`
+        )
+        .join("")}</div>`
+    : "";
+
+  const detailsHtml = metaDetailsHtml(manualMeta);
+
   return `
     <li class="episode-item">
       <div class="episode-item-layout">
@@ -109,7 +195,12 @@ function buildEpisodeItemHtml(episode, isAndMode, favorites, watched) {
           </div>
           <div class="cast-badges" aria-label="出演者">${castBadgesHtml}</div>
           ${unitBadgesHtml ? `<div class="unit-badges" aria-label="ユニット">${unitBadgesHtml}</div>` : ""}
+          ${cornersLineHtml}
+          ${lunchLineHtml}
+          ${primaryHtml}
+          ${hitBlock}
           <p class="meta">公開日: ${safePublishedAt}</p>
+          ${detailsHtml}
           <a href="${safeYoutubeUrl}" target="_blank" rel="noopener noreferrer">YouTubeで見る</a>
         </div>
       </div>

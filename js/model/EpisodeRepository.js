@@ -68,6 +68,45 @@ export function getAllCastMembers(episode) {
   return merged.length > 0 ? [...new Set(merged)] : ["出演者情報未設定"];
 }
 
+/**
+ * メタ情報（Excel 由来など）JSON を読み込む。
+ * 開発時のみ存在しない場合がある。
+ */
+async function fetchEpisodeManualMetaOnce() {
+  try {
+    const response = await fetch("./data/episodeMeta.json");
+    if (!response.ok) {
+      return [];
+    }
+    return response.json();
+  } catch (_error) {
+    return [];
+  }
+}
+
+/**
+ * メタオブジェクトを broadcastNumber でエピソードへマージする。
+ */
+export function mergeManualMetaIntoEpisodes(episodes, manualMetaRecords) {
+  if (!Array.isArray(manualMetaRecords) || manualMetaRecords.length === 0) {
+    return episodes;
+  }
+
+  /** @type {Map<number, object>} */
+  const map = new Map();
+  for (const record of manualMetaRecords) {
+    const n = record?.broadcastNumber;
+    if (typeof n !== "number" || !Number.isFinite(n)) continue;
+    map.set(n, record);
+  }
+
+  return episodes.map((episode) => {
+    const num = episode.broadcastNumber ?? episode.episodeNumber;
+    const manual = typeof num === "number" ? map.get(num) : undefined;
+    return manual ? { ...episode, manualMeta: manual } : { ...episode };
+  });
+}
+
 // ---------------------------------------------------------------------------
 // データ取得
 // ---------------------------------------------------------------------------
@@ -77,25 +116,32 @@ export function getAllCastMembers(episode) {
  * 1) /api/episodes（Vercel サーバーレス）を優先
  * 2) 失敗した場合は ./data/episodes.json へフォールバック
  *
- * 将来 Spring Boot 静的 JSON に切り替える場合はここの URL を変えるだけでよい。
+ * 取得後、`./data/episodeMeta.json` があれば manualMeta を付与する。
  */
 export async function fetchEpisodes() {
+  let episodesPayload;
+
   try {
     const apiResponse = await fetch("./api/episodes");
     if (apiResponse.ok) {
-      return apiResponse.json();
+      episodesPayload = await apiResponse.json();
     }
   } catch (error) {
     console.warn("API fetch failed. Fallback to local JSON.", error);
   }
 
-  const localResponse = await fetch("./data/episodes.json");
-  if (!localResponse.ok) {
-    throw new Error(`Fetch failed: ${localResponse.status}`);
+  if (!episodesPayload) {
+    const localResponse = await fetch("./data/episodes.json");
+    if (!localResponse.ok) {
+      throw new Error(`Fetch failed: ${localResponse.status}`);
+    }
+    episodesPayload = await localResponse.json();
   }
 
-  return localResponse.json();
+  const manualRecords = await fetchEpisodeManualMetaOnce();
+  return mergeManualMetaIntoEpisodes(episodesPayload, manualRecords);
 }
+
 
 // ---------------------------------------------------------------------------
 // フィルタリング

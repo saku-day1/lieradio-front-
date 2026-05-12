@@ -16,10 +16,48 @@
       <li>AND絞り込み（最大5人）</li>
       <li>出演回数・共演者ランキング</li>
       <li>♡ お気に入り / ✓ 視聴済み管理</li>
+      <li>コーナー・楽曲などの詳細検索</li>
     </ul>
   </header>
 
   <main class="container">
+    <section id="discoveryPanel" class="card search-discovery-card">
+      <div class="search-discovery-header">
+        <h2 class="discovery-title">詳細検索</h2>
+        <p class="discovery-hint">出演者に加え、コーナーや楽曲などからでも探せます。</p>
+      </div>
+      <div class="discovery-grid">
+        <label class="search-field-label" for="globalSearchInput">フリーワード</label>
+        <div class="search-inline">
+          <input
+            id="globalSearchInput"
+            type="search"
+            autocomplete="off"
+            enterkeyhint="search"
+            inputmode="search"
+            placeholder="出演者・曲名・ライブ名・イベント・アニメ期など">
+          <button type="button" id="clearGlobalSearchButton" class="tiny-button" aria-label="検索語をクリア">クリア</button>
+        </div>
+        <label class="search-field-label" for="searchCategorySelect">検索カテゴリ</label>
+        <select id="searchCategorySelect">
+          <option value="all">すべて（横断）</option>
+          <option value="cast">出演者</option>
+          <option value="song">楽曲（リクエスト曲）</option>
+          <option value="corner">コーナー</option>
+          <option value="liveImpression">ライブ感想</option>
+          <option value="eventImpression">イベント感想</option>
+          <option value="animeImpression">アニメ感想</option>
+          <option value="birthday">誕生日祝い</option>
+          <option value="publicRecording">公開録音（タイトル）</option>
+          <option value="miscTag">タグ・備考</option>
+        </select>
+      </div>
+      <div class="preset-chip-section">
+        <p class="preset-chip-label">おすすめのまとめ</p>
+        <div id="presetChipBar" class="preset-chip-bar" aria-label="プリセット検索"></div>
+      </div>
+    </section>
+
     <section class="controls card">
       <div class="control-group">
         <div id="castQuickFilters" class="cast-quick-filters"></div>

@@ -29,6 +29,13 @@ import {
   MAX_AND_CAST_SELECTION
 } from "../constants.js";
 
+import {
+  applyExtendedEpisodeSearch,
+  isExtendedDiscoveryActive,
+  SEARCH_CATEGORY,
+  SEARCH_PRESETS
+} from "../model/episodeSearch.js";
+
 export default class AppController {
   constructor() {
     // --- DOM 参照 ---
@@ -51,6 +58,11 @@ export default class AppController {
     this.unwatchedFilterButton   = document.getElementById("unwatchedFilterButton");
     this.otherVideoFilterButton  = document.getElementById("otherVideoFilterButton");
 
+    this.globalSearchInput       = document.getElementById("globalSearchInput");
+    this.searchCategorySelect    = document.getElementById("searchCategorySelect");
+    this.clearGlobalSearchButton = document.getElementById("clearGlobalSearchButton");
+    this.presetChipBar           = document.getElementById("presetChipBar");
+
     // ランキング View に渡す DOM まとめ
     this.rankingElements = {
       rankingSection:  this.rankingSection,
@@ -71,6 +83,10 @@ export default class AppController {
     this.isFavoritesFilterActive  = false;
     this.watchedFilterMode     = ""; // "" | "watched" | "unwatched"
     this.isUnitSectionExpanded = false;
+
+    this.freeQuery             = "";
+    this.searchCategoryId      = SEARCH_CATEGORY.ALL;
+    this.activePresetKey       = "";
   }
 
   // -------------------------------------------------------------------------
@@ -82,6 +98,7 @@ export default class AppController {
       this.allEpisodes = await fetchEpisodes();
       this._renderCastQuickFilters();
       this._renderUnitQuickFilters();
+      this._renderPresetChipBar();
       this._bindEvents();
       this.render();
     } catch (error) {
@@ -131,6 +148,41 @@ export default class AppController {
     this.otherVideoFilterButton?.addEventListener("click", () => {
       this.isOtherVideoFilterActive = !this.isOtherVideoFilterActive;
       this.render();
+    });
+
+    this.globalSearchInput?.addEventListener("input", () => {
+      this.freeQuery = String(this.globalSearchInput.value || "");
+      this.render();
+    });
+
+    this.clearGlobalSearchButton?.addEventListener("click", () => {
+      this.freeQuery = "";
+      if (this.globalSearchInput) {
+        this.globalSearchInput.value = "";
+      }
+      this.render();
+    });
+
+    this.searchCategorySelect?.addEventListener("change", () => {
+      this.searchCategoryId = String(this.searchCategorySelect.value || SEARCH_CATEGORY.ALL);
+      this.render();
+    });
+  }
+
+  _renderPresetChipBar() {
+    if (!this.presetChipBar) return;
+    this.presetChipBar.innerHTML = SEARCH_PRESETS.map(
+      (p) =>
+        `<button type="button" class="preset-chip-button" data-preset-key="${p.key}">
+          ${p.label}
+        </button>`
+    ).join("");
+    this.presetChipBar.querySelectorAll(".preset-chip-button").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const key = btn.dataset.presetKey || "";
+        this.activePresetKey = this.activePresetKey === key ? "" : key;
+        this.render();
+      });
     });
   }
 
@@ -231,6 +283,7 @@ export default class AppController {
   // -------------------------------------------------------------------------
 
   render() {
+    const discoveryActiveUi = this._isDiscoveryUiActive();
     const hasFilter = this._isAnyFilterActive();
     if (!this.lastRenderHadFilter && hasFilter) this.isEpisodeListVisible = true;
     if (this.lastRenderHadFilter && !hasFilter) this.isEpisodeListVisible = false;
@@ -239,7 +292,8 @@ export default class AppController {
     const keyword    = this.quickFilterKeyword;
     const isAndMode  = this.andFilterNames.length >= 2;
     const isUnitMode = Boolean(this.activeUnitFilterKey);
-    const hideRanking = isAndMode || isUnitMode || this.isOtherVideoFilterActive;
+    const hideRanking =
+      isAndMode || isUnitMode || this.isOtherVideoFilterActive || discoveryActiveUi;
     const sortOrder  = this.sortSelect.value;
 
     const favorites = loadFavorites();
@@ -257,8 +311,20 @@ export default class AppController {
       this.isOtherVideoFilterActive,
       UNIT_FILTERS
     );
-    const sortedEpisodes = sortEpisodes(filteredEpisodes, sortOrder);
-    const ranking = buildRanking(filteredEpisodes, keyword, this.quickFilterKeyword, PRIORITY_CAST_FILTERS);
+
+    const extOpts = {
+      freeText: this.freeQuery,
+      categoryId: this.searchCategoryId,
+      presetKey: this.activePresetKey,
+      unitFilters: UNIT_FILTERS
+    };
+    const { episodes: narrowedEpisodes, hitLabelsByVideoId } = applyExtendedEpisodeSearch(
+      filteredEpisodes,
+      extOpts
+    );
+
+    const sortedEpisodes = sortEpisodes(narrowedEpisodes, sortOrder);
+    const ranking = buildRanking(narrowedEpisodes, keyword, this.quickFilterKeyword, PRIORITY_CAST_FILTERS);
 
     // View に描画を委譲
     renderEpisodeList(
@@ -267,8 +333,15 @@ export default class AppController {
       isAndMode,
       favorites,
       watched,
-      (videoId) => { toggleFavorite(videoId); this.render(); },
-      (videoId) => { toggleWatched(videoId); this.render(); }
+      (videoId) => {
+        toggleFavorite(videoId);
+        this.render();
+      },
+      (videoId) => {
+        toggleWatched(videoId);
+        this.render();
+      },
+      hitLabelsByVideoId
     );
     renderRankingSection(this.rankingElements, ranking, keyword, hideRanking, this.isRankingVisible);
 
@@ -279,6 +352,7 @@ export default class AppController {
     this._updateResetButtonVisibility();
     this._updateCastSelectionNotice();
     this._updateEpisodeResultsVisibility();
+    this._updatePresetChipHighlight();
     this._updateFavoritesFilterButton();
     this._updateWatchedFilterButtons();
     this._updateOtherVideoFilterButton();
@@ -324,8 +398,25 @@ export default class AppController {
       Boolean(this.activeUnitFilterKey) ||
       this.isFavoritesFilterActive ||
       Boolean(this.watchedFilterMode) ||
-      this.isOtherVideoFilterActive
+      this.isOtherVideoFilterActive ||
+      this._isDiscoveryUiActive()
     );
+  }
+
+  _isDiscoveryUiActive() {
+    return isExtendedDiscoveryActive({
+      freeText: this.freeQuery,
+      categoryId: this.searchCategoryId,
+      presetKey: this.activePresetKey
+    });
+  }
+
+  _updatePresetChipHighlight() {
+    if (!this.presetChipBar) return;
+    this.presetChipBar.querySelectorAll(".preset-chip-button").forEach((btn) => {
+      const key = btn.dataset.presetKey || "";
+      btn.classList.toggle("is-active", Boolean(this.activePresetKey) && key === this.activePresetKey);
+    });
   }
 
   _updateEpisodeResultsVisibility() {
@@ -360,7 +451,10 @@ export default class AppController {
     const shouldShow =
       this.andFilterNames.length > 0 ||
       Boolean(this.quickFilterKeyword) ||
-      Boolean(this.activeUnitFilterKey);
+      Boolean(this.activeUnitFilterKey) ||
+      Boolean(this.freeQuery.trim()) ||
+      this.searchCategoryId !== SEARCH_CATEGORY.ALL ||
+      Boolean(this.activePresetKey);
     this.resetFiltersButton.classList.toggle("hidden", !shouldShow);
   }
 
@@ -395,6 +489,16 @@ export default class AppController {
     this.isFavoritesFilterActive  = false;
     this.watchedFilterMode     = "";
     this.isOtherVideoFilterActive = false;
+
+    this.freeQuery             = "";
+    this.searchCategoryId      = SEARCH_CATEGORY.ALL;
+    this.activePresetKey       = "";
+    if (this.globalSearchInput) {
+      this.globalSearchInput.value = "";
+    }
+    if (this.searchCategorySelect) {
+      this.searchCategorySelect.value = SEARCH_CATEGORY.ALL;
+    }
     this.render();
   }
 }
