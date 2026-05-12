@@ -635,6 +635,24 @@ h2 {
   text-decoration: underline;
 }
 
+.footer-x-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  text-decoration: none;
+}
+
+.footer-x-link:hover {
+  text-decoration: underline;
+}
+
+.x-icon {
+  width: 13px;
+  height: 13px;
+  fill: currentColor;
+  flex-shrink: 0;
+}
+
 .search-discovery-card {
   display: flex;
   flex-direction: column;
