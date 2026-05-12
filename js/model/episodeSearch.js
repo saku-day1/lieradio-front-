@@ -184,6 +184,13 @@ export function applyFacetDiscoveryFilter(episodes, opts) {
 
   let out = episodes.slice();
 
+  const normSong = normalizeSearchText(String(songPartialQuery || "").trim());
+
+  // リクエスト曲はキーワード未入力なら0件
+  if (facetPrimary === "lunchSong" && !normSong) {
+    return { episodes: [], hitLabelsByVideoId: hitMap };
+  }
+
   if (facetPrimary) {
     if (facetPrimary === "publicRecording") {
       out = out.filter((episode) => episodeHasPublicRecordingMention(episode));
@@ -205,7 +212,6 @@ export function applyFacetDiscoveryFilter(episodes, opts) {
   }
 
   // 楽曲キーワード絞り込み（lunchSong ファセット選択時にのみ入力される）
-  const normSong = normalizeSearchText(String(songPartialQuery || "").trim());
   if (normSong) {
     out = out.filter((episode) => {
       const hay = collectLunchHaystack(episode);

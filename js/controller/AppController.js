@@ -315,6 +315,8 @@ export default class AppController {
         return "メンバーのお祝い回を選んでください";
       case "incident":
         return "どの出来事？";
+      case "publicRecording":
+        return "公録を選んでください";
       default:
         return "（このカテゴリのすべて）";
     }
