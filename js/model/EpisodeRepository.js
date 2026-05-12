@@ -101,6 +101,9 @@ export function mergeManualMetaIntoEpisodes(episodes, manualMetaRecords) {
   }
 
   return episodes.map((episode) => {
+    if (isOtherVideoTitle(episode.title)) {
+      return { ...episode };
+    }
     const num = episode.broadcastNumber ?? episode.episodeNumber;
     const manual = typeof num === "number" ? map.get(num) : undefined;
     return manual ? { ...episode, manualMeta: manual } : { ...episode };
