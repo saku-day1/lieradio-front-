@@ -6,6 +6,7 @@ import { normalizeSearchText } from "./EpisodeRepository.js";
 import { BIRTHDAY_CAST_ORDER } from "../constants.js";
 
 const LIELLA_DIARY_PREFIX = "Li絵lla!日記";
+const LIELLA_SPECIAL_PREFIX = "Li絵lla!日記スペシャル";
 
 /**
  * @typedef {{
@@ -84,7 +85,9 @@ export function buildFacetCatalog(episodes) {
     const meta = episode.manualMeta || {};
 
     for (const c of meta.corners || []) {
-      if (String(c).startsWith(LIELLA_DIARY_PREFIX)) {
+      if (String(c).startsWith(LIELLA_SPECIAL_PREFIX)) {
+        addLabel(corners, LIELLA_SPECIAL_PREFIX);
+      } else if (String(c).startsWith(LIELLA_DIARY_PREFIX)) {
         hasLiellaDiary = true;
         const colonIdx = String(c).indexOf(":");
         if (colonIdx !== -1) {
@@ -107,7 +110,9 @@ export function buildFacetCatalog(episodes) {
 
       switch (tag.type) {
         case "corner": {
-          if (String(name).startsWith(LIELLA_DIARY_PREFIX)) {
+          if (String(name).startsWith(LIELLA_SPECIAL_PREFIX)) {
+            addLabel(corners, LIELLA_SPECIAL_PREFIX);
+          } else if (String(name).startsWith(LIELLA_DIARY_PREFIX)) {
             hasLiellaDiary = true;
             const colonIdx = String(name).indexOf(":");
             if (colonIdx !== -1) {
@@ -144,11 +149,16 @@ export function buildFacetCatalog(episodes) {
     }
   }
 
-  // Li絵lla!日記 を独立コーナータグとして先頭に追加
+  // Li絵lla!日記 を先頭に、スペシャルを2番目に固定
   if (hasLiellaDiary) {
+    const hasSpecial = corners.has(normalizeSearchText(LIELLA_SPECIAL_PREFIX));
+    corners.delete(normalizeSearchText(LIELLA_SPECIAL_PREFIX));
     const sorted = sortedUniqueValues(corners);
     corners.clear();
     corners.set(normalizeSearchText(LIELLA_DIARY_PREFIX), LIELLA_DIARY_PREFIX);
+    if (hasSpecial) {
+      corners.set(normalizeSearchText(LIELLA_SPECIAL_PREFIX), LIELLA_SPECIAL_PREFIX);
+    }
     for (const v of sorted) {
       corners.set(normalizeSearchText(v), v);
     }

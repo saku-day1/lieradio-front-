@@ -106,8 +106,15 @@ export function episodeMatchesFacetSecondary(episode, facetPrimary, rawValue) {
     case "corner": {
       const needleNorm = normalizeSearchText(needle);
       const liellaNorm = normalizeSearchText("Li絵lla!日記");
+      const liellaSpecialNorm = normalizeSearchText("Li絵lla!日記スペシャル");
+      if (needleNorm === liellaSpecialNorm) {
+        return cornerStrings(episode).some((t) => normalizeSearchText(t).startsWith(liellaSpecialNorm));
+      }
       if (needleNorm === liellaNorm) {
-        return cornerStrings(episode).some((t) => normalizeSearchText(t).startsWith(liellaNorm));
+        return cornerStrings(episode).some((t) => {
+          const tn = normalizeSearchText(t);
+          return tn.startsWith(liellaNorm) && !tn.startsWith(liellaSpecialNorm);
+        });
       }
       return cornerStrings(episode).some((t) => normEq(t, needle));
     }

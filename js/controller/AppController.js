@@ -70,6 +70,9 @@ export default class AppController {
     this.cornerPickClearButton    = document.getElementById("cornerPickClearButton");
     this.liellaDiaryCastWrap      = document.getElementById("liellaDiaryCastWrap");
     this.liellaDiaryCastList      = document.getElementById("liellaDiaryCastList");
+    this.animePickWrap            = document.getElementById("animePickWrap");
+    this.animePickList            = document.getElementById("animePickList");
+    this.animePickClearButton     = document.getElementById("animePickClearButton");
 
     // ランキング View に渡す DOM まとめ
     this.rankingElements = {
@@ -206,6 +209,11 @@ export default class AppController {
       this.render();
     });
 
+    this.animePickClearButton?.addEventListener("click", () => {
+      this.facetSecondaryValue = "";
+      this.render();
+    });
+
     this.pagePrevButton?.addEventListener("click", () => {
       if (this.currentPage > 1) {
         this.currentPage -= 1;
@@ -322,12 +330,14 @@ export default class AppController {
 
     const showCornerExplorer = primary === "corner";
     const showSongInput = primary === "lunchSong";
+    const showAnimePick = primary === "animeImpression";
     const showSecondaryPullDown =
-      Boolean(primary) && primary !== "corner" && primary !== "lunchSong";
+      Boolean(primary) && primary !== "corner" && primary !== "lunchSong" && primary !== "animeImpression";
 
     this.cornerPickWrap?.classList.toggle("hidden", !showCornerExplorer);
     this.facetSecondaryWrap?.classList.toggle("hidden", !showSecondaryPullDown);
     this.songPartialWrap?.classList.toggle("hidden", !showSongInput);
+    this.animePickWrap?.classList.toggle("hidden", !showAnimePick);
 
     if (this.facetSecondaryLabel) {
       this.facetSecondaryLabel.textContent = this._facetSecondaryHeadingText(primary || "");
@@ -342,13 +352,15 @@ export default class AppController {
     root.replaceChildren();
 
     const LIELLA_PREFIX = "Li絵lla!日記";
+    const LIELLA_SPECIAL_PREFIX = "Li絵lla!日記スペシャル";
     for (const label of catalog.corners) {
       const btn = document.createElement("button");
       btn.type = "button";
       btn.className = "corner-pick-item";
       const isLiellaSelected =
         label === LIELLA_PREFIX &&
-        String(this.facetSecondaryValue).startsWith(LIELLA_PREFIX);
+        String(this.facetSecondaryValue).startsWith(LIELLA_PREFIX) &&
+        !String(this.facetSecondaryValue).startsWith(LIELLA_SPECIAL_PREFIX);
       if (this.facetSecondaryValue === label || isLiellaSelected) {
         btn.classList.add("is-selected");
       }
@@ -360,13 +372,36 @@ export default class AppController {
     this._renderLiellaDiaryCastList(catalog);
   }
 
+  _renderAnimePickList() {
+    const root = this.animePickList;
+    const catalog = this._facetCatalog;
+    if (!root || !catalog) return;
+
+    root.replaceChildren();
+    for (const label of catalog.animeImpressions) {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "corner-pick-item";
+      if (this.facetSecondaryValue === label) btn.classList.add("is-selected");
+      btn.textContent = label;
+      btn.addEventListener("click", () => {
+        this.facetSecondaryValue = this.facetSecondaryValue === label ? "" : label;
+        this.render();
+      });
+      root.appendChild(btn);
+    }
+  }
+
   _renderLiellaDiaryCastList(catalog) {
     const wrap = this.liellaDiaryCastWrap;
     const listEl = this.liellaDiaryCastList;
     if (!wrap || !listEl || !catalog) return;
 
     const LIELLA_PREFIX = "Li絵lla!日記";
-    const liellaActive = String(this.facetSecondaryValue).startsWith(LIELLA_PREFIX);
+    const LIELLA_SPECIAL_PREFIX = "Li絵lla!日記スペシャル";
+    const liellaActive =
+      String(this.facetSecondaryValue).startsWith(LIELLA_PREFIX) &&
+      !String(this.facetSecondaryValue).startsWith(LIELLA_SPECIAL_PREFIX);
 
     wrap.classList.toggle("hidden", !liellaActive);
     if (!liellaActive) return;
@@ -492,6 +527,7 @@ export default class AppController {
     this._updateDiscoveryVisibility();
     this._updateFacetAccessoryVisibility();
     this._renderCornerPickList();
+    this._renderAnimePickList();
 
     const discoveryActiveUi = this._isDiscoveryUiActive();
     const hasFilter = this._isAnyFilterActive();
