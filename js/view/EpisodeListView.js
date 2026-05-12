@@ -254,7 +254,7 @@ function buildEpisodeItemHtml(episode, isAndMode, favorites, watched, hitMap, me
         <div class="episode-content">
           <div class="episode-title-row">
             <h3>${safeTitle}</h3>
-            ${watchedBtn}${favBtn}${memoBtn}
+            <div class="episode-card-actions">${watchedBtn}${favBtn}${memoBtn}</div>
           </div>
           <div class="cast-badges" aria-label="出演者">${castBadgesHtml}</div>
           ${unitBadgesHtml ? `<div class="unit-badges" aria-label="ユニット">${unitBadgesHtml}</div>` : ""}
