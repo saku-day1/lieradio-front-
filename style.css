@@ -508,6 +508,18 @@ h2 {
   word-break: break-word;
 }
 
+.episode-bottom-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.youtube-link {
+  font-size: 0.9rem;
+}
+
 .episode-card-actions {
   display: flex;
   align-items: center;

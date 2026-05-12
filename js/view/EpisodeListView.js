@@ -254,7 +254,6 @@ function buildEpisodeItemHtml(episode, isAndMode, favorites, watched, hitMap, me
         <div class="episode-content">
           <div class="episode-title-row">
             <h3>${safeTitle}</h3>
-            <div class="episode-card-actions">${watchedBtn}${favBtn}${memoBtn}</div>
           </div>
           <div class="cast-badges" aria-label="出演者">${castBadgesHtml}</div>
           ${unitBadgesHtml ? `<div class="unit-badges" aria-label="ユニット">${unitBadgesHtml}</div>` : ""}
@@ -266,7 +265,10 @@ function buildEpisodeItemHtml(episode, isAndMode, favorites, watched, hitMap, me
           ${memoEditHtml}
           <p class="meta">公開日: ${safePublishedAt}</p>
           ${detailsHtml}
-          <a href="${safeYoutubeUrl}" target="_blank" rel="noopener noreferrer">YouTubeで見る</a>
+          <div class="episode-bottom-row">
+            <a href="${safeYoutubeUrl}" target="_blank" rel="noopener noreferrer" class="youtube-link">YouTubeで見る</a>
+            <div class="episode-card-actions">${watchedBtn}${favBtn}${memoBtn}</div>
+          </div>
         </div>
       </div>
     </li>
