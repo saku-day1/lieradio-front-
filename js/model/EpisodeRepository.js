@@ -302,15 +302,14 @@ export function buildSongRanking(episodes, limit = 3) {
   for (const episode of episodes) {
     if (isCompilationTitle(episode.title)) continue;
     const meta = episode.manualMeta || {};
-    const songs = [];
-    if (meta.lunchTimeRequestSong) songs.push(meta.lunchTimeRequestSong);
+    const songsPerEpisode = new Set();
+    if (meta.lunchTimeRequestSong) songsPerEpisode.add(meta.lunchTimeRequestSong.trim());
     const tags = Array.isArray(meta.tags) ? meta.tags : [];
     for (const tag of tags) {
-      if (tag.type === "lunchSong" && tag.name) songs.push(tag.name);
+      if (tag.type === "lunchSong" && tag.name) songsPerEpisode.add(tag.name.trim());
     }
-    for (const song of songs) {
-      const key = song.trim();
-      if (key) countMap[key] = (countMap[key] || 0) + 1;
+    for (const song of songsPerEpisode) {
+      if (song) countMap[song] = (countMap[song] || 0) + 1;
     }
   }
   return Object.entries(countMap)
