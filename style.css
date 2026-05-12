@@ -12,6 +12,10 @@
   box-sizing: border-box;
 }
 
+button:focus:not(:focus-visible) {
+  outline: none;
+}
+
 body {
   margin: 0;
   font-family: "Segoe UI", "Hiragino Kaku Gothic ProN", "Yu Gothic UI", sans-serif;
