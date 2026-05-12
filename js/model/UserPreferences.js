@@ -6,6 +6,7 @@
 
 const FAVORITES_KEY = "lieradio_favorites";
 const WATCHED_KEY = "lieradio_watched";
+const MEMOS_KEY = "lieradio_memos";
 
 export function loadFavorites() {
   try {
@@ -51,4 +52,26 @@ export function toggleWatched(videoId) {
   } catch {
     // localStorage が使えない環境では無視
   }
+}
+
+export function loadMemos() {
+  try {
+    const data = localStorage.getItem(MEMOS_KEY);
+    return data ? new Map(Object.entries(JSON.parse(data))) : new Map();
+  } catch {
+    return new Map();
+  }
+}
+
+export function saveMemo(videoId, text) {
+  const memos = loadMemos();
+  const trimmed = text.trim();
+  if (trimmed) {
+    memos.set(videoId, trimmed);
+  } else {
+    memos.delete(videoId);
+  }
+  try {
+    localStorage.setItem(MEMOS_KEY, JSON.stringify(Object.fromEntries(memos)));
+  } catch {}
 }

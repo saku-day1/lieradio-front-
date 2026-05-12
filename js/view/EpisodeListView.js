@@ -80,7 +80,9 @@ export function renderEpisodeList(
   watched = new Set(),
   onFavToggle = () => {},
   onWatchedToggle = () => {},
-  hitLabelsByVideoId = null
+  hitLabelsByVideoId = null,
+  memos = new Map(),
+  onMemoSave = () => {}
 ) {
   const hitMap = hitLabelsByVideoId instanceof Map ? hitLabelsByVideoId : new Map();
 
@@ -90,7 +92,7 @@ export function renderEpisodeList(
   }
 
   episodeListEl.innerHTML = episodes
-    .map((episode) => buildEpisodeItemHtml(episode, isAndMode, favorites, watched, hitMap))
+    .map((episode) => buildEpisodeItemHtml(episode, isAndMode, favorites, watched, hitMap, memos))
     .join("");
 
   episodeListEl.querySelectorAll(".fav-button").forEach((btn) => {
@@ -106,6 +108,36 @@ export function renderEpisodeList(
       if (videoId) onWatchedToggle(videoId);
     });
   });
+
+  episodeListEl.querySelectorAll(".memo-button").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const videoId = btn.dataset.videoId;
+      const editWrap = episodeListEl.querySelector(`.memo-edit-wrap[data-video-id="${videoId}"]`);
+      if (!editWrap) return;
+      const isOpen = !editWrap.classList.contains("hidden");
+      editWrap.classList.toggle("hidden", isOpen);
+      if (!isOpen) editWrap.querySelector(".memo-textarea")?.focus();
+    });
+  });
+
+  episodeListEl.querySelectorAll(".memo-textarea").forEach((textarea) => {
+    const videoId = textarea.closest(".memo-edit-wrap")?.dataset.videoId;
+    if (!videoId) return;
+    textarea.addEventListener("blur", () => {
+      onMemoSave(videoId, textarea.value);
+      const hasMemo = Boolean(textarea.value.trim());
+      const preview = episodeListEl.querySelector(`.memo-preview[data-video-id="${videoId}"]`);
+      const btn = episodeListEl.querySelector(`.memo-button[data-video-id="${videoId}"]`);
+      if (preview) {
+        preview.textContent = textarea.value.trim();
+        preview.classList.toggle("hidden", !hasMemo);
+      }
+      if (btn) {
+        btn.classList.toggle("is-active", hasMemo);
+        btn.setAttribute("aria-pressed", String(hasMemo));
+      }
+    });
+  });
 }
 
 // ---------------------------------------------------------------------------
@@ -115,7 +147,7 @@ export function renderEpisodeList(
 /**
  * @param {Map<string, string[]>} hitMap
  */
-function buildEpisodeItemHtml(episode, isAndMode, favorites, watched, hitMap) {
+function buildEpisodeItemHtml(episode, isAndMode, favorites, watched, hitMap, memos = new Map()) {
   const castMembers = getAllCastMembers(episode);
   const displayedNumber = episode.broadcastNumber ?? episode.episodeNumber;
   const titleText = isAndMode ? episode.title : formatEpisodeHeading(displayedNumber, episode.title);
@@ -145,6 +177,18 @@ function buildEpisodeItemHtml(episode, isAndMode, favorites, watched, hitMap) {
     : "";
   const watchedBtn = videoId
     ? `<button type="button" class="watched-button${isWatched ? " is-watched" : ""}" data-video-id="${videoId}" aria-label="${isWatched ? "視聴済みを解除" : "視聴済みにする"}" aria-pressed="${isWatched}">${isWatched ? "✓" : "○"}</button>`
+    : "";
+
+  const memoText = videoId ? (memos.get(videoId) || "") : "";
+  const hasMemo = Boolean(memoText);
+  const memoBtn = videoId
+    ? `<button type="button" class="memo-button${hasMemo ? " is-active" : ""}" data-video-id="${videoId}" aria-label="メモ" aria-pressed="${hasMemo}">📝</button>`
+    : "";
+  const memoPreviewHtml = videoId
+    ? `<p class="memo-preview${hasMemo ? "" : " hidden"}" data-video-id="${videoId}">${escapeHtml(memoText)}</p>`
+    : "";
+  const memoEditHtml = videoId
+    ? `<div class="memo-edit-wrap hidden" data-video-id="${videoId}"><textarea class="memo-textarea" rows="3" placeholder="メモを入力…">${escapeHtml(memoText)}</textarea></div>`
     : "";
 
   const manualMeta = episode.manualMeta;
@@ -189,7 +233,7 @@ function buildEpisodeItemHtml(episode, isAndMode, favorites, watched, hitMap) {
         <div class="episode-content">
           <div class="episode-title-row">
             <h3>${safeTitle}</h3>
-            ${watchedBtn}${favBtn}
+            ${watchedBtn}${favBtn}${memoBtn}
           </div>
           <div class="cast-badges" aria-label="出演者">${castBadgesHtml}</div>
           ${unitBadgesHtml ? `<div class="unit-badges" aria-label="ユニット">${unitBadgesHtml}</div>` : ""}
@@ -197,6 +241,8 @@ function buildEpisodeItemHtml(episode, isAndMode, favorites, watched, hitMap) {
           ${lunchLineHtml}
           ${primaryHtml}
           ${hitBlock}
+          ${memoPreviewHtml}
+          ${memoEditHtml}
           <p class="meta">公開日: ${safePublishedAt}</p>
           ${detailsHtml}
           <a href="${safeYoutubeUrl}" target="_blank" rel="noopener noreferrer">YouTubeで見る</a>

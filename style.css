@@ -617,6 +617,73 @@ h2 {
   display: none !important;
 }
 
+.memo-filter-button {
+  border: 1px solid #3a4661;
+  border-radius: 10px;
+  padding: 6px 14px;
+  color: var(--text);
+  background: #1f2937;
+  cursor: pointer;
+  font-size: 0.88rem;
+  transition: border-color 120ms ease, background 120ms ease;
+}
+
+.memo-filter-button:hover {
+  border-color: var(--accent);
+}
+
+.memo-filter-button.is-active {
+  background: #1a2435;
+  border-color: var(--accent);
+  color: var(--accent-soft);
+}
+
+.memo-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 5px;
+  font-size: 1rem;
+  line-height: 1;
+  opacity: 0.4;
+  transition: opacity 0.15s;
+  flex-shrink: 0;
+}
+
+.memo-button:hover,
+.memo-button.is-active {
+  opacity: 1;
+}
+
+.memo-preview {
+  margin: 4px 0;
+  font-size: 0.88rem;
+  color: var(--muted);
+  white-space: pre-wrap;
+  word-break: break-word;
+  background: rgba(122, 162, 255, 0.07);
+  border-left: 2px solid var(--accent);
+  padding: 4px 8px;
+  border-radius: 0 4px 4px 0;
+}
+
+.memo-edit-wrap {
+  margin: 6px 0 4px;
+}
+
+.memo-textarea {
+  width: 100%;
+  min-height: 72px;
+  resize: vertical;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  border-radius: 8px;
+  padding: 8px 10px;
+  background: #141a25;
+  border: 1px solid var(--accent);
+  color: var(--text);
+}
+
 .site-footer {
   max-width: 900px;
   margin: 24px auto 32px;

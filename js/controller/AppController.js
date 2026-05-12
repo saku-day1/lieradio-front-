@@ -17,8 +17,12 @@ import {
   loadFavorites,
   loadWatched,
   toggleFavorite,
-  toggleWatched
+  toggleWatched,
+  loadMemos,
+  saveMemo
 } from "../model/UserPreferences.js";
+
+import { extractYoutubeVideoId } from "../model/EpisodeRepository.js";
 
 import { renderEpisodeList } from "../view/EpisodeListView.js";
 import { renderRankingSection } from "../view/RankingView.js";
@@ -54,6 +58,7 @@ export default class AppController {
     this.watchedFilterButton     = document.getElementById("watchedFilterButton");
     this.unwatchedFilterButton   = document.getElementById("unwatchedFilterButton");
     this.otherVideoFilterButton  = document.getElementById("otherVideoFilterButton");
+    this.memoFilterButton        = document.getElementById("memoFilterButton");
 
     this.toggleDiscoveryButton    = document.getElementById("toggleDiscoveryButton");
     this.discoveryContent         = document.getElementById("discoveryContent");
@@ -94,6 +99,7 @@ export default class AppController {
     this.isOtherVideoFilterActive = false;
     this.isFavoritesFilterActive  = false;
     this.watchedFilterMode     = ""; // "" | "watched" | "unwatched"
+    this.isMemoFilterActive    = false;
     this.isUnitSectionExpanded = false;
 
     this.facetPrimaryKey       = FACET_PRIMARY_NONE;
@@ -170,6 +176,11 @@ export default class AppController {
 
     this.otherVideoFilterButton?.addEventListener("click", () => {
       this.isOtherVideoFilterActive = !this.isOtherVideoFilterActive;
+      this.render();
+    });
+
+    this.memoFilterButton?.addEventListener("click", () => {
+      this.isMemoFilterActive = !this.isMemoFilterActive;
       this.render();
     });
 
@@ -551,6 +562,7 @@ export default class AppController {
 
     const favorites = loadFavorites();
     const watched   = loadWatched();
+    const memos     = loadMemos();
 
     const filteredEpisodes = filterEpisodes(
       this.allEpisodes,
@@ -565,6 +577,13 @@ export default class AppController {
       UNIT_FILTERS
     );
 
+    const memoFiltered = this.isMemoFilterActive
+      ? filteredEpisodes.filter((ep) => {
+          const vid = extractYoutubeVideoId(ep.youtubeUrl);
+          return vid && memos.has(vid);
+        })
+      : filteredEpisodes;
+
     const extOpts = {
       facetPrimary: this.facetPrimaryKey,
       facetSecondaryValue: this.facetSecondaryValue,
@@ -572,7 +591,7 @@ export default class AppController {
     };
 
     const { episodes: narrowedEpisodes, hitLabelsByVideoId } = applyFacetDiscoveryFilter(
-      filteredEpisodes,
+      memoFiltered,
       extOpts
     );
 
@@ -580,7 +599,7 @@ export default class AppController {
     const ranking = buildRanking(narrowedEpisodes, keyword, this.quickFilterKeyword, PRIORITY_CAST_FILTERS);
 
     // フィルター変更時はページを1に戻す
-    const filterKey = JSON.stringify({ keyword, andNames: this.andFilterNames, unitKey: this.activeUnitFilterKey, fav: this.isFavoritesFilterActive, watched: this.watchedFilterMode, other: this.isOtherVideoFilterActive, facet: this.facetPrimaryKey, secondary: this.facetSecondaryValue, song: this.songPartialQuery, sort: sortOrder });
+    const filterKey = JSON.stringify({ keyword, andNames: this.andFilterNames, unitKey: this.activeUnitFilterKey, fav: this.isFavoritesFilterActive, watched: this.watchedFilterMode, other: this.isOtherVideoFilterActive, memo: this.isMemoFilterActive, facet: this.facetPrimaryKey, secondary: this.facetSecondaryValue, song: this.songPartialQuery, sort: sortOrder });
     if (filterKey !== this._lastFilterKey) {
       this.currentPage = 1;
       this._lastFilterKey = filterKey;
@@ -608,7 +627,9 @@ export default class AppController {
         toggleWatched(videoId);
         this.render();
       },
-      hitLabelsByVideoId
+      hitLabelsByVideoId,
+      memos,
+      (videoId, text) => saveMemo(videoId, text)
     );
     renderRankingSection(this.rankingElements, ranking, keyword, hideRanking, this.isRankingVisible);
 
@@ -623,6 +644,7 @@ export default class AppController {
     this._updateFavoritesFilterButton();
     this._updateWatchedFilterButtons();
     this._updateOtherVideoFilterButton();
+    this._updateMemoFilterButton();
   }
 
   // -------------------------------------------------------------------------
@@ -760,6 +782,12 @@ export default class AppController {
       : "📼 その他の動画";
   }
 
+  _updateMemoFilterButton() {
+    if (!this.memoFilterButton) return;
+    this.memoFilterButton.classList.toggle("is-active", this.isMemoFilterActive);
+    this.memoFilterButton.textContent = this.isMemoFilterActive ? "📝 メモあり 表示中" : "📝 メモあり";
+  }
+
   _resetDiscoveryFilters() {
     this.facetPrimaryKey     = FACET_PRIMARY_NONE;
     this.facetSecondaryValue = "";
@@ -784,6 +812,7 @@ export default class AppController {
     this.isFavoritesFilterActive  = false;
     this.watchedFilterMode     = "";
     this.isOtherVideoFilterActive = false;
+    this.isMemoFilterActive    = false;
 
     this.facetPrimaryKey       = FACET_PRIMARY_NONE;
     this.facetSecondaryValue   = "";
