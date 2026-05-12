@@ -630,6 +630,11 @@ h2 {
   margin-bottom: 0;
 }
 
+.site-footer a {
+  color: var(--muted);
+  text-decoration: underline;
+}
+
 .search-discovery-card {
   display: flex;
   flex-direction: column;
