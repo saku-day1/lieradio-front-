@@ -218,6 +218,11 @@ export default class AppController {
     this.facetPrimaryKey = this.facetPrimarySelect.value || FACET_PRIMARY_NONE;
     this.facetSecondaryValue = "";
 
+    if (this.facetPrimaryKey !== "lunchSong") {
+      this.songPartialQuery = "";
+      if (this.songPartialInput) this.songPartialInput.value = "";
+    }
+
     this._populateFacetSecondaryOptions();
     this.render();
   }
@@ -301,11 +306,13 @@ export default class AppController {
     const primary = this.facetPrimaryKey;
 
     const showCornerExplorer = primary === "corner";
+    const showSongInput = primary === "lunchSong";
     const showSecondaryPullDown =
-      Boolean(primary) && primary !== "corner";
+      Boolean(primary) && primary !== "corner" && primary !== "lunchSong";
 
     this.cornerPickWrap?.classList.toggle("hidden", !showCornerExplorer);
     this.facetSecondaryWrap?.classList.toggle("hidden", !showSecondaryPullDown);
+    this.songPartialWrap?.classList.toggle("hidden", !showSongInput);
 
     if (this.facetSecondaryLabel) {
       this.facetSecondaryLabel.textContent = this._facetSecondaryHeadingText(primary || "");

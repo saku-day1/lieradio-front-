@@ -44,6 +44,7 @@
         <select id="facetPrimarySelect">
           <option value="">（使わない）</option>
           <option value="corner">コーナー</option>
+          <option value="lunchSong">楽曲</option>
           <option value="liveImpression">ライブ感想</option>
           <option value="eventImpression">イベント感想</option>
           <option value="animeImpression">アニメ感想</option>
@@ -65,7 +66,7 @@
         <label class="search-field-label" id="facetSecondaryLabel" for="facetSecondarySelect">さらに指定</label>
         <select id="facetSecondarySelect"></select>
       </div>
-      <div id="songPartialWrap" class="discovery-grid facet-song-wrap">
+      <div id="songPartialWrap" class="discovery-grid facet-song-wrap hidden">
         <label class="search-field-label" for="songPartialInput">楽曲キーワード（部分一致）</label>
         <div class="search-inline">
           <input

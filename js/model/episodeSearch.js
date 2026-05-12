@@ -177,8 +177,7 @@ export function applyFacetDiscoveryFilter(episodes, opts) {
 
   let out = episodes.slice();
 
-  // ファセット絞り込み（楽曲は独立入力欄で処理するためスキップ）
-  if (facetPrimary && facetPrimary !== "lunchSong") {
+  if (facetPrimary) {
     if (facetPrimary === "publicRecording") {
       out = out.filter((episode) => episodeHasPublicRecordingMention(episode));
       const secondaryTrim = String(facetSecondaryValue || "").trim();
@@ -198,7 +197,7 @@ export function applyFacetDiscoveryFilter(episodes, opts) {
     }
   }
 
-  // 楽曲キーワード絞り込み（ファセット選択と独立して常時適用）
+  // 楽曲キーワード絞り込み（lunchSong ファセット選択時にのみ入力される）
   const normSong = normalizeSearchText(String(songPartialQuery || "").trim());
   if (normSong) {
     out = out.filter((episode) => {
