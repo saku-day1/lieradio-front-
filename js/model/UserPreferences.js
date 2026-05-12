@@ -75,3 +75,32 @@ export function saveMemo(videoId, text) {
     localStorage.setItem(MEMOS_KEY, JSON.stringify(Object.fromEntries(memos)));
   } catch {}
 }
+
+export function buildExportPayload() {
+  return {
+    version: 1,
+    exportedAt: new Date().toISOString(),
+    favorites: [...loadFavorites()],
+    watched: [...loadWatched()],
+    memos: Object.fromEntries(loadMemos())
+  };
+}
+
+export function importUserData(payload) {
+  if (!payload || payload.version !== 1) {
+    throw new Error("Invalid backup format");
+  }
+  try {
+    if (Array.isArray(payload.favorites)) {
+      localStorage.setItem(FAVORITES_KEY, JSON.stringify(payload.favorites));
+    }
+    if (Array.isArray(payload.watched)) {
+      localStorage.setItem(WATCHED_KEY, JSON.stringify(payload.watched));
+    }
+    if (payload.memos && typeof payload.memos === "object" && !Array.isArray(payload.memos)) {
+      localStorage.setItem(MEMOS_KEY, JSON.stringify(payload.memos));
+    }
+  } catch {
+    throw new Error("Failed to write to localStorage");
+  }
+}

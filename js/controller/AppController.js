@@ -19,7 +19,9 @@ import {
   toggleFavorite,
   toggleWatched,
   loadMemos,
-  saveMemo
+  saveMemo,
+  buildExportPayload,
+  importUserData
 } from "../model/UserPreferences.js";
 
 import { extractYoutubeVideoId } from "../model/EpisodeRepository.js";
@@ -114,6 +116,9 @@ export default class AppController {
     this.pagePrevButton        = document.getElementById("pagePrevButton");
     this.pageNextButton        = document.getElementById("pageNextButton");
     this.pageIndicator         = document.getElementById("pageIndicator");
+
+    this.exportDataButton      = document.getElementById("exportDataButton");
+    this.importDataInput       = document.getElementById("importDataInput");
   }
 
   // -------------------------------------------------------------------------
@@ -240,6 +245,41 @@ export default class AppController {
       this.render();
       this.episodeList?.scrollIntoView({ behavior: "smooth", block: "start" });
     });
+
+    this.exportDataButton?.addEventListener("click", () => this._handleExport());
+    this.importDataInput?.addEventListener("change", (ev) => this._handleImport(ev));
+  }
+
+  _handleExport() {
+    const payload = buildExportPayload();
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `lieradio-backup-${new Date().toISOString().slice(0, 10)}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  _handleImport(ev) {
+    const file = ev.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const payload = JSON.parse(String(e.target.result));
+        importUserData(payload);
+        this.render();
+        alert("復元が完了しました。");
+      } catch {
+        alert("ファイルの読み込みに失敗しました。正しいバックアップファイルを選択してください。");
+      } finally {
+        ev.target.value = "";
+      }
+    };
+    reader.readAsText(file);
   }
 
   _onFacetPrimaryChange() {
