@@ -452,6 +452,9 @@ export default class AppController {
     `).join("");
 
     this.castQuickFilters.innerHTML = `
+      <div class="filter-group-header">
+        <span class="filter-group-label">メンバー</span>
+      </div>
       <div class="cast-buttons-wrap">${castButtonsHtml}${yuisakuBtn}</div>
     `;
 

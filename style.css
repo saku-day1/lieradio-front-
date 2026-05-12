@@ -136,8 +136,16 @@ body {
   margin-top: 8px;
 }
 
+.status-filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--card-border);
+}
+
 .favorites-filter-button {
-  margin-top: 10px;
   border: 1px solid #3a4661;
   border-radius: 10px;
   padding: 6px 14px;
@@ -159,7 +167,6 @@ body {
 }
 
 .watched-filter-button {
-  margin-top: 10px;
   border: 1px solid #3a4661;
   border-radius: 10px;
   padding: 6px 14px;
@@ -181,7 +188,6 @@ body {
 }
 
 .other-video-filter-button {
-  margin-top: 10px;
   border: 1px solid #3a4661;
   border-radius: 10px;
   padding: 6px 14px;
@@ -203,7 +209,6 @@ body {
 }
 
 .reset-filters-button {
-  margin-top: 10px;
   border: 1px solid #3a4661;
   border-radius: 10px;
   padding: 6px 12px;
@@ -232,7 +237,7 @@ body {
   border: 1px solid #3a4661;
   border-radius: 999px;
   overflow: hidden;
-  padding: 4px 10px;
+  padding: 6px 12px;
   color: #0f172a;
   background: var(--cast-color, #141a25);
   font-size: 0.85rem;
@@ -263,7 +268,7 @@ body {
   border: 1px solid #3a4661;
   border-radius: 999px;
   overflow: hidden;
-  padding: 4px 10px;
+  padding: 6px 12px;
   color: #0f172a;
   background: var(--unit-color, #334155);
   font-size: 0.85rem;
@@ -832,7 +837,7 @@ h2 {
   flex-wrap: wrap;
   gap: 6px 10px;
   margin: 2px 0 4px;
-  font-size: 0.86rem;
+  font-size: 0.9rem;
   color: var(--muted);
 }
 
@@ -944,6 +949,10 @@ h2 {
 
 
 @media (max-width: 640px) {
+  .feature-list {
+    display: none;
+  }
+
   .episode-item-layout {
     flex-direction: column;
   }
@@ -1013,7 +1022,7 @@ h2 {
   color: var(--text);
   border: 1px solid var(--card-border);
   border-radius: 6px;
-  padding: 7px 16px;
+  padding: 10px 24px;
   font-size: 0.9rem;
   cursor: pointer;
   transition: background 0.15s;
