@@ -27,6 +27,10 @@ function classifyRemark(text) {
   const t = String(text).trim();
   if (!t) return null;
 
+  if (/公開録音|公録/.test(t)) {
+    return { type: "publicRecordingNote", searchable: true, visibleInList: false, priority: 22 };
+  }
+
   if (/誕生日|バースデー|たんじょうび|おたんじょうび/i.test(t)) {
     return { type: "birthday", searchable: true, visibleInList: false, priority: 12 };
   }
@@ -173,6 +177,10 @@ function main() {
       hasEventImpression: tags.some((t) => t.type === "eventImpression"),
       hasAnimeImpression: tags.some((t) => t.type === "animeImpression"),
       hasNetaTag: tags.some((t) => ["netaTag", "animeSeasonTag", "eventName"].includes(t.type)),
+      mentionsPublicRecordingInRemark: tags.some((t) => {
+        if (t.type === "publicRecordingNote") return true;
+        return /公開録音|公録/.test(String(t.name || ""));
+      }),
       mentionsIjigenFes: /異次元フェス|異次元|イジゲン/i.test(allTagText + eventText + animeText + lunch),
       mentionsGen3Join: /3期|加入|新メンバー|11人|11名|三期|第3期/i.test(allTagText)
     };

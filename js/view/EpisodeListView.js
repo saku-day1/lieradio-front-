@@ -20,7 +20,7 @@ const META_TYPE_LABELS = {
   corner: "コーナー",
   lunchSong: "リクエスト曲",
   birthday: "誕生日祝い",
-  incident: "事件・ネタ備考",
+  incident: "事件",
   externalShow: "外部番組・メディア",
   eventName: "イベント",
   animeSeasonTag: "アニメ期タグ",
@@ -28,6 +28,7 @@ const META_TYPE_LABELS = {
   liveImpression: "ライブ感想",
   eventImpression: "イベント感想",
   animeImpression: "アニメ感想",
+  publicRecordingNote: "公開録音メモ",
   miscTag: "備考タグ",
   remark: "備考",
   generic: "メタ情報"

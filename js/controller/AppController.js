@@ -29,12 +29,9 @@ import {
   MAX_AND_CAST_SELECTION
 } from "../constants.js";
 
-import {
-  applyExtendedEpisodeSearch,
-  isExtendedDiscoveryActive,
-  SEARCH_CATEGORY,
-  SEARCH_PRESETS
-} from "../model/episodeSearch.js";
+import { applyFacetDiscoveryFilter, isFacetDiscoveryActive, FACET_PRIMARY_NONE } from "../model/episodeSearch.js";
+
+import { buildFacetCatalog } from "../model/facetCatalog.js";
 
 export default class AppController {
   constructor() {
@@ -58,10 +55,17 @@ export default class AppController {
     this.unwatchedFilterButton   = document.getElementById("unwatchedFilterButton");
     this.otherVideoFilterButton  = document.getElementById("otherVideoFilterButton");
 
-    this.globalSearchInput       = document.getElementById("globalSearchInput");
-    this.searchCategorySelect    = document.getElementById("searchCategorySelect");
-    this.clearGlobalSearchButton = document.getElementById("clearGlobalSearchButton");
-    this.presetChipBar           = document.getElementById("presetChipBar");
+    this.facetPrimarySelect       = document.getElementById("facetPrimarySelect");
+    this.facetSecondarySelect     = document.getElementById("facetSecondarySelect");
+    this.facetSecondaryWrap       = document.getElementById("facetSecondaryWrap");
+    this.facetSecondaryLabel      = document.getElementById("facetSecondaryLabel");
+    this.songPartialWrap          = document.getElementById("songPartialWrap");
+    this.songPartialInput         = document.getElementById("songPartialInput");
+    this.clearSongPartialButton   = document.getElementById("clearSongPartialButton");
+
+    this.cornerPickWrap           = document.getElementById("cornerPickWrap");
+    this.cornerPickList           = document.getElementById("cornerPickList");
+    this.cornerPickClearButton    = document.getElementById("cornerPickClearButton");
 
     // ランキング View に渡す DOM まとめ
     this.rankingElements = {
@@ -84,9 +88,10 @@ export default class AppController {
     this.watchedFilterMode     = ""; // "" | "watched" | "unwatched"
     this.isUnitSectionExpanded = false;
 
-    this.freeQuery             = "";
-    this.searchCategoryId      = SEARCH_CATEGORY.ALL;
-    this.activePresetKey       = "";
+    this.facetPrimaryKey       = FACET_PRIMARY_NONE;
+    this.facetSecondaryValue   = "";
+    this.songPartialQuery      = "";
+    this._facetCatalog         = null;
   }
 
   // -------------------------------------------------------------------------
@@ -96,9 +101,13 @@ export default class AppController {
   async init() {
     try {
       this.allEpisodes = await fetchEpisodes();
+      this._facetCatalog = buildFacetCatalog(
+        this.allEpisodes,
+        PRIORITY_CAST_FILTERS.map((item) => item.name)
+      );
       this._renderCastQuickFilters();
       this._renderUnitQuickFilters();
-      this._renderPresetChipBar();
+      this._populateFacetSecondaryOptions();
       this._bindEvents();
       this.render();
     } catch (error) {
@@ -150,40 +159,168 @@ export default class AppController {
       this.render();
     });
 
-    this.globalSearchInput?.addEventListener("input", () => {
-      this.freeQuery = String(this.globalSearchInput.value || "");
+    this.facetPrimarySelect?.addEventListener("change", () => this._onFacetPrimaryChange());
+
+    this.facetSecondarySelect?.addEventListener("change", () => {
+      this.facetSecondaryValue = this.facetSecondarySelect?.value || "";
       this.render();
     });
 
-    this.clearGlobalSearchButton?.addEventListener("click", () => {
-      this.freeQuery = "";
-      if (this.globalSearchInput) {
-        this.globalSearchInput.value = "";
+    this.songPartialInput?.addEventListener("input", () => {
+      if (this.facetPrimaryKey !== "lunchSong") return;
+      this.songPartialQuery = String(this.songPartialInput.value || "");
+      this.render();
+    });
+
+    this.clearSongPartialButton?.addEventListener("click", () => {
+      this.songPartialQuery = "";
+      if (this.songPartialInput) {
+        this.songPartialInput.value = "";
       }
       this.render();
     });
 
-    this.searchCategorySelect?.addEventListener("change", () => {
-      this.searchCategoryId = String(this.searchCategorySelect.value || SEARCH_CATEGORY.ALL);
+    this.cornerPickList?.addEventListener("click", (ev) => {
+      const target = ev.target.closest("button.corner-pick-item");
+      if (!target) return;
+      const value = target.dataset.cornerPick || "";
+      this.facetSecondaryValue = this.facetSecondaryValue === value ? "" : value;
+      this.render();
+    });
+
+    this.cornerPickClearButton?.addEventListener("click", () => {
+      this.facetSecondaryValue = "";
       this.render();
     });
   }
 
-  _renderPresetChipBar() {
-    if (!this.presetChipBar) return;
-    this.presetChipBar.innerHTML = SEARCH_PRESETS.map(
-      (p) =>
-        `<button type="button" class="preset-chip-button" data-preset-key="${p.key}">
-          ${p.label}
-        </button>`
-    ).join("");
-    this.presetChipBar.querySelectorAll(".preset-chip-button").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const key = btn.dataset.presetKey || "";
-        this.activePresetKey = this.activePresetKey === key ? "" : key;
-        this.render();
-      });
-    });
+  _onFacetPrimaryChange() {
+    if (!this.facetPrimarySelect) return;
+    this.facetPrimaryKey = this.facetPrimarySelect.value || FACET_PRIMARY_NONE;
+    this.facetSecondaryValue = "";
+
+    if (this.facetPrimaryKey !== "lunchSong") {
+      this.songPartialQuery = "";
+      if (this.songPartialInput) {
+        this.songPartialInput.value = "";
+      }
+    }
+
+    this._populateFacetSecondaryOptions();
+    this.render();
+  }
+
+  /**
+   * 現在の親ファセットに応じて第二プルダウンを組み替える。
+   */
+  _populateFacetSecondaryOptions() {
+    const selectEl = this.facetSecondarySelect;
+    if (!selectEl || !this._facetCatalog) return;
+
+    const catalog = this._facetCatalog;
+
+    /** @type {string[]} */
+    let values = [];
+
+    switch (this.facetPrimaryKey) {
+      case "corner":
+        selectEl.innerHTML = "";
+        return;
+      case "publicRecording":
+        values = catalog.publicRecordingMemos;
+        break;
+      case "liveImpression":
+        values = catalog.liveImpressions;
+        break;
+      case "eventImpression":
+        values = catalog.events;
+        break;
+      case "animeImpression":
+        values = catalog.animeImpressions;
+        break;
+      case "birthday":
+        values = catalog.birthdayCastNames;
+        break;
+      case "incident":
+        values = catalog.incidents;
+        break;
+      default:
+        selectEl.innerHTML = "";
+        return;
+    }
+
+    selectEl.innerHTML = "";
+
+    const allOpt = document.createElement("option");
+    allOpt.value = "";
+    allOpt.textContent = "（このカテゴリのすべて）";
+    selectEl.appendChild(allOpt);
+
+    for (const label of values) {
+      const option = document.createElement("option");
+      option.value = label;
+      option.textContent = label;
+      selectEl.appendChild(option);
+    }
+
+    selectEl.value = "";
+  }
+
+  _facetSecondaryHeadingText(primaryKey) {
+    switch (primaryKey) {
+      case "publicRecording":
+        return "備考・タグにある表記で絞り込む";
+      case "liveImpression":
+        return "どのライブか（テキストを選択）";
+      case "eventImpression":
+        return "どのイベントか（テキストを選択）";
+      case "animeImpression":
+        return "どのアニメ回か（テキストを選択）";
+      case "birthday":
+        return "誰の誕生日か（メンバー）";
+      case "incident":
+        return "どの事件・ネタ備考か";
+      default:
+        return "さらに指定";
+    }
+  }
+
+  _updateFacetAccessoryVisibility() {
+    const primary = this.facetPrimaryKey;
+
+    const showCornerExplorer = primary === "corner";
+    const showSecondaryPullDown =
+      Boolean(primary) && primary !== "lunchSong" && primary !== "corner";
+
+    this.cornerPickWrap?.classList.toggle("hidden", !showCornerExplorer);
+    this.facetSecondaryWrap?.classList.toggle("hidden", !showSecondaryPullDown);
+
+    if (this.facetSecondaryLabel) {
+      this.facetSecondaryLabel.textContent = this._facetSecondaryHeadingText(primary || "");
+    }
+
+    const songVisible = primary === "lunchSong";
+    this.songPartialWrap?.classList.toggle("hidden", !songVisible);
+  }
+
+  _renderCornerPickList() {
+    const root = this.cornerPickList;
+    const catalog = this._facetCatalog;
+    if (!root || !catalog) return;
+
+    root.replaceChildren();
+
+    for (const label of catalog.corners) {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "corner-pick-item";
+      if (this.facetSecondaryValue === label) {
+        btn.classList.add("is-selected");
+      }
+      btn.dataset.cornerPick = label;
+      btn.textContent = label;
+      root.appendChild(btn);
+    }
   }
 
   // -------------------------------------------------------------------------
@@ -283,6 +420,9 @@ export default class AppController {
   // -------------------------------------------------------------------------
 
   render() {
+    this._updateFacetAccessoryVisibility();
+    this._renderCornerPickList();
+
     const discoveryActiveUi = this._isDiscoveryUiActive();
     const hasFilter = this._isAnyFilterActive();
     if (!this.lastRenderHadFilter && hasFilter) this.isEpisodeListVisible = true;
@@ -313,12 +453,12 @@ export default class AppController {
     );
 
     const extOpts = {
-      freeText: this.freeQuery,
-      categoryId: this.searchCategoryId,
-      presetKey: this.activePresetKey,
-      unitFilters: UNIT_FILTERS
+      facetPrimary: this.facetPrimaryKey,
+      facetSecondaryValue: this.facetPrimaryKey === "lunchSong" ? "" : this.facetSecondaryValue,
+      songPartialQuery: this.facetPrimaryKey === "lunchSong" ? this.songPartialQuery : ""
     };
-    const { episodes: narrowedEpisodes, hitLabelsByVideoId } = applyExtendedEpisodeSearch(
+
+    const { episodes: narrowedEpisodes, hitLabelsByVideoId } = applyFacetDiscoveryFilter(
       filteredEpisodes,
       extOpts
     );
@@ -352,7 +492,6 @@ export default class AppController {
     this._updateResetButtonVisibility();
     this._updateCastSelectionNotice();
     this._updateEpisodeResultsVisibility();
-    this._updatePresetChipHighlight();
     this._updateFavoritesFilterButton();
     this._updateWatchedFilterButtons();
     this._updateOtherVideoFilterButton();
@@ -404,18 +543,10 @@ export default class AppController {
   }
 
   _isDiscoveryUiActive() {
-    return isExtendedDiscoveryActive({
-      freeText: this.freeQuery,
-      categoryId: this.searchCategoryId,
-      presetKey: this.activePresetKey
-    });
-  }
-
-  _updatePresetChipHighlight() {
-    if (!this.presetChipBar) return;
-    this.presetChipBar.querySelectorAll(".preset-chip-button").forEach((btn) => {
-      const key = btn.dataset.presetKey || "";
-      btn.classList.toggle("is-active", Boolean(this.activePresetKey) && key === this.activePresetKey);
+    return isFacetDiscoveryActive({
+      facetPrimary: this.facetPrimaryKey,
+      facetSecondaryValue: this.facetSecondaryValue,
+      songPartialQuery: this.facetPrimaryKey === "lunchSong" ? this.songPartialQuery : ""
     });
   }
 
@@ -448,13 +579,16 @@ export default class AppController {
   }
 
   _updateResetButtonVisibility() {
+    const hasSongQuery = this.facetPrimaryKey === "lunchSong" && Boolean(this.songPartialQuery.trim());
+    const hasSecondary = Boolean(this.facetSecondaryValue.trim());
     const shouldShow =
       this.andFilterNames.length > 0 ||
       Boolean(this.quickFilterKeyword) ||
       Boolean(this.activeUnitFilterKey) ||
-      Boolean(this.freeQuery.trim()) ||
-      this.searchCategoryId !== SEARCH_CATEGORY.ALL ||
-      Boolean(this.activePresetKey);
+      Boolean(this.facetPrimaryKey) ||
+      hasSecondary ||
+      hasSongQuery;
+
     this.resetFiltersButton.classList.toggle("hidden", !shouldShow);
   }
 
@@ -490,15 +624,20 @@ export default class AppController {
     this.watchedFilterMode     = "";
     this.isOtherVideoFilterActive = false;
 
-    this.freeQuery             = "";
-    this.searchCategoryId      = SEARCH_CATEGORY.ALL;
-    this.activePresetKey       = "";
-    if (this.globalSearchInput) {
-      this.globalSearchInput.value = "";
+    this.facetPrimaryKey       = FACET_PRIMARY_NONE;
+    this.facetSecondaryValue   = "";
+    this.songPartialQuery      = "";
+    if (this.facetPrimarySelect) {
+      this.facetPrimarySelect.value = FACET_PRIMARY_NONE;
     }
-    if (this.searchCategorySelect) {
-      this.searchCategorySelect.value = SEARCH_CATEGORY.ALL;
+    this._populateFacetSecondaryOptions();
+    if (this.facetSecondarySelect) {
+      this.facetSecondarySelect.value = "";
     }
+    if (this.songPartialInput) {
+      this.songPartialInput.value = "";
+    }
+
     this.render();
   }
 }
