@@ -443,8 +443,8 @@ export default class AppController {
 
     const extOpts = {
       facetPrimary: this.facetPrimaryKey,
-      facetSecondaryValue: this.facetPrimaryKey === "lunchSong" ? "" : this.facetSecondaryValue,
-      songPartialQuery: this.facetPrimaryKey === "lunchSong" ? this.songPartialQuery : ""
+      facetSecondaryValue: this.facetSecondaryValue,
+      songPartialQuery: this.songPartialQuery
     };
 
     const { episodes: narrowedEpisodes, hitLabelsByVideoId } = applyFacetDiscoveryFilter(
@@ -535,7 +535,7 @@ export default class AppController {
     return isFacetDiscoveryActive({
       facetPrimary: this.facetPrimaryKey,
       facetSecondaryValue: this.facetSecondaryValue,
-      songPartialQuery: this.facetPrimaryKey === "lunchSong" ? this.songPartialQuery : ""
+      songPartialQuery: this.songPartialQuery
     });
   }
 
@@ -568,7 +568,7 @@ export default class AppController {
   }
 
   _updateResetButtonVisibility() {
-    const hasSongQuery = this.facetPrimaryKey === "lunchSong" && Boolean(this.songPartialQuery.trim());
+    const hasSongQuery = Boolean(this.songPartialQuery.trim());
     const hasSecondary = Boolean(this.facetSecondaryValue.trim());
     const shouldShow =
       this.andFilterNames.length > 0 ||
