@@ -671,6 +671,28 @@ h2 {
   margin: 6px 0 4px;
 }
 
+.memo-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 6px;
+}
+
+.memo-confirm-button {
+  background: var(--accent);
+  color: #0f172a;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 18px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.memo-confirm-button:hover {
+  opacity: 0.85;
+}
+
 .memo-textarea {
   width: 100%;
   min-height: 72px;
@@ -700,6 +722,12 @@ h2 {
 
 .site-footer p:last-child {
   margin-bottom: 0;
+}
+
+.storage-notice {
+  font-size: 0.75rem;
+  color: var(--muted);
+  opacity: 0.6;
 }
 
 .site-footer a {

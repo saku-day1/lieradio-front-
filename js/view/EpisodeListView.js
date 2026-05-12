@@ -109,6 +109,20 @@ export function renderEpisodeList(
     });
   });
 
+  const applyMemoToDOM = (videoId, text) => {
+    const hasMemo = Boolean(text.trim());
+    const preview = episodeListEl.querySelector(`.memo-preview[data-video-id="${videoId}"]`);
+    const memoBtn = episodeListEl.querySelector(`.memo-button[data-video-id="${videoId}"]`);
+    if (preview) {
+      preview.textContent = text.trim();
+      preview.classList.toggle("hidden", !hasMemo);
+    }
+    if (memoBtn) {
+      memoBtn.classList.toggle("is-active", hasMemo);
+      memoBtn.setAttribute("aria-pressed", String(hasMemo));
+    }
+  };
+
   episodeListEl.querySelectorAll(".memo-button").forEach((btn) => {
     btn.addEventListener("click", () => {
       const videoId = btn.dataset.videoId;
@@ -125,17 +139,19 @@ export function renderEpisodeList(
     if (!videoId) return;
     textarea.addEventListener("blur", () => {
       onMemoSave(videoId, textarea.value);
-      const hasMemo = Boolean(textarea.value.trim());
-      const preview = episodeListEl.querySelector(`.memo-preview[data-video-id="${videoId}"]`);
-      const btn = episodeListEl.querySelector(`.memo-button[data-video-id="${videoId}"]`);
-      if (preview) {
-        preview.textContent = textarea.value.trim();
-        preview.classList.toggle("hidden", !hasMemo);
-      }
-      if (btn) {
-        btn.classList.toggle("is-active", hasMemo);
-        btn.setAttribute("aria-pressed", String(hasMemo));
-      }
+      applyMemoToDOM(videoId, textarea.value);
+    });
+  });
+
+  episodeListEl.querySelectorAll(".memo-confirm-button").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const videoId = btn.dataset.videoId;
+      const editWrap = episodeListEl.querySelector(`.memo-edit-wrap[data-video-id="${videoId}"]`);
+      const textarea = editWrap?.querySelector(".memo-textarea");
+      if (!textarea) return;
+      onMemoSave(videoId, textarea.value);
+      applyMemoToDOM(videoId, textarea.value);
+      editWrap.classList.add("hidden");
     });
   });
 }
@@ -188,7 +204,12 @@ function buildEpisodeItemHtml(episode, isAndMode, favorites, watched, hitMap, me
     ? `<p class="memo-preview${hasMemo ? "" : " hidden"}" data-video-id="${videoId}">${escapeHtml(memoText)}</p>`
     : "";
   const memoEditHtml = videoId
-    ? `<div class="memo-edit-wrap hidden" data-video-id="${videoId}"><textarea class="memo-textarea" rows="3" placeholder="メモを入力…">${escapeHtml(memoText)}</textarea></div>`
+    ? `<div class="memo-edit-wrap hidden" data-video-id="${videoId}">
+        <textarea class="memo-textarea" rows="3" placeholder="メモを入力…">${escapeHtml(memoText)}</textarea>
+        <div class="memo-actions">
+          <button type="button" class="memo-confirm-button" data-video-id="${videoId}">確定</button>
+        </div>
+      </div>`
     : "";
 
   const manualMeta = episode.manualMeta;
