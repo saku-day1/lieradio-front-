@@ -222,9 +222,24 @@ function main() {
 
   out.sort((a, b) => a.broadcastNumber - b.broadcastNumber);
 
+  // broadcastNumber を持たない titleKeyword エントリを既存ファイルから引き継ぐ
+  const preserved = [];
+  try {
+    const existing = JSON.parse(fs.readFileSync(OUT, "utf8"));
+    for (const e of existing) {
+      if (!Number.isFinite(e.broadcastNumber) && typeof e.titleKeyword === "string") {
+        preserved.push(e);
+      }
+    }
+  } catch (_) {
+    // ファイルが存在しない場合は無視
+  }
+
+  const finalOut = [...preserved, ...out];
+
   fs.mkdirSync(path.dirname(OUT), { recursive: true });
-  fs.writeFileSync(OUT, JSON.stringify(out, null, 2), "utf8");
-  console.log("Wrote", OUT, "records:", out.length, "from", xlsxPath);
+  fs.writeFileSync(OUT, JSON.stringify(finalOut, null, 2), "utf8");
+  console.log("Wrote", OUT, "records:", finalOut.length, "from", xlsxPath, `(${preserved.length} titleKeyword entries preserved)`);
 }
 
 main();

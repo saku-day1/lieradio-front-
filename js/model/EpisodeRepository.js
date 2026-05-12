@@ -94,10 +94,15 @@ export function mergeManualMetaIntoEpisodes(episodes, manualMetaRecords) {
 
   /** @type {Map<number, object>} */
   const map = new Map();
+  /** @type {Map<string, object>} broadcastNumber を持たない特殊回（公開録音など）をタイトルで照合 */
+  const titleMap = new Map();
   for (const record of manualMetaRecords) {
     const n = record?.broadcastNumber;
-    if (typeof n !== "number" || !Number.isFinite(n)) continue;
-    map.set(n, record);
+    if (typeof n === "number" && Number.isFinite(n)) {
+      map.set(n, record);
+    } else if (typeof record?.titleKeyword === "string" && record.titleKeyword.trim()) {
+      titleMap.set(record.titleKeyword.trim(), record);
+    }
   }
 
   return episodes.map((episode) => {
@@ -106,7 +111,17 @@ export function mergeManualMetaIntoEpisodes(episodes, manualMetaRecords) {
     }
     const num = episode.broadcastNumber ?? episode.episodeNumber;
     const manual = typeof num === "number" ? map.get(num) : undefined;
-    return manual ? { ...episode, manualMeta: manual } : { ...episode };
+    if (manual) return { ...episode, manualMeta: manual };
+
+    if (typeof episode.title === "string") {
+      for (const [kw, meta] of titleMap) {
+        if (episode.title.includes(kw)) {
+          return { ...episode, manualMeta: meta };
+        }
+      }
+    }
+
+    return { ...episode };
   });
 }
 

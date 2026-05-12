@@ -1,5 +1,69 @@
 [
   {
+    "titleKeyword": "公録第1部",
+    "corners": ["MIRACLE NEW アンケート"],
+    "lunchTimeRequestSong": "",
+    "tags": [
+      {"name": "MIRACLE NEW アンケート", "type": "corner", "searchable": true, "visibleInList": true, "priority": 100},
+      {"name": "公録第1部", "type": "publicRecordingNote", "searchable": true, "visibleInList": false, "priority": 22}
+    ],
+    "primaryTagsForList": [],
+    "flags": {
+      "hasCorner": true, "hasLunchSong": false, "hasBirthdayTag": false,
+      "hasLiveImpression": false, "hasEventImpression": false, "hasAnimeImpression": false,
+      "hasNetaTag": false, "mentionsPublicRecordingInRemark": true,
+      "mentionsIjigenFes": false, "mentionsGen3Join": false
+    }
+  },
+  {
+    "titleKeyword": "公録第2部",
+    "corners": ["うぃっす！うぃっす！うぃっす！ゲーム"],
+    "lunchTimeRequestSong": "",
+    "tags": [
+      {"name": "うぃっす！うぃっす！うぃっす！ゲーム", "type": "corner", "searchable": true, "visibleInList": true, "priority": 100},
+      {"name": "公録第2部", "type": "publicRecordingNote", "searchable": true, "visibleInList": false, "priority": 22}
+    ],
+    "primaryTagsForList": [],
+    "flags": {
+      "hasCorner": true, "hasLunchSong": false, "hasBirthdayTag": false,
+      "hasLiveImpression": false, "hasEventImpression": false, "hasAnimeImpression": false,
+      "hasNetaTag": false, "mentionsPublicRecordingInRemark": true,
+      "mentionsIjigenFes": false, "mentionsGen3Join": false
+    }
+  },
+  {
+    "titleKeyword": "公開録音2025第1部",
+    "corners": ["ヒント人狼！DAISUKI FOUR POWER"],
+    "lunchTimeRequestSong": "",
+    "tags": [
+      {"name": "ヒント人狼！DAISUKI FOUR POWER", "type": "corner", "searchable": true, "visibleInList": true, "priority": 100},
+      {"name": "公開録音2025第1部", "type": "publicRecordingNote", "searchable": true, "visibleInList": false, "priority": 22}
+    ],
+    "primaryTagsForList": [],
+    "flags": {
+      "hasCorner": true, "hasLunchSong": false, "hasBirthdayTag": false,
+      "hasLiveImpression": false, "hasEventImpression": false, "hasAnimeImpression": false,
+      "hasNetaTag": false, "mentionsPublicRecordingInRemark": true,
+      "mentionsIjigenFes": false, "mentionsGen3Join": false
+    }
+  },
+  {
+    "titleKeyword": "公開録音2025第2部",
+    "corners": ["演出HOPPERS"],
+    "lunchTimeRequestSong": "",
+    "tags": [
+      {"name": "演出HOPPERS", "type": "corner", "searchable": true, "visibleInList": true, "priority": 100},
+      {"name": "公開録音2025第2部", "type": "publicRecordingNote", "searchable": true, "visibleInList": false, "priority": 22}
+    ],
+    "primaryTagsForList": [],
+    "flags": {
+      "hasCorner": true, "hasLunchSong": false, "hasBirthdayTag": false,
+      "hasLiveImpression": false, "hasEventImpression": false, "hasAnimeImpression": false,
+      "hasNetaTag": false, "mentionsPublicRecordingInRemark": true,
+      "mentionsIjigenFes": false, "mentionsGen3Join": false
+    }
+  },
+  {
     "broadcastNumber": 1,
     "excelRow": 2,
     "corners": [
