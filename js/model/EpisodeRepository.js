@@ -30,9 +30,9 @@ export function isOtherVideoTitle(title) {
 // 文字列ユーティリティ
 // ---------------------------------------------------------------------------
 
-/** スペース除去・小文字化して比較用に正規化する */
+/** 全角/半角統一・スペース除去・小文字化して比較用に正規化する */
 export function normalizeSearchText(text) {
-  return String(text).replace(/\s+/g, "").toLowerCase();
+  return String(text).normalize("NFKC").replace(/\s+/g, "").toLowerCase();
 }
 
 // ---------------------------------------------------------------------------

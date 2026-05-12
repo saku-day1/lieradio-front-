@@ -167,7 +167,6 @@ export default class AppController {
     });
 
     this.songPartialInput?.addEventListener("input", () => {
-      if (this.facetPrimaryKey !== "lunchSong") return;
       this.songPartialQuery = String(this.songPartialInput.value || "");
       this.render();
     });
@@ -198,13 +197,6 @@ export default class AppController {
     if (!this.facetPrimarySelect) return;
     this.facetPrimaryKey = this.facetPrimarySelect.value || FACET_PRIMARY_NONE;
     this.facetSecondaryValue = "";
-
-    if (this.facetPrimaryKey !== "lunchSong") {
-      this.songPartialQuery = "";
-      if (this.songPartialInput) {
-        this.songPartialInput.value = "";
-      }
-    }
 
     this._populateFacetSecondaryOptions();
     this.render();
@@ -290,7 +282,7 @@ export default class AppController {
 
     const showCornerExplorer = primary === "corner";
     const showSecondaryPullDown =
-      Boolean(primary) && primary !== "lunchSong" && primary !== "corner";
+      Boolean(primary) && primary !== "corner";
 
     this.cornerPickWrap?.classList.toggle("hidden", !showCornerExplorer);
     this.facetSecondaryWrap?.classList.toggle("hidden", !showSecondaryPullDown);
@@ -298,9 +290,6 @@ export default class AppController {
     if (this.facetSecondaryLabel) {
       this.facetSecondaryLabel.textContent = this._facetSecondaryHeadingText(primary || "");
     }
-
-    const songVisible = primary === "lunchSong";
-    this.songPartialWrap?.classList.toggle("hidden", !songVisible);
   }
 
   _renderCornerPickList() {

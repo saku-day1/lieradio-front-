@@ -171,26 +171,30 @@ export function applyFacetDiscoveryFilter(episodes, opts) {
 
   let out = episodes.slice();
 
-  if (!facetPrimary) {
-    return { episodes: out, hitLabelsByVideoId: hitMap };
+  // ファセット絞り込み（楽曲は独立入力欄で処理するためスキップ）
+  if (facetPrimary && facetPrimary !== "lunchSong") {
+    if (facetPrimary === "publicRecording") {
+      out = out.filter((episode) => episodeHasPublicRecordingMention(episode));
+      const secondaryTrim = String(facetSecondaryValue || "").trim();
+      if (secondaryTrim) {
+        out = out.filter((episode) => episodeMatchesFacetSecondary(episode, "publicRecording", secondaryTrim));
+      }
+    } else {
+      const categoryHint = categoryForFacet(facetPrimary);
+      if (categoryHint) {
+        const secondaryTrim = String(facetSecondaryValue || "").trim();
+        if (!secondaryTrim) {
+          out = out.filter((episode) => episodeHasCategorySignals(episode, categoryHint));
+        } else {
+          out = out.filter((episode) => episodeMatchesFacetSecondary(episode, facetPrimary, secondaryTrim));
+        }
+      }
+    }
   }
 
-  if (facetPrimary === "publicRecording") {
-    out = out.filter((episode) => episodeHasPublicRecordingMention(episode));
-    const secondaryTrim = String(facetSecondaryValue || "").trim();
-    if (secondaryTrim) {
-      out = out.filter((episode) => episodeMatchesFacetSecondary(episode, "publicRecording", secondaryTrim));
-    }
-    return { episodes: out, hitLabelsByVideoId: hitMap };
-  }
-
-  if (facetPrimary === "lunchSong") {
-    const normSong = normalizeSearchText(String(songPartialQuery || "").trim());
-    if (!normSong) {
-      out = out.filter((episode) => episodeHasCategorySignals(episode, SEARCH_CATEGORY.SONG));
-      return { episodes: out, hitLabelsByVideoId: hitMap };
-    }
-
+  // 楽曲キーワード絞り込み（ファセット選択と独立して常時適用）
+  const normSong = normalizeSearchText(String(songPartialQuery || "").trim());
+  if (normSong) {
     out = out.filter((episode) => {
       const hay = collectLunchHaystack(episode);
       const match = hay.find((text) => normalizeSearchText(text).includes(normSong));
@@ -201,22 +205,7 @@ export function applyFacetDiscoveryFilter(episodes, opts) {
       }
       return true;
     });
-
-    return { episodes: out, hitLabelsByVideoId: hitMap };
   }
-
-  const categoryHint = categoryForFacet(facetPrimary);
-  if (!categoryHint) {
-    return { episodes: out, hitLabelsByVideoId: hitMap };
-  }
-
-  const secondaryTrim = String(facetSecondaryValue || "").trim();
-  if (!secondaryTrim) {
-    out = out.filter((episode) => episodeHasCategorySignals(episode, categoryHint));
-    return { episodes: out, hitLabelsByVideoId: hitMap };
-  }
-
-  out = out.filter((episode) => episodeMatchesFacetSecondary(episode, facetPrimary, secondaryTrim));
 
   return { episodes: out, hitLabelsByVideoId: hitMap };
 }
@@ -226,5 +215,5 @@ export function isFacetDiscoveryActive(opts) {
   const primary = String(opts.facetPrimary ?? "");
   const sec = String(opts.facetSecondaryValue ?? "").trim();
   const sq = String(opts.songPartialQuery ?? "").trim();
-  return Boolean(primary || sec || (primary === "lunchSong" && sq));
+  return Boolean(primary || sec || sq);
 }
