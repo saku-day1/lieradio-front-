@@ -108,10 +108,7 @@ export default class AppController {
   async init() {
     try {
       this.allEpisodes = await fetchEpisodes();
-      this._facetCatalog = buildFacetCatalog(
-        this.allEpisodes,
-        PRIORITY_CAST_FILTERS.map((item) => item.name)
-      );
+      this._facetCatalog = buildFacetCatalog(this.allEpisodes);
       this._renderCastQuickFilters();
       this._renderUnitQuickFilters();
       this._populateFacetSecondaryOptions();

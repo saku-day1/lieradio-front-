@@ -57,6 +57,12 @@ function classifyRemark(text) {
   };
 }
 
+/** 「○○誕生日祝い」「○○バースデー」などから名前部分だけを取り出す */
+function extractBirthdayName(text) {
+  const m = String(text).trim().match(/^(.+?)(?:誕生日|バースデー|たんじょうび|おたんじょうび)/i);
+  return m ? m[1].trim() : text;
+}
+
 /**
  * @param {string} name
  * @param {string} type
@@ -131,13 +137,14 @@ function main() {
       tags.push(tagObj(lunch, "lunchSong", true, true, 95));
     }
 
-    // 誕生日祝い列（3列）: classifyRemark で birthday 型に分類
+    // 誕生日祝い列（3列）: 「○○誕生日祝い」→ 名前部分だけ抽出して birthday タグにする
     for (const idx of [4, 5, 6]) {
       const raw = String(row[idx] ?? "").trim();
       if (!raw) continue;
       const cls = classifyRemark(raw);
       if (!cls) continue;
-      tags.push(tagObj(raw, cls.type, cls.searchable, cls.visibleInList, cls.priority));
+      const name = cls.type === "birthday" ? extractBirthdayName(raw) : raw;
+      tags.push(tagObj(name, cls.type, cls.searchable, cls.visibleInList, cls.priority));
     }
 
     // 出来事・事件列 (index 7)

@@ -43,10 +43,9 @@ function addLabel(bucket, raw) {
 
 /**
  * @param {object[]} episodes
- * @param {string[]} birthdayCastCandidates
  * @returns {FacetCatalog}
  */
-export function buildFacetCatalog(episodes, birthdayCastCandidates) {
+export function buildFacetCatalog(episodes) {
   /** @type {Map<string,string>} */
   const corners = new Map();
   /** @type {Map<string,string>} */
@@ -59,13 +58,8 @@ export function buildFacetCatalog(episodes, birthdayCastCandidates) {
   const incidents = new Map();
   /** @type {Map<string,string>} */
   const publicRecordingMemos = new Map();
-
-  /** @type {Set<string>} */
-  const birthdayCastHits = new Set();
-
-  const castNorms = birthdayCastCandidates
-    .map((name) => ({ name: String(name).trim(), norm: normalizeSearchText(name) }))
-    .filter((x) => x.name && x.norm);
+  /** @type {Map<string,string>} */
+  const birthdays = new Map();
 
   for (const episode of episodes) {
     const meta = episode.manualMeta || {};
@@ -96,27 +90,23 @@ export function buildFacetCatalog(episodes, birthdayCastCandidates) {
         case "incident":
           addLabel(incidents, name);
           break;
-        case "birthday": {
-          const hay = normalizeSearchText(name);
-          for (const { name: castName, norm } of castNorms) {
-            if (hay.includes(norm)) birthdayCastHits.add(castName);
-          }
+        case "birthday":
+          addLabel(birthdays, name);
           break;
-        }
         default:
           break;
       }
     }
   }
 
-  const birthdayCastNames = [...birthdayCastHits].sort((a, b) => a.localeCompare(b, "ja"));
+  const birthdayCastNames = sortedUniqueValues(birthdays);
 
   return {
-    corners: sortedUniqueValues(corners),
-    liveImpressions: sortedUniqueValues(lives),
-    events: sortedUniqueValues(events),
-    animeImpressions: sortedUniqueValues(animes),
-    incidents: sortedUniqueValues(incidents),
+    corners:             sortedUniqueValues(corners),
+    liveImpressions:     sortedUniqueValues(lives),
+    events:              sortedUniqueValues(events),
+    animeImpressions:    sortedUniqueValues(animes),
+    incidents:           sortedUniqueValues(incidents),
     publicRecordingMemos: sortedUniqueValues(publicRecordingMemos),
     birthdayCastNames
   };
