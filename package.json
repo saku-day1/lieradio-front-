@@ -1,7 +1,8 @@
 {
   "scripts": {
     "verify-absence": "node scripts/verify-absence.mjs",
-    "import-episode-meta": "node scripts/import-episode-meta.mjs"
+    "import-episode-meta": "node scripts/import-episode-meta.mjs",
+    "dump-excel": "node scripts/dump-excel.mjs"
   },
   "dependencies": {
     "@upstash/redis": "^1.38.0"

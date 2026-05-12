@@ -35,7 +35,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.916Z"
+    "exportedAt": "2026-05-12T07:53:08.691Z"
   },
   {
     "broadcastNumber": 2,
@@ -73,7 +73,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.919Z"
+    "exportedAt": "2026-05-12T07:53:08.691Z"
   },
   {
     "broadcastNumber": 3,
@@ -119,7 +119,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.919Z"
+    "exportedAt": "2026-05-12T07:53:08.691Z"
   },
   {
     "broadcastNumber": 4,
@@ -172,7 +172,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.919Z"
+    "exportedAt": "2026-05-12T07:53:08.691Z"
   },
   {
     "broadcastNumber": 5,
@@ -206,10 +206,10 @@
       },
       {
         "name": "おそろっち事件",
-        "type": "incident",
+        "type": "liveImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 8
+        "priority": 30
       }
     ],
     "primaryTagsForList": [],
@@ -217,7 +217,7 @@
       "hasCorner": true,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": false,
+      "hasLiveImpression": true,
       "hasEventImpression": false,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
@@ -225,7 +225,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.919Z"
+    "exportedAt": "2026-05-12T07:53:08.691Z"
   },
   {
     "broadcastNumber": 6,
@@ -271,7 +271,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.919Z"
+    "exportedAt": "2026-05-12T07:53:08.691Z"
   },
   {
     "broadcastNumber": 7,
@@ -302,13 +302,6 @@
         "searchable": true,
         "visibleInList": true,
         "priority": 95
-      },
-      {
-        "name": "Anime Japan 2021",
-        "type": "eventImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -317,14 +310,14 @@
       "hasLunchSong": true,
       "hasBirthdayTag": false,
       "hasLiveImpression": false,
-      "hasEventImpression": true,
+      "hasEventImpression": false,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.919Z"
+    "exportedAt": "2026-05-12T07:53:08.691Z"
   },
   {
     "broadcastNumber": 8,
@@ -370,7 +363,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.919Z"
+    "exportedAt": "2026-05-12T07:53:08.691Z"
   },
   {
     "broadcastNumber": 9,
@@ -416,7 +409,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.919Z"
+    "exportedAt": "2026-05-12T07:53:08.691Z"
   },
   {
     "broadcastNumber": 10,
@@ -454,7 +447,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.920Z"
+    "exportedAt": "2026-05-12T07:53:08.691Z"
   },
   {
     "broadcastNumber": 11,
@@ -500,7 +493,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.920Z"
+    "exportedAt": "2026-05-12T07:53:08.691Z"
   },
   {
     "broadcastNumber": 12,
@@ -534,34 +527,26 @@
       },
       {
         "name": "番組タイトル決定",
-        "type": "netaTag",
+        "type": "liveImpression",
         "searchable": true,
-        "visibleInList": true,
-        "priority": 45
+        "visibleInList": false,
+        "priority": 30
       }
     ],
-    "primaryTagsForList": [
-      {
-        "name": "番組タイトル決定",
-        "type": "netaTag",
-        "searchable": true,
-        "visibleInList": true,
-        "priority": 45
-      }
-    ],
+    "primaryTagsForList": [],
     "flags": {
       "hasCorner": true,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": false,
+      "hasLiveImpression": true,
       "hasEventImpression": false,
       "hasAnimeImpression": false,
-      "hasNetaTag": true,
+      "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.920Z"
+    "exportedAt": "2026-05-12T07:53:08.691Z"
   },
   {
     "broadcastNumber": 13,
@@ -607,7 +592,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.920Z"
+    "exportedAt": "2026-05-12T07:53:08.691Z"
   },
   {
     "broadcastNumber": 14,
@@ -630,13 +615,6 @@
         "searchable": true,
         "visibleInList": true,
         "priority": 95
-      },
-      {
-        "name": "デビューシングルリリイベ",
-        "type": "eventImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -645,14 +623,14 @@
       "hasLunchSong": true,
       "hasBirthdayTag": false,
       "hasLiveImpression": false,
-      "hasEventImpression": true,
+      "hasEventImpression": false,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.920Z"
+    "exportedAt": "2026-05-12T07:53:08.691Z"
   },
   {
     "broadcastNumber": 15,
@@ -666,13 +644,6 @@
         "searchable": true,
         "visibleInList": true,
         "priority": 95
-      },
-      {
-        "name": "シブヤノオト",
-        "type": "eventImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -681,14 +652,14 @@
       "hasLunchSong": true,
       "hasBirthdayTag": false,
       "hasLiveImpression": false,
-      "hasEventImpression": true,
+      "hasEventImpression": false,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.920Z"
+    "exportedAt": "2026-05-12T07:53:08.691Z"
   },
   {
     "broadcastNumber": 16,
@@ -711,13 +682,6 @@
         "searchable": true,
         "visibleInList": true,
         "priority": 95
-      },
-      {
-        "name": "デビューシングルリリイベ",
-        "type": "eventImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -726,14 +690,14 @@
       "hasLunchSong": true,
       "hasBirthdayTag": false,
       "hasLiveImpression": false,
-      "hasEventImpression": true,
+      "hasEventImpression": false,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.920Z"
+    "exportedAt": "2026-05-12T07:53:08.691Z"
   },
   {
     "broadcastNumber": 17,
@@ -779,7 +743,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.920Z"
+    "exportedAt": "2026-05-12T07:53:08.691Z"
   },
   {
     "broadcastNumber": 18,
@@ -825,7 +789,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.920Z"
+    "exportedAt": "2026-05-12T07:53:08.691Z"
   },
   {
     "broadcastNumber": 19,
@@ -871,7 +835,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.920Z"
+    "exportedAt": "2026-05-12T07:53:08.691Z"
   },
   {
     "broadcastNumber": 20,
@@ -894,13 +858,6 @@
         "searchable": true,
         "visibleInList": true,
         "priority": 95
-      },
-      {
-        "name": "1期",
-        "type": "animeImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -910,13 +867,13 @@
       "hasBirthdayTag": false,
       "hasLiveImpression": false,
       "hasEventImpression": false,
-      "hasAnimeImpression": true,
+      "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.920Z"
+    "exportedAt": "2026-05-12T07:53:08.691Z"
   },
   {
     "broadcastNumber": 21,
@@ -947,13 +904,6 @@
         "searchable": true,
         "visibleInList": true,
         "priority": 95
-      },
-      {
-        "name": "1期",
-        "type": "animeImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -963,13 +913,13 @@
       "hasBirthdayTag": false,
       "hasLiveImpression": false,
       "hasEventImpression": false,
-      "hasAnimeImpression": true,
+      "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.920Z"
+    "exportedAt": "2026-05-12T07:53:08.691Z"
   },
   {
     "broadcastNumber": 22,
@@ -992,13 +942,6 @@
         "searchable": true,
         "visibleInList": true,
         "priority": 95
-      },
-      {
-        "name": "1期",
-        "type": "animeImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -1008,13 +951,13 @@
       "hasBirthdayTag": false,
       "hasLiveImpression": false,
       "hasEventImpression": false,
-      "hasAnimeImpression": true,
+      "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.920Z"
+    "exportedAt": "2026-05-12T07:53:08.691Z"
   },
   {
     "broadcastNumber": 23,
@@ -1037,13 +980,6 @@
         "searchable": true,
         "visibleInList": true,
         "priority": 95
-      },
-      {
-        "name": "1期",
-        "type": "animeImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -1053,13 +989,13 @@
       "hasBirthdayTag": false,
       "hasLiveImpression": false,
       "hasEventImpression": false,
-      "hasAnimeImpression": true,
+      "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.920Z"
+    "exportedAt": "2026-05-12T07:53:08.691Z"
   },
   {
     "broadcastNumber": 24,
@@ -1090,13 +1026,6 @@
         "searchable": true,
         "visibleInList": true,
         "priority": 95
-      },
-      {
-        "name": "1期",
-        "type": "animeImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -1106,13 +1035,13 @@
       "hasBirthdayTag": false,
       "hasLiveImpression": false,
       "hasEventImpression": false,
-      "hasAnimeImpression": true,
+      "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.920Z"
+    "exportedAt": "2026-05-12T07:53:08.691Z"
   },
   {
     "broadcastNumber": 25,
@@ -1158,7 +1087,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.920Z"
+    "exportedAt": "2026-05-12T07:53:08.691Z"
   },
   {
     "broadcastNumber": 26,
@@ -1181,13 +1110,6 @@
         "searchable": true,
         "visibleInList": true,
         "priority": 95
-      },
-      {
-        "name": "1期",
-        "type": "animeImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -1197,13 +1119,13 @@
       "hasBirthdayTag": false,
       "hasLiveImpression": false,
       "hasEventImpression": false,
-      "hasAnimeImpression": true,
+      "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.920Z"
+    "exportedAt": "2026-05-12T07:53:08.691Z"
   },
   {
     "broadcastNumber": 27,
@@ -1226,13 +1148,6 @@
         "searchable": true,
         "visibleInList": true,
         "priority": 95
-      },
-      {
-        "name": "1期",
-        "type": "animeImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -1242,13 +1157,13 @@
       "hasBirthdayTag": false,
       "hasLiveImpression": false,
       "hasEventImpression": false,
-      "hasAnimeImpression": true,
+      "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.920Z"
+    "exportedAt": "2026-05-12T07:53:08.691Z"
   },
   {
     "broadcastNumber": 28,
@@ -1271,13 +1186,6 @@
         "searchable": true,
         "visibleInList": true,
         "priority": 95
-      },
-      {
-        "name": "1期",
-        "type": "animeImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -1287,13 +1195,13 @@
       "hasBirthdayTag": false,
       "hasLiveImpression": false,
       "hasEventImpression": false,
-      "hasAnimeImpression": true,
+      "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.920Z"
+    "exportedAt": "2026-05-12T07:53:08.691Z"
   },
   {
     "broadcastNumber": 29,
@@ -1331,7 +1239,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.920Z"
+    "exportedAt": "2026-05-12T07:53:08.691Z"
   },
   {
     "broadcastNumber": 30,
@@ -1354,13 +1262,6 @@
         "searchable": true,
         "visibleInList": true,
         "priority": 95
-      },
-      {
-        "name": "1期",
-        "type": "animeImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -1370,13 +1271,13 @@
       "hasBirthdayTag": false,
       "hasLiveImpression": false,
       "hasEventImpression": false,
-      "hasAnimeImpression": true,
+      "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.920Z"
+    "exportedAt": "2026-05-12T07:53:08.691Z"
   },
   {
     "broadcastNumber": 31,
@@ -1399,13 +1300,6 @@
         "searchable": true,
         "visibleInList": true,
         "priority": 95
-      },
-      {
-        "name": "1期",
-        "type": "animeImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -1415,13 +1309,13 @@
       "hasBirthdayTag": false,
       "hasLiveImpression": false,
       "hasEventImpression": false,
-      "hasAnimeImpression": true,
+      "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.920Z"
+    "exportedAt": "2026-05-12T07:53:08.691Z"
   },
   {
     "broadcastNumber": 32,
@@ -1444,13 +1338,6 @@
         "searchable": true,
         "visibleInList": true,
         "priority": 95
-      },
-      {
-        "name": "1期",
-        "type": "animeImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -1460,13 +1347,13 @@
       "hasBirthdayTag": false,
       "hasLiveImpression": false,
       "hasEventImpression": false,
-      "hasAnimeImpression": true,
+      "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.920Z"
+    "exportedAt": "2026-05-12T07:53:08.691Z"
   },
   {
     "broadcastNumber": 33,
@@ -1489,13 +1376,6 @@
         "searchable": true,
         "visibleInList": true,
         "priority": 95
-      },
-      {
-        "name": "1期",
-        "type": "animeImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -1505,13 +1385,13 @@
       "hasBirthdayTag": false,
       "hasLiveImpression": false,
       "hasEventImpression": false,
-      "hasAnimeImpression": true,
+      "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.920Z"
+    "exportedAt": "2026-05-12T07:53:08.691Z"
   },
   {
     "broadcastNumber": 34,
@@ -1525,13 +1405,6 @@
         "searchable": true,
         "visibleInList": true,
         "priority": 95
-      },
-      {
-        "name": "1期",
-        "type": "animeImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -1541,13 +1414,13 @@
       "hasBirthdayTag": false,
       "hasLiveImpression": false,
       "hasEventImpression": false,
-      "hasAnimeImpression": true,
+      "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.920Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 35,
@@ -1561,13 +1434,6 @@
         "searchable": true,
         "visibleInList": true,
         "priority": 95
-      },
-      {
-        "name": "1期",
-        "type": "animeImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -1577,13 +1443,13 @@
       "hasBirthdayTag": false,
       "hasLiveImpression": false,
       "hasEventImpression": false,
-      "hasAnimeImpression": true,
+      "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.920Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 36,
@@ -1597,13 +1463,6 @@
         "searchable": true,
         "visibleInList": true,
         "priority": 95
-      },
-      {
-        "name": "1期",
-        "type": "animeImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -1613,13 +1472,13 @@
       "hasBirthdayTag": false,
       "hasLiveImpression": false,
       "hasEventImpression": false,
-      "hasAnimeImpression": true,
+      "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.920Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 37,
@@ -1648,7 +1507,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.920Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 38,
@@ -1674,10 +1533,10 @@
       },
       {
         "name": "1st",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -1685,15 +1544,15 @@
       "hasCorner": true,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.920Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 39,
@@ -1726,10 +1585,10 @@
       },
       {
         "name": "1st",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -1737,15 +1596,15 @@
       "hasCorner": true,
       "hasLunchSong": true,
       "hasBirthdayTag": true,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.920Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 40,
@@ -1771,10 +1630,10 @@
       },
       {
         "name": "1st",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -1782,15 +1641,15 @@
       "hasCorner": true,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.920Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 41,
@@ -1828,7 +1687,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 42,
@@ -1854,13 +1713,6 @@
       },
       {
         "name": "1st",
-        "type": "liveImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 30
-      },
-      {
-        "name": "FNS歌謡祭",
         "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
@@ -1872,7 +1724,7 @@
       "hasCorner": true,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
+      "hasLiveImpression": false,
       "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
@@ -1880,7 +1732,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 43,
@@ -1926,7 +1778,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 44,
@@ -1952,10 +1804,10 @@
       },
       {
         "name": "1st",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -1963,15 +1815,15 @@
       "hasCorner": true,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 45,
@@ -2017,7 +1869,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 46,
@@ -2041,10 +1893,10 @@
       },
       {
         "name": "CDTV",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -2052,15 +1904,15 @@
       "hasCorner": false,
       "hasLunchSong": true,
       "hasBirthdayTag": true,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 47,
@@ -2077,10 +1929,10 @@
       },
       {
         "name": "CDTV",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -2088,15 +1940,15 @@
       "hasCorner": false,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 48,
@@ -2115,10 +1967,10 @@
       },
       {
         "name": "1st",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -2126,15 +1978,15 @@
       "hasCorner": true,
       "hasLunchSong": false,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 49,
@@ -2160,10 +2012,10 @@
       },
       {
         "name": "1st",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -2171,15 +2023,15 @@
       "hasCorner": true,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 50,
@@ -2205,10 +2057,10 @@
       },
       {
         "name": "1st",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -2216,15 +2068,15 @@
       "hasCorner": true,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 51,
@@ -2243,17 +2095,17 @@
       },
       {
         "name": "公開録音2022第1回",
-        "type": "publicRecordingNote",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 22
-      },
-      {
-        "name": "1st",
         "type": "liveImpression",
         "searchable": true,
         "visibleInList": false,
         "priority": 30
+      },
+      {
+        "name": "1st",
+        "type": "eventImpression",
+        "searchable": true,
+        "visibleInList": false,
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -2262,14 +2114,14 @@
       "hasLunchSong": false,
       "hasBirthdayTag": false,
       "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": true,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 52,
@@ -2288,17 +2140,17 @@
       },
       {
         "name": "公開録音2022第2回",
-        "type": "publicRecordingNote",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 22
-      },
-      {
-        "name": "1st",
         "type": "liveImpression",
         "searchable": true,
         "visibleInList": false,
         "priority": 30
+      },
+      {
+        "name": "1st",
+        "type": "eventImpression",
+        "searchable": true,
+        "visibleInList": false,
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -2307,14 +2159,14 @@
       "hasLunchSong": false,
       "hasBirthdayTag": false,
       "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": true,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 53,
@@ -2331,10 +2183,10 @@
       },
       {
         "name": "オダイバ!!超次元音楽祭",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -2342,15 +2194,15 @@
       "hasCorner": false,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 54,
@@ -2386,7 +2238,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 55,
@@ -2412,10 +2264,10 @@
       },
       {
         "name": "2nd",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -2423,15 +2275,15 @@
       "hasCorner": true,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 56,
@@ -2457,10 +2309,10 @@
       },
       {
         "name": "2nd",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -2468,15 +2320,15 @@
       "hasCorner": true,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 57,
@@ -2502,10 +2354,10 @@
       },
       {
         "name": "2nd",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -2513,15 +2365,15 @@
       "hasCorner": true,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 58,
@@ -2559,7 +2411,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 59,
@@ -2597,7 +2449,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 60,
@@ -2620,13 +2472,6 @@
         "searchable": true,
         "visibleInList": true,
         "priority": 95
-      },
-      {
-        "name": "J-MELO",
-        "type": "eventImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -2635,14 +2480,14 @@
       "hasLunchSong": true,
       "hasBirthdayTag": false,
       "hasLiveImpression": false,
-      "hasEventImpression": true,
+      "hasEventImpression": false,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 61,
@@ -2668,10 +2513,10 @@
       },
       {
         "name": "2nd",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -2679,15 +2524,15 @@
       "hasCorner": true,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 62,
@@ -2725,7 +2570,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 63,
@@ -2763,7 +2608,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 64,
@@ -2801,7 +2646,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 65,
@@ -2827,10 +2672,10 @@
       },
       {
         "name": "MTV",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -2838,15 +2683,15 @@
       "hasCorner": true,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 66,
@@ -2872,10 +2717,10 @@
       },
       {
         "name": "バンダイナムコエンターテインメントフェスティバル2nd",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -2883,15 +2728,15 @@
       "hasCorner": true,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 67,
@@ -2917,10 +2762,10 @@
       },
       {
         "name": "2nd",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -2928,15 +2773,15 @@
       "hasCorner": true,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 68,
@@ -2982,7 +2827,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 69,
@@ -3016,10 +2861,10 @@
       },
       {
         "name": "Welcome to Yuigaoka!!",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -3027,15 +2872,15 @@
       "hasCorner": true,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 70,
@@ -3061,10 +2906,10 @@
       },
       {
         "name": "Welcome to Yuigaoka!!",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -3072,15 +2917,15 @@
       "hasCorner": true,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 71,
@@ -3126,7 +2971,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 72,
@@ -3152,10 +2997,10 @@
       },
       {
         "name": "Welcome to Yuigaoka!!",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -3163,15 +3008,15 @@
       "hasCorner": true,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 73,
@@ -3197,17 +3042,17 @@
       },
       {
         "name": "Welcome to Yuigaoka!!",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       },
       {
         "name": "xR ARTISTS SUPER FES 2022",
-        "type": "liveImpression",
+        "type": "animeImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -3215,15 +3060,15 @@
       "hasCorner": true,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
-      "hasAnimeImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
+      "hasAnimeImpression": true,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 74,
@@ -3261,7 +3106,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 75,
@@ -3275,13 +3120,6 @@
         "searchable": true,
         "visibleInList": true,
         "priority": 95
-      },
-      {
-        "name": "2期",
-        "type": "animeImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -3291,13 +3129,13 @@
       "hasBirthdayTag": false,
       "hasLiveImpression": false,
       "hasEventImpression": false,
-      "hasAnimeImpression": true,
+      "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 76,
@@ -3311,13 +3149,6 @@
         "searchable": true,
         "visibleInList": true,
         "priority": 95
-      },
-      {
-        "name": "2期",
-        "type": "animeImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -3327,13 +3158,13 @@
       "hasBirthdayTag": false,
       "hasLiveImpression": false,
       "hasEventImpression": false,
-      "hasAnimeImpression": true,
+      "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 77,
@@ -3347,13 +3178,6 @@
         "searchable": true,
         "visibleInList": true,
         "priority": 95
-      },
-      {
-        "name": "2期",
-        "type": "animeImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -3363,13 +3187,13 @@
       "hasBirthdayTag": false,
       "hasLiveImpression": false,
       "hasEventImpression": false,
-      "hasAnimeImpression": true,
+      "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 78,
@@ -3398,7 +3222,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 79,
@@ -3415,14 +3239,7 @@
       },
       {
         "name": "SUMMER SNIC 2022",
-        "type": "liveImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 30
-      },
-      {
-        "name": "2期",
-        "type": "animeImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
         "priority": 28
@@ -3433,15 +3250,15 @@
       "hasCorner": false,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
-      "hasAnimeImpression": true,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
+      "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 80,
@@ -3455,13 +3272,6 @@
         "searchable": true,
         "visibleInList": true,
         "priority": 95
-      },
-      {
-        "name": "2期",
-        "type": "animeImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -3471,13 +3281,13 @@
       "hasBirthdayTag": false,
       "hasLiveImpression": false,
       "hasEventImpression": false,
-      "hasAnimeImpression": true,
+      "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 81,
@@ -3491,13 +3301,6 @@
         "searchable": true,
         "visibleInList": true,
         "priority": 95
-      },
-      {
-        "name": "2期",
-        "type": "animeImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -3507,13 +3310,13 @@
       "hasBirthdayTag": false,
       "hasLiveImpression": false,
       "hasEventImpression": false,
-      "hasAnimeImpression": true,
+      "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 82,
@@ -3527,13 +3330,6 @@
         "searchable": true,
         "visibleInList": true,
         "priority": 95
-      },
-      {
-        "name": "2期",
-        "type": "animeImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -3543,13 +3339,13 @@
       "hasBirthdayTag": false,
       "hasLiveImpression": false,
       "hasEventImpression": false,
-      "hasAnimeImpression": true,
+      "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 83,
@@ -3570,13 +3366,6 @@
         "searchable": true,
         "visibleInList": false,
         "priority": 12
-      },
-      {
-        "name": "2期",
-        "type": "animeImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -3586,13 +3375,13 @@
       "hasBirthdayTag": true,
       "hasLiveImpression": false,
       "hasEventImpression": false,
-      "hasAnimeImpression": true,
+      "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 84,
@@ -3609,14 +3398,7 @@
       },
       {
         "name": "CDTV",
-        "type": "liveImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 30
-      },
-      {
-        "name": "2期",
-        "type": "animeImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
         "priority": 28
@@ -3627,15 +3409,15 @@
       "hasCorner": false,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
-      "hasAnimeImpression": true,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
+      "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 85,
@@ -3649,13 +3431,6 @@
         "searchable": true,
         "visibleInList": true,
         "priority": 95
-      },
-      {
-        "name": "2期",
-        "type": "animeImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -3665,13 +3440,13 @@
       "hasBirthdayTag": false,
       "hasLiveImpression": false,
       "hasEventImpression": false,
-      "hasAnimeImpression": true,
+      "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 86,
@@ -3688,21 +3463,7 @@
       },
       {
         "name": "オダイバ!!超次元音楽祭",
-        "type": "liveImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 30
-      },
-      {
-        "name": "Venue101 EXTRA",
         "type": "eventImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 28
-      },
-      {
-        "name": "2期",
-        "type": "animeImpression",
         "searchable": true,
         "visibleInList": false,
         "priority": 28
@@ -3713,15 +3474,15 @@
       "hasCorner": false,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
+      "hasLiveImpression": false,
       "hasEventImpression": true,
-      "hasAnimeImpression": true,
+      "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 87,
@@ -3735,13 +3496,6 @@
         "searchable": true,
         "visibleInList": true,
         "priority": 95
-      },
-      {
-        "name": "2期",
-        "type": "animeImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -3751,13 +3505,13 @@
       "hasBirthdayTag": false,
       "hasLiveImpression": false,
       "hasEventImpression": false,
-      "hasAnimeImpression": true,
+      "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 88,
@@ -3793,7 +3547,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 89,
@@ -3824,13 +3578,6 @@
         "searchable": true,
         "visibleInList": true,
         "priority": 95
-      },
-      {
-        "name": "ドッキリGP",
-        "type": "eventImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -3839,14 +3586,14 @@
       "hasLunchSong": true,
       "hasBirthdayTag": false,
       "hasLiveImpression": false,
-      "hasEventImpression": true,
+      "hasEventImpression": false,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 90,
@@ -3884,7 +3631,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 91,
@@ -3920,7 +3667,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 92,
@@ -3958,7 +3705,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 93,
@@ -4004,7 +3751,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 94,
@@ -4050,7 +3797,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 95,
@@ -4076,17 +3823,17 @@
       },
       {
         "name": "FNS歌謡祭2022",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       },
       {
         "name": "3rd",
-        "type": "liveImpression",
+        "type": "animeImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -4094,15 +3841,15 @@
       "hasCorner": true,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
-      "hasAnimeImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
+      "hasAnimeImpression": true,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 96,
@@ -4140,7 +3887,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 97,
@@ -4186,7 +3933,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 98,
@@ -4220,10 +3967,10 @@
       },
       {
         "name": "ASIA EMOTIONAL MUSIC FES 2022",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -4231,15 +3978,15 @@
       "hasCorner": true,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 99,
@@ -4273,10 +4020,10 @@
       },
       {
         "name": "3rd",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -4284,15 +4031,15 @@
       "hasCorner": true,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 100,
@@ -4338,7 +4085,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 101,
@@ -4376,7 +4123,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 102,
@@ -4410,10 +4157,10 @@
       },
       {
         "name": "3rd",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -4421,15 +4168,15 @@
       "hasCorner": true,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 103,
@@ -4446,10 +4193,10 @@
       },
       {
         "name": "3rd",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -4457,15 +4204,15 @@
       "hasCorner": false,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 104,
@@ -4525,7 +4272,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 105,
@@ -4559,10 +4306,10 @@
       },
       {
         "name": "オダイバ!!超次元音楽祭2023",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -4570,15 +4317,15 @@
       "hasCorner": true,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 106,
@@ -4604,13 +4351,6 @@
       },
       {
         "name": "3rd",
-        "type": "liveImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 30
-      },
-      {
-        "name": "ドッキリGP",
         "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
@@ -4622,7 +4362,7 @@
       "hasCorner": true,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
+      "hasLiveImpression": false,
       "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
@@ -4630,7 +4370,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 107,
@@ -4647,10 +4387,10 @@
       },
       {
         "name": "3rd",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -4658,15 +4398,15 @@
       "hasCorner": false,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 108,
@@ -4683,10 +4423,10 @@
       },
       {
         "name": "3rd",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -4694,15 +4434,15 @@
       "hasCorner": false,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 109,
@@ -4719,10 +4459,10 @@
       },
       {
         "name": "3rd",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -4730,15 +4470,15 @@
       "hasCorner": false,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 110,
@@ -4767,7 +4507,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 111,
@@ -4790,13 +4530,6 @@
         "searchable": true,
         "visibleInList": true,
         "priority": 95
-      },
-      {
-        "name": "オニフェッショナル",
-        "type": "eventImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -4805,14 +4538,14 @@
       "hasLunchSong": true,
       "hasBirthdayTag": false,
       "hasLiveImpression": false,
-      "hasEventImpression": true,
+      "hasEventImpression": false,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 112,
@@ -4831,10 +4564,10 @@
       },
       {
         "name": "公開録音2023第1回",
-        "type": "publicRecordingNote",
+        "type": "liveImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 22
+        "priority": 30
       }
     ],
     "primaryTagsForList": [],
@@ -4842,7 +4575,7 @@
       "hasCorner": true,
       "hasLunchSong": false,
       "hasBirthdayTag": false,
-      "hasLiveImpression": false,
+      "hasLiveImpression": true,
       "hasEventImpression": false,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
@@ -4850,7 +4583,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 113,
@@ -4869,10 +4602,10 @@
       },
       {
         "name": "公開録音2023第2回",
-        "type": "publicRecordingNote",
+        "type": "liveImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 22
+        "priority": 30
       }
     ],
     "primaryTagsForList": [],
@@ -4880,7 +4613,7 @@
       "hasCorner": true,
       "hasLunchSong": false,
       "hasBirthdayTag": false,
-      "hasLiveImpression": false,
+      "hasLiveImpression": true,
       "hasEventImpression": false,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
@@ -4888,7 +4621,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 114,
@@ -4909,7 +4642,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 115,
@@ -4938,7 +4671,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 116,
@@ -4961,13 +4694,6 @@
         "searchable": true,
         "visibleInList": true,
         "priority": 95
-      },
-      {
-        "name": "Venue101",
-        "type": "eventImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -4976,14 +4702,14 @@
       "hasLunchSong": true,
       "hasBirthdayTag": false,
       "hasLiveImpression": false,
-      "hasEventImpression": true,
+      "hasEventImpression": false,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 117,
@@ -5021,7 +4747,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 118,
@@ -5059,7 +4785,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 119,
@@ -5085,10 +4811,10 @@
       },
       {
         "name": "BUSHIROAD ROCK　FESTIVAL 2023",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -5096,15 +4822,15 @@
       "hasCorner": true,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 120,
@@ -5149,7 +4875,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 121,
@@ -5172,24 +4898,9 @@
         "searchable": true,
         "visibleInList": true,
         "priority": 95
-      },
-      {
-        "name": "3期生加入会",
-        "type": "animeSeasonTag",
-        "searchable": true,
-        "visibleInList": true,
-        "priority": 88
       }
     ],
-    "primaryTagsForList": [
-      {
-        "name": "3期生加入会",
-        "type": "animeSeasonTag",
-        "searchable": true,
-        "visibleInList": true,
-        "priority": 88
-      }
-    ],
+    "primaryTagsForList": [],
     "flags": {
       "hasCorner": true,
       "hasLunchSong": true,
@@ -5197,12 +4908,12 @@
       "hasLiveImpression": false,
       "hasEventImpression": false,
       "hasAnimeImpression": false,
-      "hasNetaTag": true,
+      "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
-      "mentionsGen3Join": true
+      "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 122,
@@ -5240,7 +4951,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 123,
@@ -5278,7 +4989,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 124,
@@ -5316,7 +5027,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 125,
@@ -5368,7 +5079,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 126,
@@ -5397,7 +5108,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 127,
@@ -5414,10 +5125,10 @@
       },
       {
         "name": "Bilibili Macro Link2023",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -5425,15 +5136,15 @@
       "hasCorner": false,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 128,
@@ -5471,7 +5182,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 129,
@@ -5509,7 +5220,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 130,
@@ -5535,10 +5246,10 @@
       },
       {
         "name": "4th",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -5546,15 +5257,15 @@
       "hasCorner": true,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 131,
@@ -5580,10 +5291,10 @@
       },
       {
         "name": "4th",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -5591,15 +5302,15 @@
       "hasCorner": true,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 132,
@@ -5637,7 +5348,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 133,
@@ -5663,10 +5374,10 @@
       },
       {
         "name": "4th",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -5674,15 +5385,15 @@
       "hasCorner": true,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 134,
@@ -5708,10 +5419,10 @@
       },
       {
         "name": "4th",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -5719,15 +5430,15 @@
       "hasCorner": true,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 135,
@@ -5760,17 +5471,17 @@
       },
       {
         "name": "4th",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       },
       {
         "name": "MUSIC FAIR",
-        "type": "liveImpression",
+        "type": "animeImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -5778,15 +5489,15 @@
       "hasCorner": true,
       "hasLunchSong": true,
       "hasBirthdayTag": true,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
-      "hasAnimeImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
+      "hasAnimeImpression": true,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 136,
@@ -5812,10 +5523,10 @@
       },
       {
         "name": "4th",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -5823,15 +5534,15 @@
       "hasCorner": true,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 137,
@@ -5857,10 +5568,10 @@
       },
       {
         "name": "4th",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -5868,15 +5579,15 @@
       "hasCorner": true,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 138,
@@ -5902,10 +5613,10 @@
       },
       {
         "name": "4th",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -5913,15 +5624,15 @@
       "hasCorner": true,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 139,
@@ -5954,10 +5665,10 @@
       },
       {
         "name": "イナズマロックフェス2023",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -5965,15 +5676,15 @@
       "hasCorner": true,
       "hasLunchSong": true,
       "hasBirthdayTag": true,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 140,
@@ -5999,10 +5710,10 @@
       },
       {
         "name": "4th",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -6010,15 +5721,15 @@
       "hasCorner": true,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 141,
@@ -6044,10 +5755,10 @@
       },
       {
         "name": "4th",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -6055,15 +5766,15 @@
       "hasCorner": true,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 142,
@@ -6101,7 +5812,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 143,
@@ -6134,17 +5845,17 @@
       },
       {
         "name": "ヴァイスシュヴァルツ15周年記念ライブ",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       },
       {
         "name": "めざましテレビ30周年フェス",
-        "type": "liveImpression",
+        "type": "animeImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -6152,15 +5863,15 @@
       "hasCorner": true,
       "hasLunchSong": true,
       "hasBirthdayTag": true,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
-      "hasAnimeImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
+      "hasAnimeImpression": true,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": true,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 144,
@@ -6186,10 +5897,10 @@
       },
       {
         "name": "4th",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -6197,15 +5908,15 @@
       "hasCorner": true,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": true,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 145,
@@ -6234,7 +5945,7 @@
       "mentionsIjigenFes": true,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 146,
@@ -6272,7 +5983,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 147,
@@ -6289,13 +6000,6 @@
       },
       {
         "name": "異次元フェス",
-        "type": "liveImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 30
-      },
-      {
-        "name": "FNS歌謡祭2024",
         "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
@@ -6307,7 +6011,7 @@
       "hasCorner": false,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
+      "hasLiveImpression": false,
       "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
@@ -6315,7 +6019,7 @@
       "mentionsIjigenFes": true,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 148,
@@ -6339,10 +6043,10 @@
       },
       {
         "name": "異次元フェス",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -6350,15 +6054,15 @@
       "hasCorner": false,
       "hasLunchSong": true,
       "hasBirthdayTag": true,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": true,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 149,
@@ -6396,7 +6100,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 150,
@@ -6434,7 +6138,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 151,
@@ -6486,7 +6190,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 152,
@@ -6512,17 +6216,17 @@
       },
       {
         "name": "5th",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       },
       {
         "name": "異次元フェス",
-        "type": "liveImpression",
+        "type": "animeImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -6530,15 +6234,15 @@
       "hasCorner": true,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
-      "hasAnimeImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
+      "hasAnimeImpression": true,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": true,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 153,
@@ -6564,10 +6268,10 @@
       },
       {
         "name": "5th",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -6575,15 +6279,15 @@
       "hasCorner": true,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 154,
@@ -6609,13 +6313,6 @@
       },
       {
         "name": "異次元フェス",
-        "type": "liveImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 30
-      },
-      {
-        "name": "週刊ナイナイミュージック",
         "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
@@ -6627,7 +6324,7 @@
       "hasCorner": true,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
+      "hasLiveImpression": false,
       "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
@@ -6635,7 +6332,7 @@
       "mentionsIjigenFes": true,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 155,
@@ -6661,10 +6358,10 @@
       },
       {
         "name": "5th",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -6672,15 +6369,15 @@
       "hasCorner": true,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 156,
@@ -6713,17 +6410,17 @@
       },
       {
         "name": "リスアニ！LIVE 2024",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       },
       {
         "name": "異次元フェス",
-        "type": "liveImpression",
+        "type": "animeImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -6731,15 +6428,15 @@
       "hasCorner": true,
       "hasLunchSong": false,
       "hasBirthdayTag": true,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
-      "hasAnimeImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
+      "hasAnimeImpression": true,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": true,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 157,
@@ -6756,10 +6453,10 @@
       },
       {
         "name": "5th",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -6767,15 +6464,15 @@
       "hasCorner": false,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 158,
@@ -6792,10 +6489,10 @@
       },
       {
         "name": "5th",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -6803,15 +6500,15 @@
       "hasCorner": false,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 159,
@@ -6828,17 +6525,17 @@
       },
       {
         "name": "5th",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       },
       {
         "name": "オダイバ!!超次元音楽祭2024",
-        "type": "liveImpression",
+        "type": "animeImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -6846,15 +6543,15 @@
       "hasCorner": false,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
-      "hasAnimeImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
+      "hasAnimeImpression": true,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 160,
@@ -6871,10 +6568,10 @@
       },
       {
         "name": "5th",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -6882,15 +6579,15 @@
       "hasCorner": false,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 161,
@@ -6907,10 +6604,10 @@
       },
       {
         "name": "ユニット甲子園",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -6918,15 +6615,15 @@
       "hasCorner": false,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 162,
@@ -6950,10 +6647,10 @@
       },
       {
         "name": "ユニット甲子園",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -6961,15 +6658,15 @@
       "hasCorner": false,
       "hasLunchSong": true,
       "hasBirthdayTag": true,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 163,
@@ -7012,7 +6709,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 164,
@@ -7029,13 +6726,6 @@
       },
       {
         "name": "ユニット甲子園",
-        "type": "liveImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 30
-      },
-      {
-        "name": "オニフェッショナル",
         "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
@@ -7047,7 +6737,7 @@
       "hasCorner": false,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
+      "hasLiveImpression": false,
       "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
@@ -7055,7 +6745,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 165,
@@ -7081,41 +6771,33 @@
       },
       {
         "name": "番組リニューアル",
-        "type": "netaTag",
-        "searchable": true,
-        "visibleInList": true,
-        "priority": 45
-      },
-      {
-        "name": "ユニット甲子園",
         "type": "liveImpression",
         "searchable": true,
         "visibleInList": false,
         "priority": 30
-      }
-    ],
-    "primaryTagsForList": [
+      },
       {
-        "name": "番組リニューアル",
-        "type": "netaTag",
+        "name": "ユニット甲子園",
+        "type": "eventImpression",
         "searchable": true,
-        "visibleInList": true,
-        "priority": 45
+        "visibleInList": false,
+        "priority": 28
       }
     ],
+    "primaryTagsForList": [],
     "flags": {
       "hasCorner": true,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
       "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
-      "hasNetaTag": true,
+      "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 166,
@@ -7141,10 +6823,10 @@
       },
       {
         "name": "ユニット甲子園",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -7152,15 +6834,15 @@
       "hasCorner": true,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 167,
@@ -7198,7 +6880,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 168,
@@ -7243,7 +6925,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 169,
@@ -7266,13 +6948,6 @@
         "searchable": true,
         "visibleInList": true,
         "priority": 95
-      },
-      {
-        "name": "リエラジ公開録音2024",
-        "type": "eventImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -7281,14 +6956,14 @@
       "hasLunchSong": true,
       "hasBirthdayTag": false,
       "hasLiveImpression": false,
-      "hasEventImpression": true,
+      "hasEventImpression": false,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
-      "mentionsPublicRecordingInRemark": true,
+      "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.921Z"
+    "exportedAt": "2026-05-12T07:53:08.692Z"
   },
   {
     "broadcastNumber": 170,
@@ -7326,7 +7001,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 171,
@@ -7352,10 +7027,10 @@
       },
       {
         "name": "心技体~極上大冒険~",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -7363,15 +7038,15 @@
       "hasCorner": true,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 172,
@@ -7409,7 +7084,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 173,
@@ -7435,10 +7110,10 @@
       },
       {
         "name": "心技体~極上大冒険~",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -7446,15 +7121,15 @@
       "hasCorner": true,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 174,
@@ -7487,10 +7162,10 @@
       },
       {
         "name": "心技体~極上大冒険~",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -7498,15 +7173,15 @@
       "hasCorner": true,
       "hasLunchSong": true,
       "hasBirthdayTag": true,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 175,
@@ -7523,17 +7198,17 @@
       },
       {
         "name": "お弁当事件",
-        "type": "incident",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 8
-      },
-      {
-        "name": "心技体~極上大冒険~",
         "type": "liveImpression",
         "searchable": true,
         "visibleInList": false,
         "priority": 30
+      },
+      {
+        "name": "心技体~極上大冒険~",
+        "type": "eventImpression",
+        "searchable": true,
+        "visibleInList": false,
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -7542,14 +7217,14 @@
       "hasLunchSong": true,
       "hasBirthdayTag": false,
       "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 176,
@@ -7575,10 +7250,10 @@
       },
       {
         "name": "心技体~極上大冒険~",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -7586,15 +7261,15 @@
       "hasCorner": true,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 177,
@@ -7634,10 +7309,10 @@
       },
       {
         "name": "心技体~極上大冒険~",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -7645,15 +7320,15 @@
       "hasCorner": true,
       "hasLunchSong": true,
       "hasBirthdayTag": true,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 178,
@@ -7691,7 +7366,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 179,
@@ -7708,10 +7383,10 @@
       },
       {
         "name": "心技体~極上大冒険~",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -7719,15 +7394,15 @@
       "hasCorner": false,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 180,
@@ -7753,10 +7428,10 @@
       },
       {
         "name": "心技体~極上大冒険~",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -7764,15 +7439,15 @@
       "hasCorner": true,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 181,
@@ -7789,10 +7464,10 @@
       },
       {
         "name": "心技体~極上大冒険~",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -7800,15 +7475,15 @@
       "hasCorner": false,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 182,
@@ -7825,10 +7500,10 @@
       },
       {
         "name": "心技体~極上大冒険~",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -7836,15 +7511,15 @@
       "hasCorner": false,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 183,
@@ -7861,10 +7536,10 @@
       },
       {
         "name": "心技体~極上大冒険~",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -7872,15 +7547,15 @@
       "hasCorner": false,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 184,
@@ -7897,10 +7572,10 @@
       },
       {
         "name": "TIF2024",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -7908,15 +7583,15 @@
       "hasCorner": false,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 185,
@@ -7942,10 +7617,10 @@
       },
       {
         "name": "ANIME NYC 2024",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -7953,15 +7628,15 @@
       "hasCorner": true,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 186,
@@ -7987,10 +7662,10 @@
       },
       {
         "name": "オダイバ!!超次元音楽祭2025",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -7998,15 +7673,15 @@
       "hasCorner": true,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 187,
@@ -8056,7 +7731,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 188,
@@ -8094,7 +7769,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 189,
@@ -8123,7 +7798,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 190,
@@ -8161,7 +7836,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 191,
@@ -8175,13 +7850,6 @@
         "searchable": true,
         "visibleInList": true,
         "priority": 95
-      },
-      {
-        "name": "3期",
-        "type": "animeImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -8191,13 +7859,13 @@
       "hasBirthdayTag": false,
       "hasLiveImpression": false,
       "hasEventImpression": false,
-      "hasAnimeImpression": true,
+      "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
-      "mentionsGen3Join": true
+      "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 192,
@@ -8221,14 +7889,7 @@
       },
       {
         "name": "Asia Tour 2024",
-        "type": "liveImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 30
-      },
-      {
-        "name": "3期",
-        "type": "animeImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
         "priority": 28
@@ -8239,15 +7900,15 @@
       "hasCorner": false,
       "hasLunchSong": true,
       "hasBirthdayTag": true,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
-      "hasAnimeImpression": true,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
+      "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
-      "mentionsGen3Join": true
+      "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 193,
@@ -8261,20 +7922,6 @@
         "searchable": true,
         "visibleInList": true,
         "priority": 95
-      },
-      {
-        "name": "3期OP＆EDリリイベ",
-        "type": "eventImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 28
-      },
-      {
-        "name": "3期",
-        "type": "animeImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -8283,14 +7930,14 @@
       "hasLunchSong": true,
       "hasBirthdayTag": false,
       "hasLiveImpression": false,
-      "hasEventImpression": true,
-      "hasAnimeImpression": true,
+      "hasEventImpression": false,
+      "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
-      "mentionsGen3Join": true
+      "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 194,
@@ -8304,13 +7951,6 @@
         "searchable": true,
         "visibleInList": true,
         "priority": 95
-      },
-      {
-        "name": "3期",
-        "type": "animeImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -8320,13 +7960,13 @@
       "hasBirthdayTag": false,
       "hasLiveImpression": false,
       "hasEventImpression": false,
-      "hasAnimeImpression": true,
+      "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
-      "mentionsGen3Join": true
+      "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 195,
@@ -8340,13 +7980,6 @@
         "searchable": true,
         "visibleInList": true,
         "priority": 95
-      },
-      {
-        "name": "3期",
-        "type": "animeImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -8356,13 +7989,13 @@
       "hasBirthdayTag": false,
       "hasLiveImpression": false,
       "hasEventImpression": false,
-      "hasAnimeImpression": true,
+      "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
-      "mentionsGen3Join": true
+      "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 196,
@@ -8376,13 +8009,6 @@
         "searchable": true,
         "visibleInList": true,
         "priority": 95
-      },
-      {
-        "name": "3期",
-        "type": "animeImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -8392,13 +8018,13 @@
       "hasBirthdayTag": false,
       "hasLiveImpression": false,
       "hasEventImpression": false,
-      "hasAnimeImpression": true,
+      "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
-      "mentionsGen3Join": true
+      "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 197,
@@ -8412,20 +8038,6 @@
         "searchable": true,
         "visibleInList": true,
         "priority": 95
-      },
-      {
-        "name": "ANIMAX MUSIX 2024",
-        "type": "eventImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 28
-      },
-      {
-        "name": "3期",
-        "type": "animeImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -8434,14 +8046,14 @@
       "hasLunchSong": true,
       "hasBirthdayTag": false,
       "hasLiveImpression": false,
-      "hasEventImpression": true,
-      "hasAnimeImpression": true,
+      "hasEventImpression": false,
+      "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
-      "mentionsGen3Join": true
+      "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 198,
@@ -8455,13 +8067,6 @@
         "searchable": true,
         "visibleInList": true,
         "priority": 95
-      },
-      {
-        "name": "3期",
-        "type": "animeImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -8471,13 +8076,13 @@
       "hasBirthdayTag": false,
       "hasLiveImpression": false,
       "hasEventImpression": false,
-      "hasAnimeImpression": true,
+      "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
-      "mentionsGen3Join": true
+      "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 199,
@@ -8491,13 +8096,6 @@
         "searchable": true,
         "visibleInList": true,
         "priority": 95
-      },
-      {
-        "name": "3期",
-        "type": "animeImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -8507,13 +8105,13 @@
       "hasBirthdayTag": false,
       "hasLiveImpression": false,
       "hasEventImpression": false,
-      "hasAnimeImpression": true,
+      "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
-      "mentionsGen3Join": true
+      "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 200,
@@ -8527,13 +8125,6 @@
         "searchable": true,
         "visibleInList": true,
         "priority": 95
-      },
-      {
-        "name": "3期",
-        "type": "animeImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -8543,13 +8134,13 @@
       "hasBirthdayTag": false,
       "hasLiveImpression": false,
       "hasEventImpression": false,
-      "hasAnimeImpression": true,
+      "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
-      "mentionsGen3Join": true
+      "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 201,
@@ -8563,13 +8154,6 @@
         "searchable": true,
         "visibleInList": true,
         "priority": 95
-      },
-      {
-        "name": "3期",
-        "type": "animeImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -8579,13 +8163,13 @@
       "hasBirthdayTag": false,
       "hasLiveImpression": false,
       "hasEventImpression": false,
-      "hasAnimeImpression": true,
+      "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
-      "mentionsGen3Join": true
+      "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 202,
@@ -8599,13 +8183,6 @@
         "searchable": true,
         "visibleInList": true,
         "priority": 95
-      },
-      {
-        "name": "3期",
-        "type": "animeImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -8615,13 +8192,13 @@
       "hasBirthdayTag": false,
       "hasLiveImpression": false,
       "hasEventImpression": false,
-      "hasAnimeImpression": true,
+      "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
-      "mentionsGen3Join": true
+      "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 203,
@@ -8635,13 +8212,6 @@
         "searchable": true,
         "visibleInList": true,
         "priority": 95
-      },
-      {
-        "name": "沼にハマってきいてみた",
-        "type": "eventImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -8650,14 +8220,14 @@
       "hasLunchSong": true,
       "hasBirthdayTag": false,
       "hasLiveImpression": false,
-      "hasEventImpression": true,
+      "hasEventImpression": false,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 204,
@@ -8702,7 +8272,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 205,
@@ -8728,13 +8298,6 @@
       },
       {
         "name": "リスアニ！LIVE 2025",
-        "type": "liveImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 30
-      },
-      {
-        "name": "沼にハマってきいてみた",
         "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
@@ -8746,7 +8309,7 @@
       "hasCorner": true,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
+      "hasLiveImpression": false,
       "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
@@ -8754,7 +8317,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 206,
@@ -8792,7 +8355,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 207,
@@ -8830,7 +8393,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 208,
@@ -8856,10 +8419,10 @@
       },
       {
         "name": "Asia Tour 2024",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -8867,15 +8430,15 @@
       "hasCorner": true,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 209,
@@ -8920,7 +8483,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 210,
@@ -8944,10 +8507,10 @@
       },
       {
         "name": "Asia Tour 2024",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -8955,15 +8518,15 @@
       "hasCorner": false,
       "hasLunchSong": true,
       "hasBirthdayTag": true,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 211,
@@ -8980,10 +8543,10 @@
       },
       {
         "name": "6th",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -8991,15 +8554,15 @@
       "hasCorner": false,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 212,
@@ -9037,7 +8600,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 213,
@@ -9054,10 +8617,10 @@
       },
       {
         "name": "6th",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -9065,15 +8628,15 @@
       "hasCorner": false,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 214,
@@ -9109,7 +8672,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 215,
@@ -9147,7 +8710,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 216,
@@ -9164,10 +8727,10 @@
       },
       {
         "name": "6th",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -9175,15 +8738,15 @@
       "hasCorner": false,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 217,
@@ -9209,13 +8772,6 @@
       },
       {
         "name": "DayDay. SUPER LIVE 2025",
-        "type": "liveImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 30
-      },
-      {
-        "name": "ちゅーとりえら",
         "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
@@ -9227,7 +8783,7 @@
       "hasCorner": true,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
+      "hasLiveImpression": false,
       "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
@@ -9235,7 +8791,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 218,
@@ -9264,7 +8820,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 219,
@@ -9281,10 +8837,10 @@
       },
       {
         "name": "6th",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -9292,15 +8848,15 @@
       "hasCorner": false,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 220,
@@ -9323,13 +8879,6 @@
         "searchable": true,
         "visibleInList": true,
         "priority": 95
-      },
-      {
-        "name": "ちゅーとりえら",
-        "type": "eventImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -9338,14 +8887,14 @@
       "hasLunchSong": true,
       "hasBirthdayTag": false,
       "hasLiveImpression": false,
-      "hasEventImpression": true,
+      "hasEventImpression": false,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 221,
@@ -9362,17 +8911,17 @@
       },
       {
         "name": "餃子事件",
-        "type": "incident",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 8
-      },
-      {
-        "name": "6th",
         "type": "liveImpression",
         "searchable": true,
         "visibleInList": false,
         "priority": 30
+      },
+      {
+        "name": "6th",
+        "type": "eventImpression",
+        "searchable": true,
+        "visibleInList": false,
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -9381,14 +8930,14 @@
       "hasLunchSong": true,
       "hasBirthdayTag": false,
       "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 222,
@@ -9411,13 +8960,6 @@
         "searchable": true,
         "visibleInList": true,
         "priority": 95
-      },
-      {
-        "name": "ちゅーとりえら",
-        "type": "eventImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -9426,14 +8968,14 @@
       "hasLunchSong": true,
       "hasBirthdayTag": false,
       "hasLiveImpression": false,
-      "hasEventImpression": true,
+      "hasEventImpression": false,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 223,
@@ -9447,13 +8989,6 @@
         "searchable": true,
         "visibleInList": true,
         "priority": 95
-      },
-      {
-        "name": "Venue101",
-        "type": "eventImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -9462,14 +8997,14 @@
       "hasLunchSong": true,
       "hasBirthdayTag": false,
       "hasLiveImpression": false,
-      "hasEventImpression": true,
+      "hasEventImpression": false,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 224,
@@ -9498,7 +9033,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 225,
@@ -9515,10 +9050,10 @@
       },
       {
         "name": "6th",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -9526,15 +9061,15 @@
       "hasCorner": false,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 226,
@@ -9572,7 +9107,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 227,
@@ -9589,13 +9124,6 @@
       },
       {
         "name": "6th",
-        "type": "liveImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 30
-      },
-      {
-        "name": "永久stage",
         "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
@@ -9607,7 +9135,7 @@
       "hasCorner": false,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
+      "hasLiveImpression": false,
       "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
@@ -9615,7 +9143,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 228,
@@ -9632,10 +9160,10 @@
       },
       {
         "name": "6th",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -9643,15 +9171,15 @@
       "hasCorner": false,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 229,
@@ -9682,10 +9210,10 @@
       },
       {
         "name": "ちゅーとりえいぶ!!",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -9693,15 +9221,15 @@
       "hasCorner": false,
       "hasLunchSong": true,
       "hasBirthdayTag": true,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 230,
@@ -9718,10 +9246,10 @@
       },
       {
         "name": "6th",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -9729,15 +9257,15 @@
       "hasCorner": false,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 231,
@@ -9754,17 +9282,17 @@
       },
       {
         "name": "ちゅーとりえいぶ!!、6th",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       },
       {
         "name": "6th",
-        "type": "liveImpression",
+        "type": "animeImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -9772,15 +9300,15 @@
       "hasCorner": false,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
-      "hasAnimeImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
+      "hasAnimeImpression": true,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 232,
@@ -9797,10 +9325,10 @@
       },
       {
         "name": "6th",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -9808,15 +9336,15 @@
       "hasCorner": false,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 233,
@@ -9833,10 +9361,10 @@
       },
       {
         "name": "Wonderful Starlines",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -9844,15 +9372,15 @@
       "hasCorner": false,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 234,
@@ -9869,10 +9397,10 @@
       },
       {
         "name": "6th",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -9880,15 +9408,15 @@
       "hasCorner": false,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 235,
@@ -9905,10 +9433,10 @@
       },
       {
         "name": "Wonderful Starlines",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -9916,15 +9444,15 @@
       "hasCorner": false,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 236,
@@ -9941,10 +9469,10 @@
       },
       {
         "name": "Connect the Stars",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -9952,15 +9480,15 @@
       "hasCorner": false,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 237,
@@ -9998,7 +9526,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 238,
@@ -10036,7 +9564,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 239,
@@ -10074,7 +9602,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 240,
@@ -10119,7 +9647,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 241,
@@ -10133,13 +9661,6 @@
         "searchable": true,
         "visibleInList": true,
         "priority": 95
-      },
-      {
-        "name": "リエラジ公開録音2025",
-        "type": "eventImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -10148,14 +9669,14 @@
       "hasLunchSong": true,
       "hasBirthdayTag": false,
       "hasLiveImpression": false,
-      "hasEventImpression": true,
+      "hasEventImpression": false,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
-      "mentionsPublicRecordingInRemark": true,
+      "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 242,
@@ -10193,7 +9714,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 243,
@@ -10207,13 +9728,6 @@
         "searchable": true,
         "visibleInList": true,
         "priority": 95
-      },
-      {
-        "name": "茨城を食べよう収穫祭2025",
-        "type": "eventImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -10222,14 +9736,14 @@
       "hasLunchSong": true,
       "hasBirthdayTag": false,
       "hasLiveImpression": false,
-      "hasEventImpression": true,
+      "hasEventImpression": false,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 244,
@@ -10281,7 +9795,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 245,
@@ -10298,34 +9812,26 @@
       },
       {
         "name": "虹ヶ咲コラボ",
-        "type": "netaTag",
+        "type": "liveImpression",
         "searchable": true,
-        "visibleInList": true,
-        "priority": 45
+        "visibleInList": false,
+        "priority": 30
       }
     ],
-    "primaryTagsForList": [
-      {
-        "name": "虹ヶ咲コラボ",
-        "type": "netaTag",
-        "searchable": true,
-        "visibleInList": true,
-        "priority": 45
-      }
-    ],
+    "primaryTagsForList": [],
     "flags": {
       "hasCorner": false,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": false,
+      "hasLiveImpression": true,
       "hasEventImpression": false,
       "hasAnimeImpression": false,
-      "hasNetaTag": true,
+      "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 246,
@@ -10351,34 +9857,26 @@
       },
       {
         "name": "虹ヶ咲コラボ",
-        "type": "netaTag",
+        "type": "liveImpression",
         "searchable": true,
-        "visibleInList": true,
-        "priority": 45
+        "visibleInList": false,
+        "priority": 30
       }
     ],
-    "primaryTagsForList": [
-      {
-        "name": "虹ヶ咲コラボ",
-        "type": "netaTag",
-        "searchable": true,
-        "visibleInList": true,
-        "priority": 45
-      }
-    ],
+    "primaryTagsForList": [],
     "flags": {
       "hasCorner": true,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": false,
+      "hasLiveImpression": true,
       "hasEventImpression": false,
       "hasAnimeImpression": false,
-      "hasNetaTag": true,
+      "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 247,
@@ -10392,13 +9890,6 @@
         "searchable": true,
         "visibleInList": true,
         "priority": 95
-      },
-      {
-        "name": "葉月恋誕生日祝い",
-        "type": "birthday",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 12
       },
       {
         "name": "葉月恋誕生日祝い",
@@ -10421,7 +9912,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 248,
@@ -10466,7 +9957,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 249,
@@ -10502,7 +9993,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 250,
@@ -10516,9 +10007,38 @@
         "searchable": true,
         "visibleInList": true,
         "priority": 95
+      }
+    ],
+    "primaryTagsForList": [],
+    "flags": {
+      "hasCorner": false,
+      "hasLunchSong": true,
+      "hasBirthdayTag": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": false,
+      "hasAnimeImpression": false,
+      "hasNetaTag": false,
+      "mentionsPublicRecordingInRemark": false,
+      "mentionsIjigenFes": false,
+      "mentionsGen3Join": false
+    },
+    "exportedAt": "2026-05-12T07:53:08.693Z"
+  },
+  {
+    "broadcastNumber": 251,
+    "excelRow": 256,
+    "corners": [],
+    "lunchTimeRequestSong": "勇気のカケラ",
+    "tags": [
+      {
+        "name": "勇気のカケラ",
+        "type": "lunchSong",
+        "searchable": true,
+        "visibleInList": true,
+        "priority": 95
       },
       {
-        "name": "タイお渡し会",
+        "name": "AGF2025",
         "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
@@ -10538,50 +10058,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
-  },
-  {
-    "broadcastNumber": 251,
-    "excelRow": 256,
-    "corners": [],
-    "lunchTimeRequestSong": "勇気のカケラ",
-    "tags": [
-      {
-        "name": "勇気のカケラ",
-        "type": "lunchSong",
-        "searchable": true,
-        "visibleInList": true,
-        "priority": 95
-      },
-      {
-        "name": "AGF2025",
-        "type": "liveImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 30
-      },
-      {
-        "name": "Venue101",
-        "type": "eventImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 28
-      }
-    ],
-    "primaryTagsForList": [],
-    "flags": {
-      "hasCorner": false,
-      "hasLunchSong": true,
-      "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": true,
-      "hasAnimeImpression": false,
-      "hasNetaTag": false,
-      "mentionsPublicRecordingInRemark": false,
-      "mentionsIjigenFes": false,
-      "mentionsGen3Join": false
-    },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 252,
@@ -10619,7 +10096,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 253,
@@ -10664,7 +10141,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 254,
@@ -10709,7 +10186,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 255,
@@ -10738,7 +10215,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 256,
@@ -10783,7 +10260,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 257,
@@ -10812,7 +10289,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 258,
@@ -10841,7 +10318,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 259,
@@ -10879,7 +10356,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 260,
@@ -10924,7 +10401,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 261,
@@ -10969,7 +10446,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 262,
@@ -11002,10 +10479,10 @@
       },
       {
         "name": "7th",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -11013,15 +10490,15 @@
       "hasCorner": true,
       "hasLunchSong": true,
       "hasBirthdayTag": true,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 263,
@@ -11038,10 +10515,10 @@
       },
       {
         "name": "7th",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -11049,15 +10526,15 @@
       "hasCorner": false,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 264,
@@ -11074,10 +10551,10 @@
       },
       {
         "name": "7th",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -11085,15 +10562,15 @@
       "hasCorner": false,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 265,
@@ -11110,10 +10587,10 @@
       },
       {
         "name": "7th",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -11121,15 +10598,15 @@
       "hasCorner": false,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 266,
@@ -11153,10 +10630,10 @@
       },
       {
         "name": "7th",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -11164,15 +10641,15 @@
       "hasCorner": false,
       "hasLunchSong": true,
       "hasBirthdayTag": true,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 267,
@@ -11196,10 +10673,10 @@
       },
       {
         "name": "7th",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -11207,15 +10684,15 @@
       "hasCorner": false,
       "hasLunchSong": true,
       "hasBirthdayTag": true,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 268,
@@ -11232,10 +10709,10 @@
       },
       {
         "name": "7th",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -11243,15 +10720,15 @@
       "hasCorner": false,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 269,
@@ -11268,41 +10745,33 @@
       },
       {
         "name": "坂倉裁判",
-        "type": "netaTag",
-        "searchable": true,
-        "visibleInList": true,
-        "priority": 45
-      },
-      {
-        "name": "7th",
         "type": "liveImpression",
         "searchable": true,
         "visibleInList": false,
         "priority": 30
-      }
-    ],
-    "primaryTagsForList": [
+      },
       {
-        "name": "坂倉裁判",
-        "type": "netaTag",
+        "name": "7th",
+        "type": "eventImpression",
         "searchable": true,
-        "visibleInList": true,
-        "priority": 45
+        "visibleInList": false,
+        "priority": 28
       }
     ],
+    "primaryTagsForList": [],
     "flags": {
       "hasCorner": false,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
       "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
-      "hasNetaTag": true,
+      "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 270,
@@ -11326,13 +10795,6 @@
       },
       {
         "name": "CON-CON HONG KONG 2026",
-        "type": "liveImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 30
-      },
-      {
-        "name": "ちゅーとりえら2感想",
         "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
@@ -11344,7 +10806,7 @@
       "hasCorner": false,
       "hasLunchSong": true,
       "hasBirthdayTag": true,
-      "hasLiveImpression": true,
+      "hasLiveImpression": false,
       "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
@@ -11352,7 +10814,7 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 271,
@@ -11369,10 +10831,10 @@
       },
       {
         "name": "7th",
-        "type": "liveImpression",
+        "type": "eventImpression",
         "searchable": true,
         "visibleInList": false,
-        "priority": 30
+        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -11380,15 +10842,15 @@
       "hasCorner": false,
       "hasLunchSong": true,
       "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
+      "hasLiveImpression": false,
+      "hasEventImpression": true,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.693Z"
   },
   {
     "broadcastNumber": 272,
@@ -11409,13 +10871,6 @@
         "searchable": true,
         "visibleInList": false,
         "priority": 12
-      },
-      {
-        "name": "ちゅーとりえら2感想",
-        "type": "eventImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 28
       }
     ],
     "primaryTagsForList": [],
@@ -11424,13 +10879,13 @@
       "hasLunchSong": true,
       "hasBirthdayTag": true,
       "hasLiveImpression": false,
-      "hasEventImpression": true,
+      "hasEventImpression": false,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
       "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-12T07:23:26.922Z"
+    "exportedAt": "2026-05-12T07:53:08.694Z"
   }
 ]
