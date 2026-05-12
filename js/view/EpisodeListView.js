@@ -28,7 +28,7 @@ const META_TYPE_LABELS = {
   liveImpression: "ライブ感想",
   eventImpression: "イベント感想",
   animeImpression: "アニメ感想",
-  publicRecordingNote: "公開録音メモ",
+  publicRecordingNote: "公開録音",
   miscTag: "備考タグ",
   remark: "備考",
   generic: "メタ情報"
@@ -52,7 +52,7 @@ function metaDetailsHtml(manualMeta) {
   const body = rows
     .map((tag) => {
       const category = META_TYPE_LABELS[tag.type] || tag.type || "情報";
-      const flags = [`検索:${tag.searchable ? "対象" : "除外"}`, `一覧:${tag.visibleInList ? "表示" : "非表示"}`, `優先:${tag.priority ?? 0}`];
+      const flags = [`検索:${tag.searchable ? "対象" : "除外"}`, `一覧:${tag.visibleInList ? "表示" : "非表示"}`];
       const flagText = `<span class="meta-tag-flag">${escapeHtml(flags.join(" / "))}</span>`;
       return `<li>
         <div class="meta-tag-row-main">
@@ -66,7 +66,7 @@ function metaDetailsHtml(manualMeta) {
 
   return `
     <details class="episode-meta-details">
-      <summary>詳細（全タグ・備考）</summary>
+      <summary>詳細</summary>
       <ol class="meta-tag-detail-list">${body}</ol>
     </details>
   `;
