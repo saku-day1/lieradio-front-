@@ -225,6 +225,19 @@ body {
   border-color: var(--accent);
 }
 
+.share-button {
+  border: 1px solid #3a4661;
+  border-radius: 10px;
+  padding: 6px 12px;
+  color: var(--text);
+  background: #1f2937;
+  cursor: pointer;
+}
+
+.share-button:hover {
+  border-color: var(--accent);
+}
+
 .discovery-reset-row {
   margin-top: 12px;
   display: flex;
