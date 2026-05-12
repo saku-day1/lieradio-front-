@@ -627,13 +627,21 @@ h2 {
 .search-discovery-card {
   display: flex;
   flex-direction: column;
+  gap: 0;
+}
+
+#discoveryContent {
+  display: flex;
+  flex-direction: column;
   gap: 12px;
+  margin-top: 12px;
 }
 
 .search-discovery-header {
   display: flex;
-  flex-direction: column;
-  gap: 4px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .discovery-title {

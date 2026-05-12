@@ -35,46 +35,48 @@
     </section>
 
     <section id="discoveryPanel" class="card search-discovery-card">
-      <div class="search-discovery-header">
+      <div class="section-header">
         <h2 class="discovery-title">詳細検索</h2>
-        <p class="discovery-hint">まず項目を決め、その中からさらに絞り込めます（出演者は上のボタンで選んでください）。</p>
+        <button id="toggleDiscoveryButton" type="button" class="toggle-button">表示する</button>
       </div>
-      <div class="discovery-grid">
-        <label class="search-field-label" for="facetPrimarySelect">項目</label>
-        <select id="facetPrimarySelect">
-          <option value="">（使わない）</option>
-          <option value="corner">コーナー</option>
-          <option value="lunchSong">楽曲</option>
-          <option value="liveImpression">ライブ感想</option>
-          <option value="eventImpression">イベント感想</option>
-          <option value="animeImpression">アニメ感想</option>
-          <option value="birthday">誕生日祝い</option>
-          <option value="publicRecording">公開録音（タイトル・備考）</option>
-          <option value="incident">事件</option>
-        </select>
-      </div>
-      <div id="cornerPickWrap" class="corner-pick-panel hidden">
-        <p id="cornerPickHint" class="corner-pick-hint">リストからコーナーをタップするとそのコーナーの回だけ表示します（もう一度タップで解除）。</p>
-        <div id="cornerPickList" class="corner-pick-list" role="list"></div>
-        <div id="liellaDiaryCastWrap" class="liella-diary-cast-wrap hidden">
-          <p class="corner-pick-hint">さらにキャストで絞り込む</p>
-          <div id="liellaDiaryCastList" class="corner-pick-list" role="list"></div>
+      <div id="discoveryContent" class="hidden">
+        <div class="discovery-grid">
+          <label class="search-field-label" for="facetPrimarySelect">項目</label>
+          <select id="facetPrimarySelect">
+            <option value="">（選んでください）</option>
+            <option value="corner">コーナー</option>
+            <option value="lunchSong">楽曲</option>
+            <option value="liveImpression">ライブ感想</option>
+            <option value="eventImpression">イベント感想</option>
+            <option value="animeImpression">アニメ感想</option>
+            <option value="birthday">誕生日祝い</option>
+            <option value="publicRecording">公開録音</option>
+            <option value="incident">事件</option>
+          </select>
         </div>
-        <button type="button" id="cornerPickClearButton" class="tiny-button corner-pick-clear">コーナーの指定をクリア</button>
-      </div>
-      <div id="facetSecondaryWrap" class="facet-secondary-wrap discovery-grid hidden">
-        <label class="search-field-label" id="facetSecondaryLabel" for="facetSecondarySelect">さらに指定</label>
-        <select id="facetSecondarySelect"></select>
-      </div>
-      <div id="songPartialWrap" class="discovery-grid facet-song-wrap hidden">
-        <label class="search-field-label" for="songPartialInput">楽曲キーワード（部分一致）</label>
-        <div class="search-inline">
-          <input
-            id="songPartialInput"
-            type="search"
-            autocomplete="off"
-            placeholder="タイトルの一部だけでも検索できます">
-          <button type="button" id="clearSongPartialButton" class="tiny-button">クリア</button>
+        <div id="cornerPickWrap" class="corner-pick-panel hidden">
+          <p id="cornerPickHint" class="corner-pick-hint">タップするとそのコーナーの回だけ表示します（もう一度タップで解除）。</p>
+          <div id="cornerPickList" class="corner-pick-list" role="list"></div>
+          <div id="liellaDiaryCastWrap" class="liella-diary-cast-wrap hidden">
+            <p class="corner-pick-hint">さらにキャストで絞り込む</p>
+            <div id="liellaDiaryCastList" class="corner-pick-list" role="list"></div>
+          </div>
+          <button type="button" id="cornerPickClearButton" class="tiny-button corner-pick-clear">コーナーの指定をクリア</button>
+        </div>
+        <div id="facetSecondaryWrap" class="facet-secondary-wrap discovery-grid hidden">
+          <label class="search-field-label" id="facetSecondaryLabel" for="facetSecondarySelect">さらに指定</label>
+          <select id="facetSecondarySelect"></select>
+        </div>
+        <div id="songPartialWrap" class="discovery-grid facet-song-wrap hidden">
+          <label class="search-field-label" for="songPartialInput">楽曲キーワード（部分一致）</label>
+          <div class="search-inline">
+            <input
+              id="songPartialInput"
+              type="search"
+              autocomplete="off"
+              placeholder="タイトルの一部だけでも検索できます">
+            <button type="button" id="clearSongPartialButton" class="tiny-button">クリア</button>
+          </div>
         </div>
       </div>
     </section>

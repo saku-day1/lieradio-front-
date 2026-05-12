@@ -55,6 +55,8 @@ export default class AppController {
     this.unwatchedFilterButton   = document.getElementById("unwatchedFilterButton");
     this.otherVideoFilterButton  = document.getElementById("otherVideoFilterButton");
 
+    this.toggleDiscoveryButton    = document.getElementById("toggleDiscoveryButton");
+    this.discoveryContent         = document.getElementById("discoveryContent");
     this.facetPrimarySelect       = document.getElementById("facetPrimarySelect");
     this.facetSecondarySelect     = document.getElementById("facetSecondarySelect");
     this.facetSecondaryWrap       = document.getElementById("facetSecondaryWrap");
@@ -94,6 +96,7 @@ export default class AppController {
     this.facetSecondaryValue   = "";
     this.songPartialQuery      = "";
     this._facetCatalog         = null;
+    this.isDiscoveryVisible    = false;
 
     this.currentPage           = 1;
     this._lastFilterKey        = "";
@@ -163,6 +166,11 @@ export default class AppController {
     this.otherVideoFilterButton?.addEventListener("click", () => {
       this.isOtherVideoFilterActive = !this.isOtherVideoFilterActive;
       this.render();
+    });
+
+    this.toggleDiscoveryButton?.addEventListener("click", () => {
+      this.isDiscoveryVisible = !this.isDiscoveryVisible;
+      this._updateDiscoveryVisibility();
     });
 
     this.facetPrimarySelect?.addEventListener("change", () => this._onFacetPrimaryChange());
@@ -299,6 +307,13 @@ export default class AppController {
         return "どの事件・ネタ備考か";
       default:
         return "さらに指定";
+    }
+  }
+
+  _updateDiscoveryVisibility() {
+    this.discoveryContent?.classList.toggle("hidden", !this.isDiscoveryVisible);
+    if (this.toggleDiscoveryButton) {
+      this.toggleDiscoveryButton.textContent = this.isDiscoveryVisible ? "閉じる" : "表示する";
     }
   }
 
@@ -474,6 +489,7 @@ export default class AppController {
   // -------------------------------------------------------------------------
 
   render() {
+    this._updateDiscoveryVisibility();
     this._updateFacetAccessoryVisibility();
     this._renderCornerPickList();
 
@@ -712,6 +728,7 @@ export default class AppController {
     this.facetPrimaryKey       = FACET_PRIMARY_NONE;
     this.facetSecondaryValue   = "";
     this.songPartialQuery      = "";
+    this.isDiscoveryVisible    = false;
     if (this.facetPrimarySelect) {
       this.facetPrimarySelect.value = FACET_PRIMARY_NONE;
     }
