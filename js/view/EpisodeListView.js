@@ -208,10 +208,10 @@ function buildEpisodeItemHtml(episode, isAndMode, favorites, watched, hitMap) {
 
 function buildCastBadgesHtml(castMembers) {
   if (!Array.isArray(castMembers) || castMembers.length === 0) {
-    return `<span class="cast-fallback">出演者情報未設定</span>`;
+    return "";
   }
   if (castMembers.length === 1 && castMembers[0] === "出演者情報未設定") {
-    return `<span class="cast-fallback">出演者情報未設定</span>`;
+    return "";
   }
 
   return castMembers
