@@ -120,8 +120,6 @@ export default class AppController {
 
     this.exportDataButton      = document.getElementById("exportDataButton");
     this.importDataInput       = document.getElementById("importDataInput");
-    this.shareButton           = document.getElementById("shareButton");
-    this.shareToast            = document.getElementById("shareToast");
 
     this.songRankingSection       = document.getElementById("songRankingSection");
     this.songRankingList          = document.getElementById("songRankingList");
@@ -145,7 +143,7 @@ export default class AppController {
       this._facetCatalog = buildFacetCatalog(this.allEpisodes);
       this._renderCastQuickFilters();
       this._renderUnitQuickFilters();
-      this._applyUrlParams();
+
       this._populateFacetSecondaryOptions();
       this._bindEvents();
       this.render();
@@ -263,7 +261,6 @@ export default class AppController {
 
     this.exportDataButton?.addEventListener("click", () => this._handleExport());
     this.importDataInput?.addEventListener("change", (ev) => this._handleImport(ev));
-    this.shareButton?.addEventListener("click", () => this._handleShare());
 
     this.toggleSongRankingButton?.addEventListener("click", () => {
       this.isSongRankingVisible = !this.isSongRankingVisible;
@@ -271,122 +268,6 @@ export default class AppController {
     });
   }
 
-  _applyUrlParams() {
-    const params = new URLSearchParams(window.location.search);
-
-    const cast = params.get("cast");
-    if (cast) {
-      this.andFilterNames = cast.split(",").map((s) => s.trim()).filter(Boolean).slice(0, MAX_AND_CAST_SELECTION);
-      if (this.andFilterNames.length === 1) {
-        this.quickFilterKeyword = this.andFilterNames[0];
-      }
-    }
-
-    const unit = params.get("unit");
-    if (unit) {
-      this.activeUnitFilterKey = unit;
-    }
-
-    const facet = params.get("facet");
-    if (facet) {
-      this.facetPrimaryKey = facet;
-      if (this.facetPrimarySelect) this.facetPrimarySelect.value = facet;
-    }
-
-    const value = params.get("value");
-    if (value) {
-      this.facetSecondaryValue = value;
-    }
-
-    const song = params.get("song");
-    if (song) {
-      this.songPartialQuery = song;
-      if (this.songPartialInput) this.songPartialInput.value = song;
-    }
-
-    if (cast || unit || facet || value || song) {
-      this.isEpisodeListVisible = true;
-      if (facet) this.isDiscoveryVisible = true;
-    }
-  }
-
-  _buildShareParams() {
-    const params = new URLSearchParams();
-    if (this.andFilterNames.length > 0) {
-      params.set("cast", this.andFilterNames.join(","));
-    }
-    if (this.activeUnitFilterKey) {
-      params.set("unit", this.activeUnitFilterKey);
-    }
-    if (this.facetPrimaryKey && this.facetPrimaryKey !== FACET_PRIMARY_NONE) {
-      params.set("facet", this.facetPrimaryKey);
-    }
-    if (this.facetSecondaryValue) {
-      params.set("value", this.facetSecondaryValue);
-    }
-    if (this.songPartialQuery) {
-      params.set("song", this.songPartialQuery);
-    }
-    return params;
-  }
-
-  _updateUrl() {
-    const query = this._buildShareParams().toString();
-    const newUrl = query ? `${location.pathname}?${query}` : location.pathname;
-    history.replaceState(null, "", newUrl);
-  }
-
-  _updateShareButton() {
-    if (!this.shareButton) return;
-    const hasShareable = this._buildShareParams().toString().length > 0;
-    this.shareButton.classList.toggle("hidden", !hasShareable);
-  }
-
-  _buildShareMessage() {
-    if (this.andFilterNames.length >= 2) {
-      return `${this.andFilterNames.join("・")}の共演回を共有しました`;
-    }
-    if (this.andFilterNames.length === 1) {
-      return `${this.andFilterNames[0]}の出演回を共有しました`;
-    }
-    if (this.activeUnitFilterKey) {
-      const unit = UNIT_FILTERS.find((u) => u.key === this.activeUnitFilterKey);
-      const label = unit ? unit.label : this.activeUnitFilterKey;
-      return `${label}の出演回を共有しました`;
-    }
-    if (this.songPartialQuery) {
-      return `リクエスト曲「${this.songPartialQuery}」の回を共有しました`;
-    }
-    if (this.facetSecondaryValue) {
-      return `「${this.facetSecondaryValue}」の回を共有しました`;
-    }
-    return "リンクをコピーしました";
-  }
-
-  _handleShare() {
-    const url = location.href;
-    const message = this._buildShareMessage();
-    if (navigator.share) {
-      navigator.share({ title: "リエラジ出演者検索", text: message, url }).catch(() => {});
-      return;
-    }
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(url).then(() => this._showShareToast(message));
-    }
-  }
-
-  _showShareToast(message = "リンクをコピーしました") {
-    const toast = this.shareToast;
-    if (!toast) return;
-    toast.textContent = message;
-    toast.classList.remove("hidden");
-    requestAnimationFrame(() => toast.classList.add("is-visible"));
-    clearTimeout(this._toastTimer);
-    this._toastTimer = setTimeout(() => {
-      toast.classList.remove("is-visible");
-      setTimeout(() => toast.classList.add("hidden"), 200);
-    }, 2200);
-  }
 
   _handleExport() {
     const payload = buildExportPayload();
@@ -837,8 +718,6 @@ export default class AppController {
     this._updateWatchedFilterButtons();
     this._updateOtherVideoFilterButton();
     this._updateMemoFilterButton();
-    this._updateShareButton();
-    this._updateUrl();
   }
 
   // -------------------------------------------------------------------------
