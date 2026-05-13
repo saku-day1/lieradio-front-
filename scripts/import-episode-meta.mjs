@@ -222,17 +222,28 @@ function main() {
 
   out.sort((a, b) => a.broadcastNumber - b.broadcastNumber);
 
-  // broadcastNumber を持たない titleKeyword エントリを既存ファイルから引き継ぐ
+  // 既存ファイルから引き継ぐ情報を取得する
+  // - titleKeyword エントリ（broadcastNumber なしの特殊回）は丸ごと引き継ぐ
+  // - broadcastNumber エントリは videoId を引き継ぐ（backfill 済みの値を失わないため）
   const preserved = [];
+  const existingVideoIdMap = new Map(); // broadcastNumber → videoId
   try {
     const existing = JSON.parse(fs.readFileSync(OUT, "utf8"));
     for (const e of existing) {
       if (!Number.isFinite(e.broadcastNumber) && typeof e.titleKeyword === "string") {
         preserved.push(e);
+      } else if (Number.isFinite(e.broadcastNumber) && typeof e.videoId === "string" && e.videoId.trim()) {
+        existingVideoIdMap.set(e.broadcastNumber, e.videoId);
       }
     }
   } catch (_) {
     // ファイルが存在しない場合は無視
+  }
+
+  // 既存の videoId を各エントリに復元する
+  for (const entry of out) {
+    const vid = existingVideoIdMap.get(entry.broadcastNumber);
+    if (vid) entry.videoId = vid;
   }
 
   const finalOut = [...preserved, ...out];

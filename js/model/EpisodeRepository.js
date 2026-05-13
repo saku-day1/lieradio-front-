@@ -92,43 +92,33 @@ async function fetchEpisodeManualMetaOnce() {
 }
 
 /**
- * メタオブジェクトを broadcastNumber でエピソードへマージする。
+ * メタオブジェクトを videoId でエピソードへマージする。
+ * videoId が未設定のメタエントリは結合せず警告を出す。
  */
 export function mergeManualMetaIntoEpisodes(episodes, manualMetaRecords) {
   if (!Array.isArray(manualMetaRecords) || manualMetaRecords.length === 0) {
     return episodes;
   }
 
-  /** @type {Map<number, object>} */
+  /** @type {Map<string, object>} videoId → metaRecord */
   const map = new Map();
-  /** @type {Map<string, object>} broadcastNumber を持たない特殊回（公開録音など）をタイトルで照合 */
-  const titleMap = new Map();
   for (const record of manualMetaRecords) {
-    const n = record?.broadcastNumber;
-    if (typeof n === "number" && Number.isFinite(n)) {
-      map.set(n, record);
-    } else if (typeof record?.titleKeyword === "string" && record.titleKeyword.trim()) {
-      titleMap.set(record.titleKeyword.trim(), record);
+    const vid = record?.videoId;
+    if (typeof vid === "string" && vid.trim()) {
+      if (map.has(vid)) {
+        console.warn(`[episodeMeta] videoId 重複: ${vid}`);
+      }
+      map.set(vid, record);
+    } else {
+      console.warn(`[episodeMeta] videoId 未設定のエントリをスキップ:`, record?.broadcastNumber ?? record?.titleKeyword ?? "(不明)");
     }
   }
 
   return episodes.map((episode) => {
-    if (isOtherVideoTitle(episode.title)) {
-      return { ...episode };
-    }
-    const num = episode.broadcastNumber;
-    const manual = typeof num === "number" && Number.isFinite(num) ? map.get(num) : undefined;
-    if (manual) return { ...episode, manualMeta: manual };
-
-    if (typeof episode.title === "string") {
-      for (const [kw, meta] of titleMap) {
-        if (episode.title.includes(kw)) {
-          return { ...episode, manualMeta: meta };
-        }
-      }
-    }
-
-    return { ...episode };
+    const vid = extractYoutubeVideoId(episode.youtubeUrl);
+    if (!vid) return { ...episode };
+    const manual = map.get(vid);
+    return manual ? { ...episode, manualMeta: manual } : { ...episode };
   });
 }
 
