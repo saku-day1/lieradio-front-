@@ -342,43 +342,20 @@ export default class AppController {
     this.shareButton.classList.toggle("hidden", !hasShareable);
   }
 
-  _buildShareMessage() {
-    if (this.andFilterNames.length >= 2) {
-      return `${this.andFilterNames.join("・")}の共演回を共有しました`;
-    }
-    if (this.andFilterNames.length === 1) {
-      return `${this.andFilterNames[0]}の出演回を共有しました`;
-    }
-    if (this.activeUnitFilterKey) {
-      const unit = UNIT_FILTERS.find((u) => u.key === this.activeUnitFilterKey);
-      const label = unit ? unit.label : this.activeUnitFilterKey;
-      return `${label}の出演回を共有しました`;
-    }
-    if (this.songPartialQuery) {
-      return `リクエスト曲「${this.songPartialQuery}」の回を共有しました`;
-    }
-    if (this.facetSecondaryValue) {
-      return `「${this.facetSecondaryValue}」の回を共有しました`;
-    }
-    return "リンクをコピーしました";
-  }
-
   _handleShare() {
     const url = location.href;
-    const message = this._buildShareMessage();
     if (navigator.share) {
-      navigator.share({ title: "リエラジ出演者検索", text: message, url }).catch(() => {});
+      navigator.share({ url }).catch(() => {});
       return;
     }
     if (navigator.clipboard) {
-      navigator.clipboard.writeText(url).then(() => this._showShareToast(message));
+      navigator.clipboard.writeText(url).then(() => this._showShareToast());
     }
   }
 
-  _showShareToast(message = "リンクをコピーしました") {
+  _showShareToast() {
     const toast = this.shareToast;
     if (!toast) return;
-    toast.textContent = message;
     toast.classList.remove("hidden");
     requestAnimationFrame(() => toast.classList.add("is-visible"));
     clearTimeout(this._toastTimer);
