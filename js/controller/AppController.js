@@ -104,7 +104,6 @@ export default class AppController {
     this.watchedFilterMode     = ""; // "" | "watched" | "unwatched"
     this.isMemoFilterActive    = false;
     this.isUnitSectionExpanded = false;
-    this.isCastSectionExpanded = false;
 
     this.facetPrimaryKey       = FACET_PRIMARY_NONE;
     this.facetSecondaryValue   = "";
@@ -525,13 +524,8 @@ export default class AppController {
     this.castQuickFilters.innerHTML = `
       <div class="filter-group-header">
         <span class="filter-group-label">メンバー</span>
-        <button type="button" class="unit-more-toggle" id="castMoreToggle">
-          ${this.isCastSectionExpanded ? "閉じる ▴" : "メンバーを選ぶ ▾"}
-        </button>
       </div>
-      <div class="cast-more-wrap${this.isCastSectionExpanded ? "" : " hidden"}">
-        <div class="cast-buttons-wrap">${castButtonsHtml}${yuisakuBtn}</div>
-      </div>
+      <div class="cast-buttons-wrap">${castButtonsHtml}${yuisakuBtn}</div>
     `;
 
     this.castQuickFilters.querySelectorAll(".cast-filter-button").forEach((btn) => {
@@ -549,12 +543,6 @@ export default class AppController {
         this.andFilterNames = [];
         this.render();
       });
-    });
-
-    document.getElementById("castMoreToggle")?.addEventListener("click", () => {
-      this.isCastSectionExpanded = !this.isCastSectionExpanded;
-      this._renderCastQuickFilters();
-      this._updateActiveQuickFilter();
     });
   }
 
