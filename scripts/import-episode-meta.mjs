@@ -1,27 +1,47 @@
 /**
- * Excel（リエラジ.xlsx）から episodeMeta.json を生成する。
+ * Google スプレッドシートから episodeMeta.json を生成する。
  *
  * 使い方:
- *   node scripts/import-episode-meta.mjs [path/to/リエラジ.xlsx]
+ *   node scripts/import-episode-meta.mjs
  *
- * 既定パス: data/manual/リエラジ.xlsx（リポジトリに置いた場合）
- * 環境変数: LIERADIO_EXCEL で上書き可
+ * 必要な環境変数（.env.local に記載）:
+ *   GOOGLE_SHEETS_API_KEY        - Google Sheets API キー
+ *   GOOGLE_SHEETS_SPREADSHEET_ID - スプレッドシートID
+ *   GOOGLE_SHEETS_SHEET_GID      - シートID（gid=XXXX の値）
  */
 
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import XLSX from "xlsx";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, "..");
 const OUT = path.join(ROOT, "data", "episodeMeta.json");
 
-const DEFAULT_XLSX = path.join(ROOT, "data", "manual", "リエラジ.xlsx");
+// .env.local を読み込む
+function loadEnv() {
+  const envPath = path.join(ROOT, ".env.local");
+  if (!fs.existsSync(envPath)) return;
+  const lines = fs.readFileSync(envPath, "utf8").split("\n");
+  for (const line of lines) {
+    const m = line.match(/^([^#=]+)=(.*)$/);
+    if (m) process.env[m[1].trim()] = m[2].trim();
+  }
+}
+
+function extractVideoId(url) {
+  if (typeof url !== "string") return "";
+  const m = url.match(/[?&]v=([A-Za-z0-9_-]{11})/);
+  return m ? m[1] : "";
+}
+
+function parseBroadcastNumber(cell) {
+  const n = Number.parseInt(String(cell ?? "").trim(), 10);
+  return Number.isFinite(n) ? n : NaN;
+}
 
 /**
  * @param {string} text
- * @returns {{ type: string, searchable: boolean, visibleInList: boolean, priority: number } | null}
  */
 function classifyRemark(text) {
   const t = String(text).trim();
@@ -30,7 +50,6 @@ function classifyRemark(text) {
   if (/公開録音|公録/.test(t)) {
     return { type: "publicRecordingNote", searchable: true, visibleInList: false, priority: 22 };
   }
-
   if (/誕生日|バースデー|たんじょうび|おたんじょうび/i.test(t)) {
     return { type: "birthday", searchable: true, visibleInList: false, priority: 12 };
   }
@@ -57,19 +76,11 @@ function classifyRemark(text) {
   };
 }
 
-/** 「○○誕生日祝い」「○○バースデー」などから名前部分だけを取り出す */
 function extractBirthdayName(text) {
   const m = String(text).trim().match(/^(.+?)(?:誕生日|バースデー|たんじょうび|おたんじょうび)/i);
   return m ? m[1].trim() : text;
 }
 
-/**
- * @param {string} name
- * @param {string} type
- * @param {boolean} searchable
- * @param {boolean} visibleInList
- * @param {number} priority
- */
 function tagObj(name, type, searchable, visibleInList, priority) {
   return {
     name: String(name).trim(),
@@ -80,66 +91,109 @@ function tagObj(name, type, searchable, visibleInList, priority) {
   };
 }
 
-/** @returns {unknown[][]} */
-function readSheetRows(xlsxPath) {
-  const buf = fs.readFileSync(xlsxPath);
-  const wb = XLSX.read(buf, { type: "buffer" });
-  const sheetName = wb.SheetNames.includes("Sheet1") ? "Sheet1" : wb.SheetNames[0];
-  const ws = wb.Sheets[sheetName];
-  return XLSX.utils.sheet_to_json(ws, { header: 1, raw: false, defval: "" });
-}
+async function fetchSheetRows() {
+  const apiKey = process.env.GOOGLE_SHEETS_API_KEY;
+  const spreadsheetId = process.env.GOOGLE_SHEETS_SPREADSHEET_ID;
+  const gid = process.env.GOOGLE_SHEETS_SHEET_GID;
 
-function parseBroadcastNumber(cell) {
-  const s = String(cell ?? "").trim();
-  const n = Number.parseInt(s, 10);
-  return Number.isFinite(n) ? n : NaN;
-}
-
-function main() {
-  const argPath = process.argv[2];
-  const envPath = process.env.LIERADIO_EXCEL || "";
-  const xlsxPath = path.resolve(argPath || envPath || DEFAULT_XLSX);
-
-  if (!fs.existsSync(xlsxPath)) {
-    console.error("Excel が見つかりません:", xlsxPath);
-    console.error(
-      "次のいずれかで指定してください:\n" +
-        "  引数: node scripts/import-episode-meta.mjs <path>\n" +
-        "  環境変数 LIERADIO_EXCEL\n" +
-        "  または data/manual/リエラジ.xlsx を作成"
+  if (!apiKey || !spreadsheetId) {
+    throw new Error(
+      "環境変数が不足しています。.env.local に GOOGLE_SHEETS_API_KEY と GOOGLE_SHEETS_SPREADSHEET_ID を設定してください。"
     );
+  }
+
+  // gid からシート名を取得する
+  const metaUrl = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}?key=${apiKey}`;
+  const metaRes = await fetch(metaUrl);
+  if (!metaRes.ok) throw new Error(`スプレッドシート情報取得失敗: ${metaRes.status} ${await metaRes.text()}`);
+  const meta = await metaRes.json();
+
+  let sheetName = meta.sheets?.[0]?.properties?.title ?? "Sheet1";
+  if (gid) {
+    const matched = meta.sheets?.find((s) => String(s.properties.sheetId) === String(gid));
+    if (matched) sheetName = matched.properties.title;
+  }
+
+  const range = encodeURIComponent(`${sheetName}`);
+  const dataUrl = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?key=${apiKey}`;
+  const dataRes = await fetch(dataUrl);
+  if (!dataRes.ok) throw new Error(`シートデータ取得失敗: ${dataRes.status} ${await dataRes.text()}`);
+  const data = await dataRes.json();
+
+  return data.values ?? [];
+}
+
+async function main() {
+  loadEnv();
+
+  console.log("Google スプレッドシートからデータを取得中...");
+  const rows = await fetchSheetRows();
+
+  if (rows.length === 0) {
+    console.error("シートにデータがありません。");
     process.exit(1);
   }
 
-  const rows = readSheetRows(xlsxPath);
-  /** @type {object[]} */
+  // 1行目はヘッダー（videoId, 回, コーナー, ...）
+  const header = rows[0];
+  const colVideoId = header.indexOf("videoId");
+  const colNum = header.findIndex((h) => /^回$/.test(String(h).trim()));
+
+  if (colNum === -1) {
+    console.error("「回」列が見つかりません。ヘッダー:", header);
+    process.exit(1);
+  }
+
+  console.log(`列構成: videoId=${colVideoId}, 回=${colNum}`);
+
+  // 既存ファイルから titleKeyword エントリと videoId マップを引き継ぐ
+  const preserved = [];
+  const existingVideoIdMap = new Map();
+  try {
+    const existing = JSON.parse(fs.readFileSync(OUT, "utf8"));
+    for (const e of existing) {
+      if (!Number.isFinite(e.broadcastNumber) && typeof e.titleKeyword === "string") {
+        preserved.push(e);
+      } else if (Number.isFinite(e.broadcastNumber) && typeof e.videoId === "string" && e.videoId.trim()) {
+        existingVideoIdMap.set(e.broadcastNumber, e.videoId);
+      }
+    }
+  } catch (_) {}
+
   const out = [];
 
   for (let ri = 1; ri < rows.length; ri++) {
     const row = rows[ri];
     if (!Array.isArray(row)) continue;
 
-    const num = parseBroadcastNumber(row[0]);
+    const get = (i) => String(row[i] ?? "").trim();
+
+    const num = parseBroadcastNumber(get(colNum));
     if (!Number.isFinite(num) || num < 1) continue;
 
-    /** @type {ReturnType<typeof tagObj>[]} */
-    const tags = [];
-
-    const corners = [row[1], row[2]]
-      .map((c) => String(c ?? "").trim())
-      .filter(Boolean);
-    corners.forEach((name) => {
-      tags.push(tagObj(name, "corner", true, true, 100));
-    });
-
-    const lunch = String(row[3] ?? "").trim();
-    if (lunch) {
-      tags.push(tagObj(lunch, "lunchSong", true, true, 95));
+    // videoId: スプレッドシートの列 → URLからID抽出 → 既存JSONから引き継ぎ
+    let videoId = "";
+    if (colVideoId !== -1) {
+      videoId = extractVideoId(get(colVideoId)) || get(colVideoId);
+      // 11文字のIDが直接入っている場合もそのまま使う
+      if (!/^[A-Za-z0-9_-]{11}$/.test(videoId)) videoId = "";
     }
+    if (!videoId) videoId = existingVideoIdMap.get(num) ?? "";
 
-    // 誕生日祝い列（3列）: 「○○誕生日祝い」→ 名前部分だけ抽出して birthday タグにする
-    for (const idx of [4, 5, 6]) {
-      const raw = String(row[idx] ?? "").trim();
+    // 列オフセット（videoId列が先頭に追加された分をずらす）
+    const o = colNum - 1; // 「回」の手前までの列数（videoId列分）
+
+    const corners = [get(o + 2), get(o + 3)]
+      .filter(Boolean);
+
+    const lunch = get(o + 4);
+
+    const tags = [];
+    corners.forEach((name) => tags.push(tagObj(name, "corner", true, true, 100)));
+    if (lunch) tags.push(tagObj(lunch, "lunchSong", true, true, 95));
+
+    for (const idx of [o + 5, o + 6, o + 7]) {
+      const raw = get(idx);
       if (!raw) continue;
       const cls = classifyRemark(raw);
       if (!cls) continue;
@@ -147,36 +201,22 @@ function main() {
       tags.push(tagObj(name, cls.type, cls.searchable, cls.visibleInList, cls.priority));
     }
 
-    // 出来事・事件列 (index 7)
-    const incidentText = String(row[7] ?? "").trim();
-    if (incidentText) {
-      tags.push(tagObj(incidentText, "incident", true, false, 8));
+    const incidentText = get(o + 8);
+    if (incidentText) tags.push(tagObj(incidentText, "incident", true, false, 8));
+
+    const publicRecText = get(o + 9);
+    if (publicRecText) tags.push(tagObj(publicRecText, "publicRecordingNote", true, false, 22));
+
+    for (const idx of [o + 10, o + 11]) {
+      const raw = get(idx);
+      if (raw) tags.push(tagObj(raw, "liveImpression", true, false, 30));
     }
 
-    // 公開録音列 (index 8)
-    const publicRecText = String(row[8] ?? "").trim();
-    if (publicRecText) {
-      tags.push(tagObj(publicRecText, "publicRecordingNote", true, false, 22));
-    }
+    const eventText = get(o + 12);
+    if (eventText) tags.push(tagObj(eventText, "eventImpression", true, false, 28));
 
-    // ライブ感想列（2列: index 9, 10）
-    for (const idx of [9, 10]) {
-      const raw = String(row[idx] ?? "").trim();
-      if (!raw) continue;
-      tags.push(tagObj(raw, "liveImpression", true, false, 30));
-    }
-
-    // イベント感想列 (index 11)
-    const eventText = String(row[11] ?? "").trim();
-    if (eventText) {
-      tags.push(tagObj(eventText, "eventImpression", true, false, 28));
-    }
-
-    // アニメ感想列 (index 12)
-    const animeText = String(row[12] ?? "").trim();
-    if (animeText) {
-      tags.push(tagObj(animeText, "animeImpression", true, false, 28));
-    }
+    const animeText = get(o + 13);
+    if (animeText) tags.push(tagObj(animeText, "animeImpression", true, false, 28));
 
     const primaryCandidates = [...tags]
       .filter((t) => t.visibleInList && t.type !== "corner" && t.type !== "lunchSong")
@@ -208,7 +248,8 @@ function main() {
       mentionsGen3Join: /3期|加入|新メンバー|11人|11名|三期|第3期/i.test(allTagText)
     };
 
-    out.push({
+    const entry = {
+      videoId: videoId || undefined,
       broadcastNumber: num,
       excelRow: ri + 1,
       corners,
@@ -217,40 +258,27 @@ function main() {
       primaryTagsForList,
       flags,
       exportedAt: new Date().toISOString()
-    });
+    };
+    if (!entry.videoId) delete entry.videoId;
+
+    out.push(entry);
   }
 
   out.sort((a, b) => a.broadcastNumber - b.broadcastNumber);
 
-  // 既存ファイルから引き継ぐ情報を取得する
-  // - titleKeyword エントリ（broadcastNumber なしの特殊回）は丸ごと引き継ぐ
-  // - broadcastNumber エントリは videoId を引き継ぐ（backfill 済みの値を失わないため）
-  const preserved = [];
-  const existingVideoIdMap = new Map(); // broadcastNumber → videoId
-  try {
-    const existing = JSON.parse(fs.readFileSync(OUT, "utf8"));
-    for (const e of existing) {
-      if (!Number.isFinite(e.broadcastNumber) && typeof e.titleKeyword === "string") {
-        preserved.push(e);
-      } else if (Number.isFinite(e.broadcastNumber) && typeof e.videoId === "string" && e.videoId.trim()) {
-        existingVideoIdMap.set(e.broadcastNumber, e.videoId);
-      }
-    }
-  } catch (_) {
-    // ファイルが存在しない場合は無視
-  }
-
-  // 既存の videoId を各エントリに復元する
-  for (const entry of out) {
-    const vid = existingVideoIdMap.get(entry.broadcastNumber);
-    if (vid) entry.videoId = vid;
-  }
-
   const finalOut = [...preserved, ...out];
-
   fs.mkdirSync(path.dirname(OUT), { recursive: true });
   fs.writeFileSync(OUT, JSON.stringify(finalOut, null, 2), "utf8");
-  console.log("Wrote", OUT, "records:", finalOut.length, "from", xlsxPath, `(${preserved.length} titleKeyword entries preserved)`);
+  console.log(`書き出し完了: ${OUT} (${finalOut.length} 件 / titleKeyword引き継ぎ: ${preserved.length} 件)`);
+
+  const noVid = finalOut.filter((e) => !e.videoId);
+  if (noVid.length > 0) {
+    console.warn(`[WARN] videoId 未設定: ${noVid.length} 件`);
+    noVid.forEach((e) => console.warn(`  第${e.broadcastNumber}回`));
+  }
 }
 
-main();
+main().catch((err) => {
+  console.error(err.message);
+  process.exit(1);
+});
