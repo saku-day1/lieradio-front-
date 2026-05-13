@@ -11,21 +11,66 @@ import {
   getAllCastMembers,
   extractYoutubeVideoId,
   isCompilationTitle,
-  isPublicRecordingTitle,
+  isPublicRecording,
   isOtherVideoTitle
 } from "../model/EpisodeRepository.js";
 import { UNIT_FILTERS, CAST_COLOR_MAP } from "../constants.js";
 
+const META_TYPE_LABELS = {
+  corner: "コーナー",
+  lunchSong: "リクエスト曲",
+  birthday: "誕生日祝い",
+  incident: "出来事",
+  externalShow: "外部番組・メディア",
+  eventName: "イベント",
+  animeSeasonTag: "アニメ期タグ",
+  netaTag: "タグ",
+  liveImpression: "ライブ感想",
+  eventImpression: "イベント感想",
+  animeImpression: "アニメ感想",
+  publicRecordingNote: "公開録音",
+  miscTag: "備考タグ",
+  remark: "備考",
+  generic: "メタ情報"
+};
+
+/**
+ * Excel 由来タグ一覧をユーザー向けの詳細リストに変換する。
+ */
+function metaDetailsHtml(manualMeta) {
+  if (!manualMeta || !Array.isArray(manualMeta.tags) || manualMeta.tags.length === 0) {
+    return "";
+  }
+
+  const rows = [...manualMeta.tags].sort(
+    (a, b) =>
+      Number(b.priority || 0) - Number(a.priority || 0) ||
+      String(META_TYPE_LABELS[a.type] || a.type).localeCompare(String(META_TYPE_LABELS[b.type] || b.type), "ja") ||
+      a.name.localeCompare(b.name, "ja")
+  );
+
+  const body = rows
+    .map((tag) => {
+      const category = META_TYPE_LABELS[tag.type] || tag.type || "情報";
+      return `<li>
+        <div class="meta-tag-row-main">
+          <span class="meta-tag-type">${escapeHtml(category)}</span>
+          <span class="meta-tag-value">${escapeHtml(tag.name)}</span>
+        </div>
+      </li>`;
+    })
+    .join("");
+
+  return `
+    <details class="episode-meta-details">
+      <summary>詳細</summary>
+      <ol class="meta-tag-detail-list">${body}</ol>
+    </details>
+  `;
+}
+
 /**
  * エピソード一覧を描画する。
- *
- * @param {HTMLElement} episodeListEl  描画先の <ul> 要素
- * @param {object[]}    episodes       表示するエピソード配列
- * @param {boolean}     isAndMode      AND検索モードか否か
- * @param {Set}         favorites      お気に入り videoId セット
- * @param {Set}         watched        視聴済み videoId セット
- * @param {Function}    onFavToggle    お気に入りボタン押下時のコールバック (videoId) => void
- * @param {Function}    onWatchedToggle 視聴済みボタン押下時のコールバック (videoId) => void
  */
 export function renderEpisodeList(
   episodeListEl,
@@ -34,15 +79,20 @@ export function renderEpisodeList(
   favorites = new Set(),
   watched = new Set(),
   onFavToggle = () => {},
-  onWatchedToggle = () => {}
+  onWatchedToggle = () => {},
+  hitLabelsByVideoId = null,
+  memos = new Map(),
+  onMemoSave = () => {}
 ) {
+  const hitMap = hitLabelsByVideoId instanceof Map ? hitLabelsByVideoId : new Map();
+
   if (episodes.length === 0) {
     episodeListEl.innerHTML = "<li class='empty-message'>該当する放送回がありません。</li>";
     return;
   }
 
   episodeListEl.innerHTML = episodes
-    .map((episode) => buildEpisodeItemHtml(episode, isAndMode, favorites, watched))
+    .map((episode) => buildEpisodeItemHtml(episode, isAndMode, favorites, watched, hitMap, memos))
     .join("");
 
   episodeListEl.querySelectorAll(".fav-button").forEach((btn) => {
@@ -58,18 +108,76 @@ export function renderEpisodeList(
       if (videoId) onWatchedToggle(videoId);
     });
   });
+
+  const applyMemoToDOM = (videoId, text) => {
+    const hasMemo = Boolean(text.trim());
+    const preview = episodeListEl.querySelector(`.memo-preview[data-video-id="${videoId}"]`);
+    const memoBtn = episodeListEl.querySelector(`.memo-button[data-video-id="${videoId}"]`);
+    if (preview) {
+      preview.textContent = text.trim();
+      preview.classList.toggle("hidden", !hasMemo);
+    }
+    if (memoBtn) {
+      memoBtn.classList.toggle("is-active", hasMemo);
+      memoBtn.setAttribute("aria-pressed", String(hasMemo));
+    }
+  };
+
+  episodeListEl.querySelectorAll(".memo-button").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const videoId = btn.dataset.videoId;
+      const editWrap = episodeListEl.querySelector(`.memo-edit-wrap[data-video-id="${videoId}"]`);
+      if (!editWrap) return;
+      const isOpen = !editWrap.classList.contains("hidden");
+      editWrap.classList.toggle("hidden", isOpen);
+      if (!isOpen) editWrap.querySelector(".memo-textarea")?.focus();
+    });
+  });
+
+  episodeListEl.querySelectorAll(".memo-textarea").forEach((textarea) => {
+    const videoId = textarea.closest(".memo-edit-wrap")?.dataset.videoId;
+    if (!videoId) return;
+    const counter = textarea.closest(".memo-edit-wrap")?.querySelector(".memo-char-count");
+
+    textarea.addEventListener("input", () => {
+      // 3行を超えたら改行を除去して制限
+      const lines = textarea.value.split("\n");
+      if (lines.length > 3) {
+        textarea.value = lines.slice(0, 3).join("\n");
+      }
+      if (counter) counter.textContent = `${textarea.value.length} / 80`;
+    });
+
+    textarea.addEventListener("blur", () => {
+      onMemoSave(videoId, textarea.value);
+      applyMemoToDOM(videoId, textarea.value);
+    });
+  });
+
+  episodeListEl.querySelectorAll(".memo-confirm-button").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const videoId = btn.dataset.videoId;
+      const editWrap = episodeListEl.querySelector(`.memo-edit-wrap[data-video-id="${videoId}"]`);
+      const textarea = editWrap?.querySelector(".memo-textarea");
+      if (!textarea) return;
+      onMemoSave(videoId, textarea.value);
+      applyMemoToDOM(videoId, textarea.value);
+      editWrap.classList.add("hidden");
+    });
+  });
 }
 
 // ---------------------------------------------------------------------------
 // 内部ヘルパー（このファイル内でのみ使用）
 // ---------------------------------------------------------------------------
 
-function buildEpisodeItemHtml(episode, isAndMode, favorites, watched) {
+/**
+ * @param {Map<string, string[]>} hitMap
+ */
+function buildEpisodeItemHtml(episode, isAndMode, favorites, watched, hitMap, memos = new Map()) {
   const castMembers = getAllCastMembers(episode);
   const displayedNumber = episode.broadcastNumber ?? episode.episodeNumber;
-  const titleText = isAndMode
-    ? episode.title
-    : formatEpisodeHeading(displayedNumber, episode.title);
+  const titleText = isAndMode ? episode.title : formatEpisodeHeading(displayedNumber, episode);
 
   const videoId = extractYoutubeVideoId(episode.youtubeUrl);
   const thumbUrl = getThumbnailUrl(videoId);
@@ -98,6 +206,59 @@ function buildEpisodeItemHtml(episode, isAndMode, favorites, watched) {
     ? `<button type="button" class="watched-button${isWatched ? " is-watched" : ""}" data-video-id="${videoId}" aria-label="${isWatched ? "視聴済みを解除" : "視聴済みにする"}" aria-pressed="${isWatched}">${isWatched ? "✓" : "○"}</button>`
     : "";
 
+  const memoText = videoId ? (memos.get(videoId) || "") : "";
+  const hasMemo = Boolean(memoText);
+  const memoBtn = videoId
+    ? `<button type="button" class="memo-button${hasMemo ? " is-active" : ""}" data-video-id="${videoId}" aria-label="メモ" aria-pressed="${hasMemo}">📝</button>`
+    : "";
+  const memoPreviewHtml = videoId
+    ? `<p class="memo-preview${hasMemo ? "" : " hidden"}" data-video-id="${videoId}">${escapeHtml(memoText)}</p>`
+    : "";
+  const memoEditHtml = videoId
+    ? `<div class="memo-edit-wrap hidden" data-video-id="${videoId}">
+        <textarea class="memo-textarea" rows="3" maxlength="80" placeholder="メモを入力…">${escapeHtml(memoText)}</textarea>
+        <div class="memo-actions">
+          <span class="memo-char-count">${memoText.length} / 80</span>
+          <button type="button" class="memo-confirm-button" data-video-id="${videoId}">確定</button>
+        </div>
+      </div>`
+    : "";
+
+  const manualMeta = episode.manualMeta;
+  const hitLines =
+    videoId && hitMap?.has(videoId)
+      ? (hitMap.get(videoId) || [])
+          .map((line) => `<li>${escapeHtml(line)}</li>`)
+          .join("")
+      : "";
+  const hitBlock = hitLines
+    ? `<ul class="episode-hit-lines" aria-label="検索ヒット詳細">${hitLines}</ul>`
+    : "";
+
+  const cornersLineHtml = manualMeta?.corners?.length
+    ? `<p class="meta-line episode-line-corners"><span class="meta-k">コーナー</span><span class="meta-v">${manualMeta.corners
+        .map((x) => escapeHtml(x))
+        .join(" / ")}</span></p>`
+    : "";
+
+  const lunchLineHtml = manualMeta?.lunchTimeRequestSong
+    ? `<p class="meta-line episode-line-lunch"><span class="meta-k">リクエスト曲</span><span class="meta-v">${escapeHtml(manualMeta.lunchTimeRequestSong)}</span></p>`
+    : "";
+
+  const primaryTags = manualMeta?.primaryTagsForList || [];
+  const primaryHtml = primaryTags.length
+    ? `<div class="primary-tag-row" aria-label="主要タグ">${primaryTags
+        .map(
+          (t) =>
+            `<span class="primary-tag-chip" title="${escapeHtml(META_TYPE_LABELS[t.type] || t.type)}">${escapeHtml(
+              t.name
+            )}</span>`
+        )
+        .join("")}</div>`
+    : "";
+
+  const detailsHtml = metaDetailsHtml(manualMeta);
+
   return `
     <li class="episode-item">
       <div class="episode-item-layout">
@@ -105,12 +266,20 @@ function buildEpisodeItemHtml(episode, isAndMode, favorites, watched) {
         <div class="episode-content">
           <div class="episode-title-row">
             <h3>${safeTitle}</h3>
-            ${watchedBtn}${favBtn}
           </div>
           <div class="cast-badges" aria-label="出演者">${castBadgesHtml}</div>
           ${unitBadgesHtml ? `<div class="unit-badges" aria-label="ユニット">${unitBadgesHtml}</div>` : ""}
+          ${cornersLineHtml}
+          ${primaryHtml}
+          ${hitBlock}
+          ${memoPreviewHtml}
+          ${memoEditHtml}
           <p class="meta">公開日: ${safePublishedAt}</p>
-          <a href="${safeYoutubeUrl}" target="_blank" rel="noopener noreferrer">YouTubeで見る</a>
+          ${detailsHtml}
+          <div class="episode-bottom-row">
+            <a href="${safeYoutubeUrl}" target="_blank" rel="noopener noreferrer" class="youtube-link">YouTubeで見る</a>
+            <div class="episode-card-actions">${watchedBtn}${favBtn}${memoBtn}</div>
+          </div>
         </div>
       </div>
     </li>
@@ -119,10 +288,10 @@ function buildEpisodeItemHtml(episode, isAndMode, favorites, watched) {
 
 function buildCastBadgesHtml(castMembers) {
   if (!Array.isArray(castMembers) || castMembers.length === 0) {
-    return `<span class="cast-fallback">出演者情報未設定</span>`;
+    return "";
   }
   if (castMembers.length === 1 && castMembers[0] === "出演者情報未設定") {
-    return `<span class="cast-fallback">出演者情報未設定</span>`;
+    return "";
   }
 
   return castMembers
@@ -150,13 +319,13 @@ function buildUnitBadgesHtml(castMembers) {
     .join("");
 }
 
-function formatEpisodeHeading(displayedNumber, rawTitle) {
-  const title = String(rawTitle || "").trim();
+function formatEpisodeHeading(displayedNumber, episode) {
+  const title = String(episode?.title || "").trim();
   if (!title) {
     return `第${displayedNumber}回`;
   }
 
-  if (isPublicRecordingTitle(title) || isOtherVideoTitle(title)) {
+  if (isPublicRecording(episode) || isOtherVideoTitle(title)) {
     return title;
   }
 

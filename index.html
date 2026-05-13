@@ -4,6 +4,22 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>リエラジ出演者検索</title>
+
+  <!-- OGP / SNS共有 -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="リエラジ出演者検索">
+  <meta property="og:title" content="リエラジ出演者検索">
+  <meta property="og:description" content="Love Live! Superstar!! ラジオ「リエラジ」の放送回を検索・閲覧。メンバー絞り込み・ユニット検索・AND検索・お気に入り・詳細検索に対応。">
+  <meta property="og:url" content="https://lieradio-yisk.com">
+  <meta property="og:image" content="https://lieradio-yisk.com/public/ogp.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="ja_JP">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="リエラジ出演者検索">
+  <meta name="twitter:description" content="Love Live! Superstar!! ラジオ「リエラジ」の放送回を検索・閲覧。メンバー絞り込み・ユニット検索・AND検索・お気に入り・詳細検索に対応。">
+  <meta name="twitter:image" content="https://lieradio-yisk.com/public/ogp.png">
+
   <link rel="stylesheet" href="./style.css">
 </head>
 <body>
@@ -16,6 +32,7 @@
       <li>AND絞り込み（最大5人）</li>
       <li>出演回数・共演者ランキング</li>
       <li>♡ お気に入り / ✓ 視聴済み管理</li>
+      <li>コーナー・楽曲などの詳細検索</li>
     </ul>
   </header>
 
@@ -25,11 +42,68 @@
         <div id="castQuickFilters" class="cast-quick-filters"></div>
         <p id="castSelectionNotice" class="selection-notice hidden">出演者は最大5人まで選択できます。</p>
         <div id="unitQuickFilters" class="unit-quick-filters"></div>
-        <button id="favoritesFilterButton" type="button" class="favorites-filter-button">♡ お気に入り</button>
-        <button id="watchedFilterButton" type="button" class="watched-filter-button">✓ 視聴済み</button>
-        <button id="unwatchedFilterButton" type="button" class="watched-filter-button">○ 未視聴</button>
-        <button id="otherVideoFilterButton" type="button" class="other-video-filter-button">📼 その他の動画</button>
-        <button id="resetFiltersButton" type="button" class="reset-filters-button hidden">検索リセット</button>
+        <div class="status-filter-row">
+          <button id="favoritesFilterButton" type="button" class="favorites-filter-button">♡ お気に入り</button>
+          <button id="watchedFilterButton" type="button" class="watched-filter-button">✓ 視聴済み</button>
+          <button id="unwatchedFilterButton" type="button" class="watched-filter-button">○ 未視聴</button>
+          <button id="otherVideoFilterButton" type="button" class="other-video-filter-button">📼 その他の動画</button>
+          <button id="memoFilterButton" type="button" class="memo-filter-button">📝 ひとこと</button>
+          <button id="resetFiltersButton" type="button" class="reset-filters-button hidden">検索リセット</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="discoveryPanel" class="card search-discovery-card">
+      <div class="section-header">
+        <h2 class="discovery-title">詳細検索</h2>
+        <button id="toggleDiscoveryButton" type="button" class="toggle-button">表示する</button>
+      </div>
+      <div id="discoveryContent" class="discovery-content hidden">
+        <div class="discovery-grid">
+          <label class="search-field-label" for="facetPrimarySelect">項目</label>
+          <select id="facetPrimarySelect">
+            <option value="">（選んでください）</option>
+            <option value="corner">コーナー</option>
+            <option value="lunchSong">リクエスト曲</option>
+            <option value="liveImpression">ライブ感想</option>
+            <option value="eventImpression">イベント感想</option>
+            <option value="animeImpression">アニメ感想</option>
+            <option value="birthday">誕生日祝い</option>
+            <option value="publicRecording">公開録音</option>
+            <option value="incident">出来事</option>
+          </select>
+        </div>
+        <div id="cornerPickWrap" class="corner-pick-panel hidden">
+          <p id="cornerPickHint" class="corner-pick-hint">タップするとそのコーナーの回だけ表示します（もう一度タップで解除）。</p>
+          <div id="cornerPickList" class="corner-pick-list" role="list"></div>
+          <div id="liellaDiaryCastWrap" class="liella-diary-cast-wrap hidden">
+            <p class="corner-pick-hint">さらにキャストで絞り込む</p>
+            <div id="liellaDiaryCastList" class="corner-pick-list" role="list"></div>
+          </div>
+          <button type="button" id="cornerPickClearButton" class="tiny-button corner-pick-clear">コーナーの指定をクリア</button>
+        </div>
+        <div id="facetSecondaryWrap" class="facet-secondary-wrap discovery-grid hidden">
+          <label class="search-field-label" id="facetSecondaryLabel" for="facetSecondarySelect">さらに指定</label>
+          <select id="facetSecondarySelect"></select>
+        </div>
+        <div id="animePickWrap" class="corner-pick-panel hidden">
+          <div id="animePickList" class="corner-pick-list" role="list"></div>
+          <button type="button" id="animePickClearButton" class="tiny-button corner-pick-clear">クリア</button>
+        </div>
+        <div id="songPartialWrap" class="discovery-grid facet-song-wrap hidden">
+          <label class="search-field-label" for="songPartialInput">楽曲名</label>
+          <div class="search-inline">
+            <input
+              id="songPartialInput"
+              type="search"
+              autocomplete="off"
+              placeholder="タイトルの一部だけでも検索できます">
+            <button type="button" id="clearSongPartialButton" class="tiny-button">クリア</button>
+          </div>
+        </div>
+        <div class="discovery-reset-row">
+          <button type="button" id="resetDiscoveryButton" class="reset-filters-button">詳細検索をリセット</button>
+        </div>
       </div>
     </section>
 
@@ -39,6 +113,14 @@
         <button id="toggleRankingButton" type="button" class="toggle-button">表示する</button>
       </div>
       <ol id="rankingList" class="ranking-list hidden"></ol>
+    </section>
+
+    <section id="songRankingSection" class="card hidden">
+      <div class="section-header">
+        <h2>リクエスト曲ランキング（上位3曲）</h2>
+        <button id="toggleSongRankingButton" type="button" class="toggle-button">表示する</button>
+      </div>
+      <ol id="songRankingList" class="ranking-list hidden"></ol>
     </section>
 
     <section id="resultsSection" class="card">
@@ -58,9 +140,17 @@
       <div id="episodeResultsCollapsible" class="episode-results-collapsible hidden">
         <p id="resultCount" class="result-count"></p>
         <ul id="episodeList" class="episode-list"></ul>
+        <nav id="paginationBar" class="pagination-bar hidden" aria-label="ページ送り">
+          <button type="button" id="pagePrevButton" class="page-button" aria-label="前のページ">&#8249; 前へ</button>
+          <span id="pageIndicator" class="page-indicator"></span>
+          <button type="button" id="pageNextButton" class="page-button" aria-label="次のページ">次へ &#8250;</button>
+        </nav>
       </div>
     </section>
   </main>
+
+  <button id="shareButton" type="button" class="share-fab hidden" aria-label="この絞り込みを共有">🔗 共有</button>
+  <div id="shareToast" class="share-toast hidden" aria-live="polite">リンクをコピーしました</div>
 
   <!-- 文言は運営側で必要に応じて調整してください -->
   <footer class="site-footer">
@@ -69,6 +159,18 @@
     </p>
     <p>
       番組・キャラクター・楽曲等に関する権利は各権利者に帰属します。動画の視聴はリンク先（YouTube 等）の規約および各コンテンツの権利者に従ってください。
+    </p>
+    <p class="storage-notice">お気に入り・視聴済み・メモはこのブラウザにのみ保存されます。プライベートブラウズやキャッシュクリアでは消える場合があります。</p>
+    <div class="data-transfer-row">
+      <button type="button" id="exportDataButton" class="data-transfer-button">バックアップ</button>
+      <label class="data-transfer-button" for="importDataInput">復元</label>
+      <input type="file" id="importDataInput" accept=".json" class="visually-hidden">
+    </div>
+    <p class="footer-contact">
+      不具合・ご意見は
+      <a href="https://x.com/letsbeone201006" target="_blank" rel="noopener noreferrer" class="footer-x-link" aria-label="X（@letsbeone201006）">
+        <svg class="x-icon" viewBox="0 0 1200 1227" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M714.163 519.284L1160.89 0H1055.03L667.137 450.887L357.328 0H0L468.492 681.821L0 1226.37H105.866L515.491 750.218L842.672 1226.37H1200L714.163 519.284ZM569.165 687.828L521.697 619.934L144.011 79.6944H306.615L611.412 515.685L658.88 583.579L1055.08 1150.3H892.476L569.165 687.854V687.828Z"/></svg>
+      </a> まで
     </p>
   </footer>
 

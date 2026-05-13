@@ -18,6 +18,13 @@ export function isPublicRecordingTitle(title) {
   return /公開録音|公録/.test(title);
 }
 
+/** タイトルまたは manualMeta の publicRecordingNote タグで公開録音回を判定する */
+export function isPublicRecording(episode) {
+  if (isPublicRecordingTitle(episode?.title || "")) return true;
+  const tags = episode?.manualMeta?.tags ?? [];
+  return tags.some((t) => t.type === "publicRecordingNote");
+}
+
 export function isCompilationTitle(title) {
   return /総集編/.test(String(title || ""));
 }
@@ -30,9 +37,9 @@ export function isOtherVideoTitle(title) {
 // 文字列ユーティリティ
 // ---------------------------------------------------------------------------
 
-/** スペース除去・小文字化して比較用に正規化する */
+/** 全角/半角統一・スペース除去・小文字化して比較用に正規化する */
 export function normalizeSearchText(text) {
-  return String(text).replace(/\s+/g, "").toLowerCase();
+  return String(text).normalize("NFKC").replace(/\s+/g, "").toLowerCase();
 }
 
 // ---------------------------------------------------------------------------
@@ -68,6 +75,53 @@ export function getAllCastMembers(episode) {
   return merged.length > 0 ? [...new Set(merged)] : ["出演者情報未設定"];
 }
 
+/**
+ * メタ情報（Excel 由来など）JSON を読み込む。
+ * 開発時のみ存在しない場合がある。
+ */
+async function fetchEpisodeManualMetaOnce() {
+  try {
+    const response = await fetch("./data/episodeMeta.json");
+    if (!response.ok) {
+      return [];
+    }
+    return response.json();
+  } catch (_error) {
+    return [];
+  }
+}
+
+/**
+ * メタオブジェクトを videoId でエピソードへマージする。
+ * videoId が未設定のメタエントリは結合せず警告を出す。
+ */
+export function mergeManualMetaIntoEpisodes(episodes, manualMetaRecords) {
+  if (!Array.isArray(manualMetaRecords) || manualMetaRecords.length === 0) {
+    return episodes;
+  }
+
+  /** @type {Map<string, object>} videoId → metaRecord */
+  const map = new Map();
+  for (const record of manualMetaRecords) {
+    const vid = record?.videoId;
+    if (typeof vid === "string" && vid.trim()) {
+      if (map.has(vid)) {
+        console.warn(`[episodeMeta] videoId 重複: ${vid}`);
+      }
+      map.set(vid, record);
+    } else {
+      console.warn(`[episodeMeta] videoId 未設定のエントリをスキップ:`, record?.broadcastNumber ?? record?.titleKeyword ?? "(不明)");
+    }
+  }
+
+  return episodes.map((episode) => {
+    const vid = extractYoutubeVideoId(episode.youtubeUrl);
+    if (!vid) return { ...episode };
+    const manual = map.get(vid);
+    return manual ? { ...episode, manualMeta: manual } : { ...episode };
+  });
+}
+
 // ---------------------------------------------------------------------------
 // データ取得
 // ---------------------------------------------------------------------------
@@ -77,25 +131,32 @@ export function getAllCastMembers(episode) {
  * 1) /api/episodes（Vercel サーバーレス）を優先
  * 2) 失敗した場合は ./data/episodes.json へフォールバック
  *
- * 将来 Spring Boot 静的 JSON に切り替える場合はここの URL を変えるだけでよい。
+ * 取得後、`./data/episodeMeta.json` があれば manualMeta を付与する。
  */
 export async function fetchEpisodes() {
+  let episodesPayload;
+
   try {
     const apiResponse = await fetch("./api/episodes");
     if (apiResponse.ok) {
-      return apiResponse.json();
+      episodesPayload = await apiResponse.json();
     }
   } catch (error) {
     console.warn("API fetch failed. Fallback to local JSON.", error);
   }
 
-  const localResponse = await fetch("./data/episodes.json");
-  if (!localResponse.ok) {
-    throw new Error(`Fetch failed: ${localResponse.status}`);
+  if (!episodesPayload) {
+    const localResponse = await fetch("./data/episodes.json");
+    if (!localResponse.ok) {
+      throw new Error(`Fetch failed: ${localResponse.status}`);
+    }
+    episodesPayload = await localResponse.json();
   }
 
-  return localResponse.json();
+  const manualRecords = await fetchEpisodeManualMetaOnce();
+  return mergeManualMetaIntoEpisodes(episodesPayload, manualRecords);
 }
+
 
 // ---------------------------------------------------------------------------
 // フィルタリング
@@ -231,6 +292,27 @@ export function buildRanking(episodes, keyword = "", quickFilterKeyword = "", pr
   return Object.entries(countMap)
     .map(([name, count]) => ({ name, count }))
     .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name, "ja"));
+}
+
+export function buildSongRanking(episodes, limit = 3) {
+  const countMap = {};
+  for (const episode of episodes) {
+    if (isCompilationTitle(episode.title)) continue;
+    const meta = episode.manualMeta || {};
+    const songsPerEpisode = new Set();
+    if (meta.lunchTimeRequestSong) songsPerEpisode.add(meta.lunchTimeRequestSong.trim());
+    const tags = Array.isArray(meta.tags) ? meta.tags : [];
+    for (const tag of tags) {
+      if (tag.type === "lunchSong" && tag.name) songsPerEpisode.add(tag.name.trim());
+    }
+    for (const song of songsPerEpisode) {
+      if (song) countMap[song] = (countMap[song] || 0) + 1;
+    }
+  }
+  return Object.entries(countMap)
+    .map(([name, count]) => ({ name, count }))
+    .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name, "ja"))
+    .slice(0, limit);
 }
 
 function getExcludedRankingNames(keyword, quickFilterKeyword, priorityCastFilters) {

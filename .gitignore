@@ -2,3 +2,9 @@
 .env.local
 .env*.local
 .vercel
+
+# Excel 原本（手動管理・コミット不要）
+data/manual/
+
+# デバッグ用ダンプ
+data/excel-dump.json

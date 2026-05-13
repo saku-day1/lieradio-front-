@@ -10,24 +10,35 @@ import {
   fetchEpisodes,
   filterEpisodes,
   sortEpisodes,
-  buildRanking
+  buildRanking,
+  buildSongRanking
 } from "../model/EpisodeRepository.js";
 
 import {
   loadFavorites,
   loadWatched,
   toggleFavorite,
-  toggleWatched
+  toggleWatched,
+  loadMemos,
+  saveMemo,
+  buildExportPayload,
+  importUserData
 } from "../model/UserPreferences.js";
 
+import { extractYoutubeVideoId } from "../model/EpisodeRepository.js";
+
 import { renderEpisodeList } from "../view/EpisodeListView.js";
-import { renderRankingSection } from "../view/RankingView.js";
+import { renderRankingSection, renderSongRankingSection } from "../view/RankingView.js";
 
 import {
   PRIORITY_CAST_FILTERS,
   UNIT_FILTERS,
   MAX_AND_CAST_SELECTION
 } from "../constants.js";
+
+import { applyFacetDiscoveryFilter, isFacetDiscoveryActive, FACET_PRIMARY_NONE } from "../model/episodeSearch.js";
+
+import { buildFacetCatalog } from "../model/facetCatalog.js";
 
 export default class AppController {
   constructor() {
@@ -50,6 +61,27 @@ export default class AppController {
     this.watchedFilterButton     = document.getElementById("watchedFilterButton");
     this.unwatchedFilterButton   = document.getElementById("unwatchedFilterButton");
     this.otherVideoFilterButton  = document.getElementById("otherVideoFilterButton");
+    this.memoFilterButton        = document.getElementById("memoFilterButton");
+
+    this.toggleDiscoveryButton    = document.getElementById("toggleDiscoveryButton");
+    this.discoveryContent         = document.getElementById("discoveryContent");
+    this.facetPrimarySelect       = document.getElementById("facetPrimarySelect");
+    this.facetSecondarySelect     = document.getElementById("facetSecondarySelect");
+    this.facetSecondaryWrap       = document.getElementById("facetSecondaryWrap");
+    this.facetSecondaryLabel      = document.getElementById("facetSecondaryLabel");
+    this.songPartialWrap          = document.getElementById("songPartialWrap");
+    this.songPartialInput         = document.getElementById("songPartialInput");
+    this.clearSongPartialButton   = document.getElementById("clearSongPartialButton");
+
+    this.cornerPickWrap           = document.getElementById("cornerPickWrap");
+    this.cornerPickList           = document.getElementById("cornerPickList");
+    this.cornerPickClearButton    = document.getElementById("cornerPickClearButton");
+    this.liellaDiaryCastWrap      = document.getElementById("liellaDiaryCastWrap");
+    this.liellaDiaryCastList      = document.getElementById("liellaDiaryCastList");
+    this.animePickWrap            = document.getElementById("animePickWrap");
+    this.animePickList            = document.getElementById("animePickList");
+    this.animePickClearButton     = document.getElementById("animePickClearButton");
+    this.resetDiscoveryButton     = document.getElementById("resetDiscoveryButton");
 
     // ランキング View に渡す DOM まとめ
     this.rankingElements = {
@@ -70,7 +102,37 @@ export default class AppController {
     this.isOtherVideoFilterActive = false;
     this.isFavoritesFilterActive  = false;
     this.watchedFilterMode     = ""; // "" | "watched" | "unwatched"
+    this.isMemoFilterActive    = false;
     this.isUnitSectionExpanded = false;
+
+    this.facetPrimaryKey       = FACET_PRIMARY_NONE;
+    this.facetSecondaryValue   = "";
+    this.songPartialQuery      = "";
+    this._facetCatalog         = null;
+    this.isDiscoveryVisible    = false;
+
+    this.currentPage           = 1;
+    this._lastFilterKey        = "";
+    this.paginationBar         = document.getElementById("paginationBar");
+    this.pagePrevButton        = document.getElementById("pagePrevButton");
+    this.pageNextButton        = document.getElementById("pageNextButton");
+    this.pageIndicator         = document.getElementById("pageIndicator");
+
+    this.exportDataButton      = document.getElementById("exportDataButton");
+    this.importDataInput       = document.getElementById("importDataInput");
+    this.shareButton           = document.getElementById("shareButton");
+    this.shareToast            = document.getElementById("shareToast");
+
+    this.songRankingSection       = document.getElementById("songRankingSection");
+    this.songRankingList          = document.getElementById("songRankingList");
+    this.toggleSongRankingButton  = document.getElementById("toggleSongRankingButton");
+    this.isSongRankingVisible     = false;
+
+    this.songRankingElements = {
+      section:      this.songRankingSection,
+      list:         this.songRankingList,
+      toggleButton: this.toggleSongRankingButton
+    };
   }
 
   // -------------------------------------------------------------------------
@@ -80,8 +142,11 @@ export default class AppController {
   async init() {
     try {
       this.allEpisodes = await fetchEpisodes();
+      this._facetCatalog = buildFacetCatalog(this.allEpisodes);
       this._renderCastQuickFilters();
       this._renderUnitQuickFilters();
+      this._applyUrlParams();
+      this._populateFacetSecondaryOptions();
       this._bindEvents();
       this.render();
     } catch (error) {
@@ -112,6 +177,7 @@ export default class AppController {
     });
 
     this.resetFiltersButton.addEventListener("click", () => this._resetFilters());
+    this.resetDiscoveryButton?.addEventListener("click", () => this._resetDiscoveryFilters());
 
     this.favoritesFilterButton?.addEventListener("click", () => {
       this.isFavoritesFilterActive = !this.isFavoritesFilterActive;
@@ -132,6 +198,403 @@ export default class AppController {
       this.isOtherVideoFilterActive = !this.isOtherVideoFilterActive;
       this.render();
     });
+
+    this.memoFilterButton?.addEventListener("click", () => {
+      this.isMemoFilterActive = !this.isMemoFilterActive;
+      this.render();
+    });
+
+    this.toggleDiscoveryButton?.addEventListener("click", () => {
+      this.isDiscoveryVisible = !this.isDiscoveryVisible;
+      this._updateDiscoveryVisibility();
+    });
+
+    this.facetPrimarySelect?.addEventListener("change", () => this._onFacetPrimaryChange());
+
+    this.facetSecondarySelect?.addEventListener("change", () => {
+      this.facetSecondaryValue = this.facetSecondarySelect?.value || "";
+      this.render();
+    });
+
+    this.songPartialInput?.addEventListener("input", () => {
+      this.songPartialQuery = String(this.songPartialInput.value || "");
+      this.render();
+    });
+
+    this.clearSongPartialButton?.addEventListener("click", () => {
+      this.songPartialQuery = "";
+      if (this.songPartialInput) {
+        this.songPartialInput.value = "";
+      }
+      this.render();
+    });
+
+    this.cornerPickList?.addEventListener("click", (ev) => {
+      const target = ev.target.closest("button.corner-pick-item");
+      if (!target) return;
+      const value = target.dataset.cornerPick || "";
+      this.facetSecondaryValue = this.facetSecondaryValue === value ? "" : value;
+      this.render();
+    });
+
+    this.cornerPickClearButton?.addEventListener("click", () => {
+      this.facetSecondaryValue = "";
+      this.render();
+    });
+
+    this.animePickClearButton?.addEventListener("click", () => {
+      this.facetSecondaryValue = "";
+      this.render();
+    });
+
+    this.pagePrevButton?.addEventListener("click", () => {
+      if (this.currentPage > 1) {
+        this.currentPage -= 1;
+        this.render();
+        this.episodeList?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    });
+
+    this.pageNextButton?.addEventListener("click", () => {
+      this.currentPage += 1;
+      this.render();
+      this.episodeList?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+
+    this.exportDataButton?.addEventListener("click", () => this._handleExport());
+    this.importDataInput?.addEventListener("change", (ev) => this._handleImport(ev));
+    this.shareButton?.addEventListener("click", () => this._handleShare());
+
+    this.toggleSongRankingButton?.addEventListener("click", () => {
+      this.isSongRankingVisible = !this.isSongRankingVisible;
+      this.render();
+    });
+  }
+
+  _applyUrlParams() {
+    const params = new URLSearchParams(window.location.search);
+
+    const cast = params.get("cast");
+    if (cast) {
+      this.andFilterNames = cast.split(",").map((s) => s.trim()).filter(Boolean).slice(0, MAX_AND_CAST_SELECTION);
+      if (this.andFilterNames.length === 1) {
+        this.quickFilterKeyword = this.andFilterNames[0];
+      }
+    }
+
+    const unit = params.get("unit");
+    if (unit) {
+      this.activeUnitFilterKey = unit;
+    }
+
+    const facet = params.get("facet");
+    if (facet) {
+      this.facetPrimaryKey = facet;
+      if (this.facetPrimarySelect) this.facetPrimarySelect.value = facet;
+    }
+
+    const value = params.get("value");
+    if (value) {
+      this.facetSecondaryValue = value;
+    }
+
+    const song = params.get("song");
+    if (song) {
+      this.songPartialQuery = song;
+      if (this.songPartialInput) this.songPartialInput.value = song;
+    }
+
+    if (cast || unit || facet || value || song) {
+      this.isEpisodeListVisible = true;
+      if (facet) this.isDiscoveryVisible = true;
+    }
+  }
+
+  _buildShareParams() {
+    const params = new URLSearchParams();
+    if (this.andFilterNames.length > 0) {
+      params.set("cast", this.andFilterNames.join(","));
+    }
+    if (this.activeUnitFilterKey) {
+      params.set("unit", this.activeUnitFilterKey);
+    }
+    if (this.facetPrimaryKey && this.facetPrimaryKey !== FACET_PRIMARY_NONE) {
+      params.set("facet", this.facetPrimaryKey);
+    }
+    if (this.facetSecondaryValue) {
+      params.set("value", this.facetSecondaryValue);
+    }
+    if (this.songPartialQuery) {
+      params.set("song", this.songPartialQuery);
+    }
+    return params;
+  }
+
+  _updateUrl() {
+    const query = this._buildShareParams().toString();
+    const newUrl = query ? `${location.pathname}?${query}` : location.pathname;
+    history.replaceState(null, "", newUrl);
+  }
+
+  _updateShareButton() {
+    if (!this.shareButton) return;
+    const hasShareable = this._buildShareParams().toString().length > 0;
+    this.shareButton.classList.toggle("hidden", !hasShareable);
+  }
+
+  _handleShare() {
+    const url = location.href;
+    if (navigator.share) {
+      navigator.share({ url }).catch(() => {});
+      return;
+    }
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(url).then(() => this._showShareToast());
+    }
+  }
+
+  _showShareToast() {
+    const toast = this.shareToast;
+    if (!toast) return;
+    toast.classList.remove("hidden");
+    requestAnimationFrame(() => toast.classList.add("is-visible"));
+    clearTimeout(this._toastTimer);
+    this._toastTimer = setTimeout(() => {
+      toast.classList.remove("is-visible");
+      setTimeout(() => toast.classList.add("hidden"), 200);
+    }, 2200);
+  }
+
+  _handleExport() {
+    const payload = buildExportPayload();
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `lieradio-backup-${new Date().toISOString().slice(0, 10)}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  _handleImport(ev) {
+    const file = ev.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const payload = JSON.parse(String(e.target.result));
+        importUserData(payload);
+        this.render();
+        alert("復元が完了しました。");
+      } catch {
+        alert("ファイルの読み込みに失敗しました。正しいバックアップファイルを選択してください。");
+      } finally {
+        ev.target.value = "";
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  _onFacetPrimaryChange() {
+    if (!this.facetPrimarySelect) return;
+    this.facetPrimaryKey = this.facetPrimarySelect.value || FACET_PRIMARY_NONE;
+    this.facetSecondaryValue = "";
+
+    if (this.facetPrimaryKey !== "lunchSong") {
+      this.songPartialQuery = "";
+      if (this.songPartialInput) this.songPartialInput.value = "";
+    }
+
+    this._populateFacetSecondaryOptions();
+    this.render();
+  }
+
+  /**
+   * 現在の親ファセットに応じて第二プルダウンを組み替える。
+   */
+  _populateFacetSecondaryOptions() {
+    const selectEl = this.facetSecondarySelect;
+    if (!selectEl || !this._facetCatalog) return;
+
+    const catalog = this._facetCatalog;
+
+    /** @type {string[]} */
+    let values = [];
+
+    switch (this.facetPrimaryKey) {
+      case "corner":
+        selectEl.innerHTML = "";
+        return;
+      case "publicRecording":
+        values = catalog.publicRecordingMemos;
+        break;
+      case "liveImpression":
+        values = catalog.liveImpressions;
+        break;
+      case "eventImpression":
+        values = catalog.events;
+        break;
+      case "animeImpression":
+        values = catalog.animeImpressions;
+        break;
+      case "birthday":
+        values = catalog.birthdayCastNames;
+        break;
+      case "incident":
+        values = catalog.incidents;
+        break;
+      default:
+        selectEl.innerHTML = "";
+        return;
+    }
+
+    selectEl.innerHTML = "";
+
+    const allOpt = document.createElement("option");
+    allOpt.value = "";
+    allOpt.textContent = this._facetSecondaryPlaceholderText(this.facetPrimaryKey);
+    selectEl.appendChild(allOpt);
+
+    for (const label of values) {
+      const option = document.createElement("option");
+      option.value = label;
+      option.textContent = label;
+      selectEl.appendChild(option);
+    }
+
+    selectEl.value = "";
+  }
+
+  _facetSecondaryHeadingText(_primaryKey) {
+    return "絞り込み";
+  }
+
+  _facetSecondaryPlaceholderText(primaryKey) {
+    switch (primaryKey) {
+      case "liveImpression":
+        return "どのライブ？";
+      case "eventImpression":
+        return "どのイベント？";
+      case "birthday":
+        return "メンバーのお祝い回を選んでください";
+      case "incident":
+        return "どの出来事？";
+      case "publicRecording":
+        return "公録を選んでください";
+      default:
+        return "（このカテゴリのすべて）";
+    }
+  }
+
+  _updateDiscoveryVisibility() {
+    this.discoveryContent?.classList.toggle("hidden", !this.isDiscoveryVisible);
+    if (this.toggleDiscoveryButton) {
+      this.toggleDiscoveryButton.textContent = this.isDiscoveryVisible ? "閉じる" : "表示する";
+    }
+  }
+
+  _updateFacetAccessoryVisibility() {
+    const primary = this.facetPrimaryKey;
+
+    const showCornerExplorer = primary === "corner";
+    const showSongInput = primary === "lunchSong";
+    const showAnimePick = primary === "animeImpression";
+    const showSecondaryPullDown =
+      Boolean(primary) && primary !== "corner" && primary !== "lunchSong" && primary !== "animeImpression";
+
+    this.cornerPickWrap?.classList.toggle("hidden", !showCornerExplorer);
+    this.facetSecondaryWrap?.classList.toggle("hidden", !showSecondaryPullDown);
+    this.songPartialWrap?.classList.toggle("hidden", !showSongInput);
+    this.animePickWrap?.classList.toggle("hidden", !showAnimePick);
+
+    if (this.facetSecondaryLabel) {
+      this.facetSecondaryLabel.textContent = this._facetSecondaryHeadingText(primary || "");
+    }
+  }
+
+  _renderCornerPickList() {
+    const root = this.cornerPickList;
+    const catalog = this._facetCatalog;
+    if (!root || !catalog) return;
+
+    root.replaceChildren();
+
+    const LIELLA_PREFIX = "Li絵lla!日記";
+    const LIELLA_SPECIAL_PREFIX = "Li絵lla!日記スペシャル";
+    for (const label of catalog.corners) {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "corner-pick-item";
+      const isLiellaSelected =
+        label === LIELLA_PREFIX &&
+        String(this.facetSecondaryValue).startsWith(LIELLA_PREFIX) &&
+        !String(this.facetSecondaryValue).startsWith(LIELLA_SPECIAL_PREFIX);
+      if (this.facetSecondaryValue === label || isLiellaSelected) {
+        btn.classList.add("is-selected");
+      }
+      btn.dataset.cornerPick = label;
+      btn.textContent = label;
+      root.appendChild(btn);
+    }
+
+    this._renderLiellaDiaryCastList(catalog);
+  }
+
+  _renderAnimePickList() {
+    const root = this.animePickList;
+    const catalog = this._facetCatalog;
+    if (!root || !catalog) return;
+
+    root.replaceChildren();
+    for (const label of catalog.animeImpressions) {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "corner-pick-item";
+      if (this.facetSecondaryValue === label) btn.classList.add("is-selected");
+      btn.textContent = label;
+      btn.addEventListener("click", () => {
+        this.facetSecondaryValue = this.facetSecondaryValue === label ? "" : label;
+        this.render();
+      });
+      root.appendChild(btn);
+    }
+  }
+
+  _renderLiellaDiaryCastList(catalog) {
+    const wrap = this.liellaDiaryCastWrap;
+    const listEl = this.liellaDiaryCastList;
+    if (!wrap || !listEl || !catalog) return;
+
+    const LIELLA_PREFIX = "Li絵lla!日記";
+    const LIELLA_SPECIAL_PREFIX = "Li絵lla!日記スペシャル";
+    const liellaActive =
+      String(this.facetSecondaryValue).startsWith(LIELLA_PREFIX) &&
+      !String(this.facetSecondaryValue).startsWith(LIELLA_SPECIAL_PREFIX);
+
+    wrap.classList.toggle("hidden", !liellaActive);
+    if (!liellaActive) return;
+
+    listEl.replaceChildren();
+
+    for (const castName of catalog.liellaDiaryCasts || []) {
+      const fullValue = `${LIELLA_PREFIX}:${castName}`;
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "corner-pick-item";
+      if (this.facetSecondaryValue === fullValue) {
+        btn.classList.add("is-selected");
+      }
+      btn.dataset.liellaCast = castName;
+      btn.textContent = castName;
+      btn.addEventListener("click", () => {
+        this.facetSecondaryValue =
+          this.facetSecondaryValue === fullValue ? LIELLA_PREFIX : fullValue;
+        this.render();
+      });
+      listEl.appendChild(btn);
+    }
   }
 
   // -------------------------------------------------------------------------
@@ -155,6 +618,9 @@ export default class AppController {
     `).join("");
 
     this.castQuickFilters.innerHTML = `
+      <div class="filter-group-header">
+        <span class="filter-group-label">メンバー</span>
+      </div>
       <div class="cast-buttons-wrap">${castButtonsHtml}${yuisakuBtn}</div>
     `;
 
@@ -231,6 +697,12 @@ export default class AppController {
   // -------------------------------------------------------------------------
 
   render() {
+    this._updateDiscoveryVisibility();
+    this._updateFacetAccessoryVisibility();
+    this._renderCornerPickList();
+    this._renderAnimePickList();
+
+    const discoveryActiveUi = this._isDiscoveryUiActive();
     const hasFilter = this._isAnyFilterActive();
     if (!this.lastRenderHadFilter && hasFilter) this.isEpisodeListVisible = true;
     if (this.lastRenderHadFilter && !hasFilter) this.isEpisodeListVisible = false;
@@ -239,11 +711,13 @@ export default class AppController {
     const keyword    = this.quickFilterKeyword;
     const isAndMode  = this.andFilterNames.length >= 2;
     const isUnitMode = Boolean(this.activeUnitFilterKey);
-    const hideRanking = isAndMode || isUnitMode || this.isOtherVideoFilterActive;
+    const hideRanking =
+      isAndMode || isUnitMode || this.isOtherVideoFilterActive || discoveryActiveUi;
     const sortOrder  = this.sortSelect.value;
 
     const favorites = loadFavorites();
     const watched   = loadWatched();
+    const memos     = loadMemos();
 
     const filteredEpisodes = filterEpisodes(
       this.allEpisodes,
@@ -257,23 +731,80 @@ export default class AppController {
       this.isOtherVideoFilterActive,
       UNIT_FILTERS
     );
-    const sortedEpisodes = sortEpisodes(filteredEpisodes, sortOrder);
-    const ranking = buildRanking(filteredEpisodes, keyword, this.quickFilterKeyword, PRIORITY_CAST_FILTERS);
+
+    const memoFiltered = this.isMemoFilterActive
+      ? filteredEpisodes.filter((ep) => {
+          const vid = extractYoutubeVideoId(ep.youtubeUrl);
+          return vid && memos.has(vid);
+        })
+      : filteredEpisodes;
+
+    const extOpts = {
+      facetPrimary: this.facetPrimaryKey,
+      facetSecondaryValue: this.facetSecondaryValue,
+      songPartialQuery: this.songPartialQuery
+    };
+
+    const { episodes: narrowedEpisodes, hitLabelsByVideoId } = applyFacetDiscoveryFilter(
+      memoFiltered,
+      extOpts
+    );
+
+    const sortedEpisodes = sortEpisodes(narrowedEpisodes, sortOrder);
+    const ranking = buildRanking(narrowedEpisodes, keyword, this.quickFilterKeyword, PRIORITY_CAST_FILTERS);
+
+    // フィルター変更時はページを1に戻す
+    const filterKey = JSON.stringify({ keyword, andNames: this.andFilterNames, unitKey: this.activeUnitFilterKey, fav: this.isFavoritesFilterActive, watched: this.watchedFilterMode, other: this.isOtherVideoFilterActive, memo: this.isMemoFilterActive, facet: this.facetPrimaryKey, secondary: this.facetSecondaryValue, song: this.songPartialQuery, sort: sortOrder });
+    if (filterKey !== this._lastFilterKey) {
+      this.currentPage = 1;
+      this._lastFilterKey = filterKey;
+    }
+
+    const PAGE_SIZE = 50;
+    const totalCount = sortedEpisodes.length;
+    const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
+    if (this.currentPage > totalPages) this.currentPage = totalPages;
+    const pageStart = (this.currentPage - 1) * PAGE_SIZE;
+    const pageEpisodes = sortedEpisodes.slice(pageStart, pageStart + PAGE_SIZE);
 
     // View に描画を委譲
     renderEpisodeList(
       this.episodeList,
-      sortedEpisodes,
+      pageEpisodes,
       isAndMode,
       favorites,
       watched,
-      (videoId) => { toggleFavorite(videoId); this.render(); },
-      (videoId) => { toggleWatched(videoId); this.render(); }
+      (videoId) => {
+        toggleFavorite(videoId);
+        this.render();
+      },
+      (videoId) => {
+        toggleWatched(videoId);
+        this.render();
+      },
+      hitLabelsByVideoId,
+      memos,
+      (videoId, text) => saveMemo(videoId, text)
     );
     renderRankingSection(this.rankingElements, ranking, keyword, hideRanking, this.isRankingVisible);
 
+    const isSongSearch = this.facetPrimaryKey === "lunchSong";
+    const songRanking = isSongSearch ? buildSongRanking(memoFiltered) : [];
+    renderSongRankingSection(
+      this.songRankingElements,
+      songRanking,
+      this.isSongRankingVisible,
+      isSongSearch,
+      (songName) => {
+        this.songPartialQuery = songName;
+        if (this.songPartialInput) this.songPartialInput.value = songName;
+        this.render();
+      }
+    );
+
     this._renderResultTitle(isAndMode, hasFilter);
-    this._renderResultCount(sortedEpisodes.length, hasFilter);
+    this._renderResultCount(totalCount, hasFilter, pageStart + 1, Math.min(pageStart + PAGE_SIZE, totalCount));
+    this._updatePagination(totalCount, totalPages);
     this._updateActiveQuickFilter();
     this._updateActiveUnitFilter();
     this._updateResetButtonVisibility();
@@ -282,6 +813,9 @@ export default class AppController {
     this._updateFavoritesFilterButton();
     this._updateWatchedFilterButtons();
     this._updateOtherVideoFilterButton();
+    this._updateMemoFilterButton();
+    this._updateShareButton();
+    this._updateUrl();
   }
 
   // -------------------------------------------------------------------------
@@ -308,9 +842,25 @@ export default class AppController {
     this.resultTitle.textContent = "検索結果";
   }
 
-  _renderResultCount(count, hasFilter) {
+  _renderResultCount(total, hasFilter, from, to) {
     const label = hasFilter ? "検索結果" : "動画一覧";
-    this.resultCount.textContent = `${label}: ${count}件`;
+    if (total > 50) {
+      this.resultCount.textContent = `${label}: ${total}件中 ${from}〜${to}件を表示`;
+    } else {
+      this.resultCount.textContent = `${label}: ${total}件`;
+    }
+  }
+
+  _updatePagination(total, totalPages) {
+    if (!this.paginationBar) return;
+    const show = totalPages > 1;
+    this.paginationBar.classList.toggle("hidden", !show);
+    if (!show) return;
+    if (this.pageIndicator) {
+      this.pageIndicator.textContent = `${this.currentPage} / ${totalPages}ページ`;
+    }
+    if (this.pagePrevButton) this.pagePrevButton.disabled = this.currentPage <= 1;
+    if (this.pageNextButton) this.pageNextButton.disabled = this.currentPage >= totalPages;
   }
 
   // -------------------------------------------------------------------------
@@ -324,8 +874,17 @@ export default class AppController {
       Boolean(this.activeUnitFilterKey) ||
       this.isFavoritesFilterActive ||
       Boolean(this.watchedFilterMode) ||
-      this.isOtherVideoFilterActive
+      this.isOtherVideoFilterActive ||
+      this._isDiscoveryUiActive()
     );
+  }
+
+  _isDiscoveryUiActive() {
+    return isFacetDiscoveryActive({
+      facetPrimary: this.facetPrimaryKey,
+      facetSecondaryValue: this.facetSecondaryValue,
+      songPartialQuery: this.songPartialQuery
+    });
   }
 
   _updateEpisodeResultsVisibility() {
@@ -357,10 +916,16 @@ export default class AppController {
   }
 
   _updateResetButtonVisibility() {
+    const hasSongQuery = Boolean(this.songPartialQuery.trim());
+    const hasSecondary = Boolean(this.facetSecondaryValue.trim());
     const shouldShow =
       this.andFilterNames.length > 0 ||
       Boolean(this.quickFilterKeyword) ||
-      Boolean(this.activeUnitFilterKey);
+      Boolean(this.activeUnitFilterKey) ||
+      Boolean(this.facetPrimaryKey) ||
+      hasSecondary ||
+      hasSongQuery;
+
     this.resetFiltersButton.classList.toggle("hidden", !shouldShow);
   }
 
@@ -388,6 +953,29 @@ export default class AppController {
       : "📼 その他の動画";
   }
 
+  _updateMemoFilterButton() {
+    if (!this.memoFilterButton) return;
+    this.memoFilterButton.classList.toggle("is-active", this.isMemoFilterActive);
+    this.memoFilterButton.textContent = this.isMemoFilterActive ? "📝 ひとこと 表示中" : "📝 ひとこと";
+  }
+
+  _resetDiscoveryFilters() {
+    this.facetPrimaryKey     = FACET_PRIMARY_NONE;
+    this.facetSecondaryValue = "";
+    this.songPartialQuery    = "";
+    if (this.facetPrimarySelect) {
+      this.facetPrimarySelect.value = FACET_PRIMARY_NONE;
+    }
+    this._populateFacetSecondaryOptions();
+    if (this.facetSecondarySelect) {
+      this.facetSecondarySelect.value = "";
+    }
+    if (this.songPartialInput) {
+      this.songPartialInput.value = "";
+    }
+    this.render();
+  }
+
   _resetFilters() {
     this.andFilterNames        = [];
     this.quickFilterKeyword    = "";
@@ -395,6 +983,23 @@ export default class AppController {
     this.isFavoritesFilterActive  = false;
     this.watchedFilterMode     = "";
     this.isOtherVideoFilterActive = false;
+    this.isMemoFilterActive    = false;
+
+    this.facetPrimaryKey       = FACET_PRIMARY_NONE;
+    this.facetSecondaryValue   = "";
+    this.songPartialQuery      = "";
+    this.isDiscoveryVisible    = false;
+    if (this.facetPrimarySelect) {
+      this.facetPrimarySelect.value = FACET_PRIMARY_NONE;
+    }
+    this._populateFacetSecondaryOptions();
+    if (this.facetSecondarySelect) {
+      this.facetSecondarySelect.value = "";
+    }
+    if (this.songPartialInput) {
+      this.songPartialInput.value = "";
+    }
+
     this.render();
   }
 }

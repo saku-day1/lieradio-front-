@@ -10,7 +10,6 @@ const CACHE_TTL_MS = Number(process.env.EPISODES_CACHE_TTL_MS || 10 * 60 * 1000)
 const STALE_TTL_MS = Number(process.env.EPISODES_STALE_TTL_MS || 6 * 60 * 60 * 1000);
 const RATE_LIMIT_WINDOW_MS = Number(process.env.EPISODES_RATE_LIMIT_WINDOW_MS || 60 * 1000);
 const RATE_LIMIT_MAX_REQUESTS = Number(process.env.EPISODES_RATE_LIMIT_MAX_REQUESTS || 30);
-const RATE_LIMIT_MAX_STATE_SIZE = Number(process.env.EPISODES_RATE_LIMIT_MAX_STATE_SIZE || 5000);
 const YOUTUBE_FETCH_TIMEOUT_MS = Number(process.env.YOUTUBE_FETCH_TIMEOUT_MS || 12000);
 const YOUTUBE_FETCH_RETRIES = Number(process.env.YOUTUBE_FETCH_RETRIES || 2);
 const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || "";
@@ -27,7 +26,6 @@ let episodesCache = {
   fetchedAt: 0,
   version: CACHE_SCHEMA_VERSION
 };
-const ipRateState = new Map();
 let redisClient = null;
 
 // ユーザー指定: 抽出対象はこの名前だけ
@@ -92,7 +90,7 @@ export default async function handler(request, response) {
 
   if (!forceRefresh) {
     const clientIp = getClientIp(request);
-    const rateState = checkRateLimit(clientIp);
+    const rateState = await checkRateLimit(clientIp);
     if (rateState.limited) {
       response.setHeader("Retry-After", String(rateState.retryAfterSeconds));
       return response.status(429).json({ error: "Too Many Requests" });
@@ -325,49 +323,30 @@ function getClientIp(request) {
   return sanitizeIp(request.socket?.remoteAddress || "unknown");
 }
 
-function checkRateLimit(clientIp) {
-  cleanupRateLimitMap();
-
-  const now = Date.now();
-  const state = ipRateState.get(clientIp);
-  if (!state || now - state.windowStart > RATE_LIMIT_WINDOW_MS) {
-    ipRateState.set(clientIp, { windowStart: now, count: 1, updatedAt: now });
+async function checkRateLimit(clientIp) {
+  const redis = getRedisClient();
+  if (!redis) {
     return { limited: false, retryAfterSeconds: 0 };
   }
 
-  state.count += 1;
-  state.updatedAt = now;
-  ipRateState.set(clientIp, state);
-  if (state.count > RATE_LIMIT_MAX_REQUESTS) {
-    const elapsedMs = now - state.windowStart;
-    const retryAfterSeconds = Math.max(1, Math.ceil((RATE_LIMIT_WINDOW_MS - elapsedMs) / 1000));
-    return { limited: true, retryAfterSeconds };
-  }
+  const windowIndex = Math.floor(Date.now() / RATE_LIMIT_WINDOW_MS);
+  const key = `ratelimit:${clientIp}:${windowIndex}`;
+  const ttlSec = Math.ceil((RATE_LIMIT_WINDOW_MS * 2) / 1000);
 
-  return { limited: false, retryAfterSeconds: 0 };
-}
-
-function cleanupRateLimitMap() {
-  if (ipRateState.size < RATE_LIMIT_MAX_STATE_SIZE) {
-    return;
-  }
-
-  const expireBefore = Date.now() - RATE_LIMIT_WINDOW_MS * 2;
-  for (const [ip, state] of ipRateState.entries()) {
-    if (state.updatedAt < expireBefore) {
-      ipRateState.delete(ip);
+  try {
+    const count = await redis.incr(key);
+    if (count === 1) {
+      await redis.expire(key, ttlSec);
     }
-  }
-
-  if (ipRateState.size < RATE_LIMIT_MAX_STATE_SIZE) {
-    return;
-  }
-
-  // メモリ逼迫を防ぐため、古い順に間引く
-  const entries = [...ipRateState.entries()].sort((a, b) => a[1].updatedAt - b[1].updatedAt);
-  const removeCount = Math.ceil(entries.length * 0.25);
-  for (let i = 0; i < removeCount; i += 1) {
-    ipRateState.delete(entries[i][0]);
+    if (count > RATE_LIMIT_MAX_REQUESTS) {
+      const windowEndMs = (windowIndex + 1) * RATE_LIMIT_WINDOW_MS;
+      const retryAfterSeconds = Math.max(1, Math.ceil((windowEndMs - Date.now()) / 1000));
+      return { limited: true, retryAfterSeconds };
+    }
+    return { limited: false, retryAfterSeconds: 0 };
+  } catch (error) {
+    console.error("Rate limit check failed:", error);
+    return { limited: false, retryAfterSeconds: 0 };
   }
 }
 
