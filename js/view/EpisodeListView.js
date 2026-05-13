@@ -137,6 +137,17 @@ export function renderEpisodeList(
   episodeListEl.querySelectorAll(".memo-textarea").forEach((textarea) => {
     const videoId = textarea.closest(".memo-edit-wrap")?.dataset.videoId;
     if (!videoId) return;
+    const counter = textarea.closest(".memo-edit-wrap")?.querySelector(".memo-char-count");
+
+    textarea.addEventListener("input", () => {
+      // 3行を超えたら改行を除去して制限
+      const lines = textarea.value.split("\n");
+      if (lines.length > 3) {
+        textarea.value = lines.slice(0, 3).join("\n");
+      }
+      if (counter) counter.textContent = `${textarea.value.length} / 80`;
+    });
+
     textarea.addEventListener("blur", () => {
       onMemoSave(videoId, textarea.value);
       applyMemoToDOM(videoId, textarea.value);
@@ -205,8 +216,9 @@ function buildEpisodeItemHtml(episode, isAndMode, favorites, watched, hitMap, me
     : "";
   const memoEditHtml = videoId
     ? `<div class="memo-edit-wrap hidden" data-video-id="${videoId}">
-        <textarea class="memo-textarea" rows="3" placeholder="メモを入力…">${escapeHtml(memoText)}</textarea>
+        <textarea class="memo-textarea" rows="3" maxlength="80" placeholder="メモを入力…">${escapeHtml(memoText)}</textarea>
         <div class="memo-actions">
+          <span class="memo-char-count">${memoText.length} / 80</span>
           <button type="button" class="memo-confirm-button" data-video-id="${videoId}">確定</button>
         </div>
       </div>`

@@ -710,7 +710,16 @@ h2 {
 .memo-actions {
   display: flex;
   justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
   margin-top: 6px;
+}
+
+.memo-char-count {
+  font-size: 0.78rem;
+  color: var(--muted);
+  opacity: 0.6;
+  margin-right: auto;
 }
 
 .memo-confirm-button {

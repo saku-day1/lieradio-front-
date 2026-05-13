@@ -343,6 +343,10 @@ export default class AppController {
 
   _handleShare() {
     const url = location.href;
+    if (navigator.share) {
+      navigator.share({ url }).catch(() => {});
+      return;
+    }
     if (navigator.clipboard) {
       navigator.clipboard.writeText(url).then(() => {
         const orig = this.shareButton.textContent;
@@ -945,7 +949,7 @@ export default class AppController {
   _updateMemoFilterButton() {
     if (!this.memoFilterButton) return;
     this.memoFilterButton.classList.toggle("is-active", this.isMemoFilterActive);
-    this.memoFilterButton.textContent = this.isMemoFilterActive ? "📝 メモあり 表示中" : "📝 メモあり";
+    this.memoFilterButton.textContent = this.isMemoFilterActive ? "📝 ひとこと 表示中" : "📝 ひとこと";
   }
 
   _resetDiscoveryFilters() {
