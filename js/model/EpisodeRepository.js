@@ -18,6 +18,13 @@ export function isPublicRecordingTitle(title) {
   return /公開録音|公録/.test(title);
 }
 
+/** タイトルまたは manualMeta の publicRecordingNote タグで公開録音回を判定する */
+export function isPublicRecording(episode) {
+  if (isPublicRecordingTitle(episode?.title || "")) return true;
+  const tags = episode?.manualMeta?.tags ?? [];
+  return tags.some((t) => t.type === "publicRecordingNote");
+}
+
 export function isCompilationTitle(title) {
   return /総集編/.test(String(title || ""));
 }

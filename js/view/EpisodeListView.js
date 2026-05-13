@@ -11,7 +11,7 @@ import {
   getAllCastMembers,
   extractYoutubeVideoId,
   isCompilationTitle,
-  isPublicRecordingTitle,
+  isPublicRecording,
   isOtherVideoTitle
 } from "../model/EpisodeRepository.js";
 import { UNIT_FILTERS, CAST_COLOR_MAP } from "../constants.js";
@@ -166,7 +166,7 @@ export function renderEpisodeList(
 function buildEpisodeItemHtml(episode, isAndMode, favorites, watched, hitMap, memos = new Map()) {
   const castMembers = getAllCastMembers(episode);
   const displayedNumber = episode.broadcastNumber ?? episode.episodeNumber;
-  const titleText = isAndMode ? episode.title : formatEpisodeHeading(displayedNumber, episode.title);
+  const titleText = isAndMode ? episode.title : formatEpisodeHeading(displayedNumber, episode);
 
   const videoId = extractYoutubeVideoId(episode.youtubeUrl);
   const thumbUrl = getThumbnailUrl(videoId);
@@ -308,13 +308,13 @@ function buildUnitBadgesHtml(castMembers) {
     .join("");
 }
 
-function formatEpisodeHeading(displayedNumber, rawTitle) {
-  const title = String(rawTitle || "").trim();
+function formatEpisodeHeading(displayedNumber, episode) {
+  const title = String(episode?.title || "").trim();
   if (!title) {
     return `第${displayedNumber}回`;
   }
 
-  if (isPublicRecordingTitle(title) || isOtherVideoTitle(title)) {
+  if (isPublicRecording(episode) || isOtherVideoTitle(title)) {
     return title;
   }
 
