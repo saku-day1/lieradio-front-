@@ -1,9 +1,13 @@
 {
   "scripts": {
     "verify-absence": "node scripts/verify-absence.mjs",
-    "import-episode-meta": "node scripts/import-episode-meta.mjs"
+    "import-episode-meta": "node scripts/import-episode-meta.mjs",
+    "generate-ogp": "node scripts/generate-ogp.mjs"
   },
   "dependencies": {
     "@upstash/redis": "^1.38.0"
+  },
+  "devDependencies": {
+    "canvas": "^3.2.3"
   }
 }
