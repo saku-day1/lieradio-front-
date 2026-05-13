@@ -38,6 +38,9 @@ export const UNIT_FILTERS = [
   { key: "team-kodomo", label: "チームこども", color: "#ef4444", members: ["伊達さゆり", "Liyuu", "鈴原希実", "絵森彩"] },
   { key: "team-sports", label: "チームスポーツ", color: "#3b82f6", members: ["岬なこ", "ペイトン尚未", "薮島朱音", "結那"] },
   { key: "team-midori", label: "チームみどり", color: "#22c55e", members: ["青山なぎさ", "大熊和奏", "坂倉花"] },
+  { key: "amatou",      label: "あまとう",     color: "#ff7eb6", members: ["Liyuu", "岬なこ", "鈴原希実", "坂倉花"] },
+  { key: "bububuubu",   label: "BuBuBuBu♡",  color: "#3b82f6", members: ["伊達さゆり", "薮島朱音", "大熊和奏", "結那"] },
+  { key: "migidac",     label: "右だC",        color: "#facc15", members: ["ペイトン尚未", "青山なぎさ", "絵森彩"] },
   { key: "yuisaku",     label: "ゆいさく",     color: "#ff7eb6", members: ["結那", "坂倉花"] },
   { key: "sunnypassion",label: "Sunny Passion", color: "#f59e0b", members: ["吉武千颯", "結木ゆな"] },
   { key: "nijigasaki",  label: "虹ヶ咲",       color: "#fde047", members: ["相良茉優", "田中ちえ美"] }
