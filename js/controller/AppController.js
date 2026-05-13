@@ -121,6 +121,7 @@ export default class AppController {
     this.exportDataButton      = document.getElementById("exportDataButton");
     this.importDataInput       = document.getElementById("importDataInput");
     this.shareButton           = document.getElementById("shareButton");
+    this.shareToast            = document.getElementById("shareToast");
 
     this.songRankingSection       = document.getElementById("songRankingSection");
     this.songRankingList          = document.getElementById("songRankingList");
@@ -348,14 +349,20 @@ export default class AppController {
       return;
     }
     if (navigator.clipboard) {
-      navigator.clipboard.writeText(url).then(() => {
-        const orig = this.shareButton.textContent;
-        this.shareButton.textContent = "✓ コピーしました";
-        setTimeout(() => {
-          if (this.shareButton) this.shareButton.textContent = orig;
-        }, 2000);
-      });
+      navigator.clipboard.writeText(url).then(() => this._showShareToast());
     }
+  }
+
+  _showShareToast() {
+    const toast = this.shareToast;
+    if (!toast) return;
+    toast.classList.remove("hidden");
+    requestAnimationFrame(() => toast.classList.add("is-visible"));
+    clearTimeout(this._toastTimer);
+    this._toastTimer = setTimeout(() => {
+      toast.classList.remove("is-visible");
+      setTimeout(() => toast.classList.add("hidden"), 200);
+    }, 2200);
   }
 
   _handleExport() {
