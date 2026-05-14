@@ -5,11 +5,9 @@
  */
 import fs from "fs";
 import path from "path";
-import { fileURLToPath } from "url";
 import { Redis } from "@upstash/redis";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const FALLBACK_META_PATH = path.join(__dirname, "..", "data", "episodeMeta.json");
+const FALLBACK_META_PATH = path.join(process.cwd(), "data", "episodeMeta.json");
 
 const SHEETS_API_BASE = "https://sheets.googleapis.com/v4/spreadsheets";
 const CACHE_KEY = process.env.EPISODE_META_CACHE_KEY || "episode_meta_cache_v1";
