@@ -62,10 +62,18 @@ export default async function handler(request, response) {
   } catch (error) {
     console.error("[episode-meta] fetch error:", error);
 
-    // スタールキャッシュがあれば返す
+    // インメモリキャッシュがあれば返す
     if (inMemory.data) {
       response.setHeader("Warning", "110 - Response is stale");
       return response.status(200).json(inMemory.data);
+    }
+
+    // Redis のキャッシュにフォールバック（force refresh 失敗時など）
+    const redisStale = await readRedisCache();
+    if (redisStale) {
+      inMemory = { data: redisStale, fetchedAt: Date.now() };
+      response.setHeader("Warning", "110 - Response is stale");
+      return response.status(200).json(redisStale);
     }
 
     return response.status(500).json({ error: "Failed to load episode meta." });
