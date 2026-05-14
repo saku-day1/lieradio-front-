@@ -64,7 +64,15 @@ export default async function handler(request, response) {
 
     // force refresh 時はキャッシュに頼らず失敗を返す（GitHub Actions が検知できるように）
     if (forceRefresh) {
-      return response.status(500).json({ error: String(error.message) });
+      const apiKey = process.env.GOOGLE_SHEETS_API_KEY;
+      const spreadsheetId = process.env.GOOGLE_SHEETS_SPREADSHEET_ID;
+      return response.status(500).json({
+        error: String(error.message),
+        env: {
+          hasApiKey: Boolean(apiKey),
+          hasSpreadsheetId: Boolean(spreadsheetId),
+        },
+      });
     }
 
     // 通常アクセス時: インメモリキャッシュがあれば返す

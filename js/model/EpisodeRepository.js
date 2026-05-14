@@ -76,29 +76,35 @@ export function getAllCastMembers(episode) {
 }
 
 /**
- * メタ情報を /api/episode-meta から取得する。
- * 失敗時は ./data/episodeMeta.json にフォールバックする。
+ * メタ情報を /api/episode-meta と ./data/episodeMeta.json の両方から取得してマージする。
+ * videoId が一致する場合は API データ優先。JSON はキャッシュが古い場合の補完として使用する。
  */
 async function fetchEpisodeManualMetaOnce() {
-  try {
-    const response = await fetch("/api/episode-meta");
-    if (response.ok) {
-      return response.json();
-    }
-  } catch (_error) {
-    // フォールバックへ
-  }
+  const [apiResult, jsonResult] = await Promise.allSettled([
+    (async () => {
+      const res = await fetch("/api/episode-meta");
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return res.json();
+    })(),
+    (async () => {
+      const res = await fetch("./data/episodeMeta.json");
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return res.json();
+    })(),
+  ]);
 
-  try {
-    const response = await fetch("./data/episodeMeta.json");
-    if (response.ok) {
-      return response.json();
-    }
-  } catch (_error) {
-    // no-op
-  }
+  const apiData = apiResult.status === "fulfilled" && Array.isArray(apiResult.value) ? apiResult.value : [];
+  const jsonData = jsonResult.status === "fulfilled" && Array.isArray(jsonResult.value) ? jsonResult.value : [];
 
-  return [];
+  // JSON をベースに API データで上書き（API が存在する videoId は API を優先）
+  const map = new Map();
+  for (const r of jsonData) {
+    if (typeof r?.videoId === "string" && r.videoId) map.set(r.videoId, r);
+  }
+  for (const r of apiData) {
+    if (typeof r?.videoId === "string" && r.videoId) map.set(r.videoId, r);
+  }
+  return [...map.values()];
 }
 
 /**
