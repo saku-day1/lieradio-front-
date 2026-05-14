@@ -149,7 +149,12 @@ async function fetchSheetRows(apiKey, spreadsheetId, gid) {
   return data.values ?? [];
 }
 
-function readFallbackVideoIdMap() {
+/**
+ * episodeMeta.json から 2 種類のデータを返す。
+ *   numericMap      : broadcastNumber(整数) → videoId （正規回の videoId 解決用）
+ *   regularVideoIds : 正規回の videoId 一覧（Sheet の URL ズレ検出用）
+ */
+function readFallbackData() {
   const candidates = [
     FALLBACK_META_PATH,
     "/var/task/data/episodeMeta.json",
@@ -160,21 +165,23 @@ function readFallbackVideoIdMap() {
     try {
       const raw = fs.readFileSync(filePath, "utf8");
       const records = JSON.parse(raw);
-      const map = new Map();
+      const numericMap = new Map();
+      const regularVideoIds = new Set();
       for (const r of records) {
-        if (Number.isFinite(r.broadcastNumber) && typeof r.videoId === "string" && r.videoId) {
-          map.set(r.broadcastNumber, r.videoId);
+        if (Number.isFinite(r.broadcastNumber) && r.broadcastNumber >= 1 && typeof r.videoId === "string" && r.videoId) {
+          numericMap.set(r.broadcastNumber, r.videoId);
+          regularVideoIds.add(r.videoId);
         }
       }
-      console.log(`[episode-meta] episodeMeta.json を読み込みました: ${filePath} (${map.size} 件)`);
-      return map;
+      console.log(`[episode-meta] episodeMeta.json を読み込みました: ${filePath} (${numericMap.size} 件)`);
+      return { numericMap, regularVideoIds };
     } catch (_) {
       // 次の候補へ
     }
   }
 
   console.warn("[episode-meta] episodeMeta.json が見つかりませんでした。videoId 補完をスキップします。");
-  return new Map();
+  return { numericMap: new Map(), regularVideoIds: new Set() };
 }
 
 function processRows(rows) {
@@ -186,7 +193,7 @@ function processRows(rows) {
     throw new Error(`「回」列が見つかりません。ヘッダー: ${header.join(", ")}`);
   }
 
-  const fallbackVideoIdMap = readFallbackVideoIdMap();
+  const { numericMap, regularVideoIds } = readFallbackData();
   const out = [];
 
   for (let ri = 1; ri < rows.length; ri++) {
@@ -198,21 +205,21 @@ function processRows(rows) {
     const num = parseBroadcastNumber(get(colNum));
     const hasValidNum = Number.isFinite(num) && num >= 1;
 
-    // videoId を解決する
-    // 整数回番号がある場合は episodeMeta.json の videoId を正とし、Sheet の URL 列は無視する
-    // （Sheet への貼り間違いによるズレを自動吸収するため）
-    // 新規エピソードで episodeMeta.json に未登録の場合のみ Sheet の URL を使う
     let videoId = "";
     if (hasValidNum) {
-      videoId = fallbackVideoIdMap.get(num) ?? "";
+      // 正規回: episodeMeta.json を正とする。未登録の新回のみ Sheet の URL を使う
+      videoId = numericMap.get(num) ?? "";
       if (!videoId && colVideoId !== -1) {
         const raw = extractVideoId(get(colVideoId)) || get(colVideoId);
         if (/^[A-Za-z0-9_-]{11}$/.test(raw)) videoId = raw;
       }
     } else if (colVideoId !== -1) {
-      // 非整数回番号（公開録音等）は Sheet の URL を使う
+      // 非整数回番号（公開録音等）: Sheet の URL を使うが、
+      // それが正規回の videoId だった場合は URL がズレている → スキップ
       const raw = extractVideoId(get(colVideoId)) || get(colVideoId);
-      if (/^[A-Za-z0-9_-]{11}$/.test(raw)) videoId = raw;
+      if (/^[A-Za-z0-9_-]{11}$/.test(raw) && !regularVideoIds.has(raw)) {
+        videoId = raw;
+      }
     }
 
     // videoId も broadcastNumber もない行はスキップ
