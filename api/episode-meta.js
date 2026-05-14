@@ -195,17 +195,25 @@ function processRows(rows) {
 
     const get = (i) => String(row[i] ?? "").trim();
 
-    // videoId を先に取り出す（公開録音回など回番号が非整数の行もスキップしないため）
-    let videoId = "";
-    if (colVideoId !== -1) {
-      videoId = extractVideoId(get(colVideoId)) || get(colVideoId);
-      if (!/^[A-Za-z0-9_-]{11}$/.test(videoId)) videoId = "";
-    }
-
     const num = parseBroadcastNumber(get(colNum));
     const hasValidNum = Number.isFinite(num) && num >= 1;
 
-    if (!videoId && hasValidNum) videoId = fallbackVideoIdMap.get(num) ?? "";
+    // videoId を解決する
+    // 整数回番号がある場合は episodeMeta.json の videoId を正とし、Sheet の URL 列は無視する
+    // （Sheet への貼り間違いによるズレを自動吸収するため）
+    // 新規エピソードで episodeMeta.json に未登録の場合のみ Sheet の URL を使う
+    let videoId = "";
+    if (hasValidNum) {
+      videoId = fallbackVideoIdMap.get(num) ?? "";
+      if (!videoId && colVideoId !== -1) {
+        const raw = extractVideoId(get(colVideoId)) || get(colVideoId);
+        if (/^[A-Za-z0-9_-]{11}$/.test(raw)) videoId = raw;
+      }
+    } else if (colVideoId !== -1) {
+      // 非整数回番号（公開録音等）は Sheet の URL を使う
+      const raw = extractVideoId(get(colVideoId)) || get(colVideoId);
+      if (/^[A-Za-z0-9_-]{11}$/.test(raw)) videoId = raw;
+    }
 
     // videoId も broadcastNumber もない行はスキップ
     if (!videoId && !hasValidNum) continue;
