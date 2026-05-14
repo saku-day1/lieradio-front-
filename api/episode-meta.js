@@ -62,13 +62,18 @@ export default async function handler(request, response) {
   } catch (error) {
     console.error("[episode-meta] fetch error:", error);
 
-    // インメモリキャッシュがあれば返す
+    // force refresh 時はキャッシュに頼らず失敗を返す（GitHub Actions が検知できるように）
+    if (forceRefresh) {
+      return response.status(500).json({ error: String(error.message) });
+    }
+
+    // 通常アクセス時: インメモリキャッシュがあれば返す
     if (inMemory.data) {
       response.setHeader("Warning", "110 - Response is stale");
       return response.status(200).json(inMemory.data);
     }
 
-    // Redis のキャッシュにフォールバック（force refresh 失敗時など）
+    // Redis のキャッシュにフォールバック
     const redisStale = await readRedisCache();
     if (redisStale) {
       inMemory = { data: redisStale, fetchedAt: Date.now() };
