@@ -6,6 +6,11 @@
       "schedule": "0 0 * * *"
     }
   ],
+  "functions": {
+    "api/episode-meta.js": {
+      "includeFiles": "data/episodeMeta.json"
+    }
+  },
   "headers": [
     {
       "source": "/((?!api/).*)",
