@@ -8,6 +8,8 @@ on:
         required: false
         default: "手動更新"
 
+permissions: {}
+
 jobs:
   refresh:
     name: キャッシュをクリアして Google Sheets から再取得
