@@ -150,9 +150,8 @@ async function fetchSheetRows(apiKey, spreadsheetId, gid) {
 }
 
 /**
- * episodeMeta.json から 2 種類のデータを返す。
- *   numericMap      : broadcastNumber(整数) → videoId （正規回の videoId 解決用）
- *   regularVideoIds : 正規回の videoId 一覧（Sheet の URL ズレ検出用）
+ * episodeMeta.json から broadcastNumber → videoId のマップを返す。
+ * Sheets の videoId 列が空の行の補完にのみ使用する。
  */
 function readFallbackData() {
   const candidates = [
@@ -166,22 +165,20 @@ function readFallbackData() {
       const raw = fs.readFileSync(filePath, "utf8");
       const records = JSON.parse(raw);
       const numericMap = new Map();
-      const regularVideoIds = new Set();
       for (const r of records) {
         if (Number.isFinite(r.broadcastNumber) && r.broadcastNumber >= 1 && typeof r.videoId === "string" && r.videoId) {
           numericMap.set(r.broadcastNumber, r.videoId);
-          regularVideoIds.add(r.videoId);
         }
       }
       console.log(`[episode-meta] episodeMeta.json を読み込みました: ${filePath} (${numericMap.size} 件)`);
-      return { numericMap, regularVideoIds };
+      return numericMap;
     } catch (_) {
       // 次の候補へ
     }
   }
 
   console.warn("[episode-meta] episodeMeta.json が見つかりませんでした。videoId 補完をスキップします。");
-  return { numericMap: new Map(), regularVideoIds: new Set() };
+  return new Map();
 }
 
 function processRows(rows) {
@@ -193,7 +190,7 @@ function processRows(rows) {
     throw new Error(`「回」列が見つかりません。ヘッダー: ${header.join(", ")}`);
   }
 
-  const { numericMap, regularVideoIds } = readFallbackData();
+  const numericMap = readFallbackData();
   const out = [];
 
   for (let ri = 1; ri < rows.length; ri++) {
@@ -205,21 +202,15 @@ function processRows(rows) {
     const num = parseBroadcastNumber(get(colNum));
     const hasValidNum = Number.isFinite(num) && num >= 1;
 
+    // Sheets の videoId 列を主キーとして使う。
+    // 空の場合のみ episodeMeta.json の numericMap で補完する。
     let videoId = "";
-    if (hasValidNum) {
-      // 正規回: episodeMeta.json を正とする。未登録の新回のみ Sheet の URL を使う
-      videoId = numericMap.get(num) ?? "";
-      if (!videoId && colVideoId !== -1) {
-        const raw = extractVideoId(get(colVideoId)) || get(colVideoId);
-        if (/^[A-Za-z0-9_-]{11}$/.test(raw)) videoId = raw;
-      }
-    } else if (colVideoId !== -1) {
-      // 非整数回番号（公開録音等）: Sheet の URL を使うが、
-      // それが正規回の videoId だった場合は URL がズレている → スキップ
+    if (colVideoId !== -1) {
       const raw = extractVideoId(get(colVideoId)) || get(colVideoId);
-      if (/^[A-Za-z0-9_-]{11}$/.test(raw) && !regularVideoIds.has(raw)) {
-        videoId = raw;
-      }
+      if (/^[A-Za-z0-9_-]{11}$/.test(raw)) videoId = raw;
+    }
+    if (!videoId && hasValidNum) {
+      videoId = numericMap.get(num) ?? "";
     }
 
     // videoId も broadcastNumber もない行はスキップ
