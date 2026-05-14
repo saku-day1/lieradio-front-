@@ -76,19 +76,29 @@ export function getAllCastMembers(episode) {
 }
 
 /**
- * メタ情報（Excel 由来など）JSON を読み込む。
- * 開発時のみ存在しない場合がある。
+ * メタ情報を /api/episode-meta から取得する。
+ * 失敗時は ./data/episodeMeta.json にフォールバックする。
  */
 async function fetchEpisodeManualMetaOnce() {
   try {
-    const response = await fetch("./data/episodeMeta.json");
-    if (!response.ok) {
-      return [];
+    const response = await fetch("/api/episode-meta");
+    if (response.ok) {
+      return response.json();
     }
-    return response.json();
   } catch (_error) {
-    return [];
+    // フォールバックへ
   }
+
+  try {
+    const response = await fetch("./data/episodeMeta.json");
+    if (response.ok) {
+      return response.json();
+    }
+  } catch (_error) {
+    // no-op
+  }
+
+  return [];
 }
 
 /**
