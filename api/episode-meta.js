@@ -118,19 +118,31 @@ async function fetchSheetRows(apiKey, spreadsheetId, gid) {
 }
 
 function readFallbackVideoIdMap() {
-  try {
-    const raw = fs.readFileSync(FALLBACK_META_PATH, "utf8");
-    const records = JSON.parse(raw);
-    const map = new Map();
-    for (const r of records) {
-      if (Number.isFinite(r.broadcastNumber) && typeof r.videoId === "string" && r.videoId) {
-        map.set(r.broadcastNumber, r.videoId);
+  const candidates = [
+    FALLBACK_META_PATH,
+    "/var/task/data/episodeMeta.json",
+    path.resolve("data", "episodeMeta.json"),
+  ];
+
+  for (const filePath of candidates) {
+    try {
+      const raw = fs.readFileSync(filePath, "utf8");
+      const records = JSON.parse(raw);
+      const map = new Map();
+      for (const r of records) {
+        if (Number.isFinite(r.broadcastNumber) && typeof r.videoId === "string" && r.videoId) {
+          map.set(r.broadcastNumber, r.videoId);
+        }
       }
+      console.log(`[episode-meta] episodeMeta.json を読み込みました: ${filePath} (${map.size} 件)`);
+      return map;
+    } catch (_) {
+      // 次の候補へ
     }
-    return map;
-  } catch (_) {
-    return new Map();
   }
+
+  console.warn("[episode-meta] episodeMeta.json が見つかりませんでした。videoId 補完をスキップします。");
+  return new Map();
 }
 
 function processRows(rows) {
