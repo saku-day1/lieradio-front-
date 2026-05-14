@@ -463,7 +463,7 @@ function setResponseHeaders(request, response) {
     response.setHeader("Access-Control-Allow-Headers", "Content-Type");
   }
 
-  response.setHeader("Cache-Control", "public, max-age=60, s-maxage=600, stale-while-revalidate=3600");
+  response.setHeader("Cache-Control", "no-store");
   response.setHeader("Content-Type", "application/json; charset=utf-8");
   response.setHeader("X-Content-Type-Options", "nosniff");
   response.setHeader("X-Frame-Options", "DENY");
