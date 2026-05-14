@@ -282,7 +282,6 @@ function processRows(rows) {
     };
 
     const entry = {
-      ...(hasValidNum ? { broadcastNumber: num } : {}),
       corners,
       lunchTimeRequestSong: lunch || "",
       tags,
