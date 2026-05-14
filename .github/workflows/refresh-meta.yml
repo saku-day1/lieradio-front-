@@ -1,0 +1,29 @@
+name: メタ情報を今すぐ反映
+
+on:
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: "実行理由（任意）"
+        required: false
+        default: "手動更新"
+
+jobs:
+  refresh:
+    name: キャッシュをクリアして Google Sheets から再取得
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: /api/episode-meta のキャッシュを破棄
+        run: |
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+            -X GET \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            "${{ secrets.VERCEL_APP_URL }}/api/episode-meta?refresh=1")
+          echo "HTTP status: $STATUS"
+          if [ "$STATUS" != "200" ]; then
+            echo "::error::キャッシュ更新に失敗しました（HTTP $STATUS）"
+            exit 1
+          fi
+          echo "キャッシュを正常に更新しました。"
