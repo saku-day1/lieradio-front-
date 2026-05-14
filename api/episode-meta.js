@@ -90,8 +90,12 @@ async function fetchAndProcess() {
   const gid = process.env.GOOGLE_SHEETS_SHEET_GID || "";
 
   if (!apiKey || !spreadsheetId) {
+    console.error(
+      `[episode-meta] 環境変数未設定: GOOGLE_SHEETS_API_KEY=${apiKey ? "set" : "MISSING"}, GOOGLE_SHEETS_SPREADSHEET_ID=${spreadsheetId ? "set" : "MISSING"}`
+    );
     throw new Error("GOOGLE_SHEETS_API_KEY / GOOGLE_SHEETS_SPREADSHEET_ID が未設定です。");
   }
+  console.log(`[episode-meta] Sheets fetch start: spreadsheetId=${spreadsheetId}, gid=${gid || "(none)"}`);
 
   const rows = await fetchSheetRows(apiKey, spreadsheetId, gid);
   if (!rows || rows.length === 0) {
@@ -105,7 +109,8 @@ async function fetchSheetRows(apiKey, spreadsheetId, gid) {
   const metaUrl = `${SHEETS_API_BASE}/${spreadsheetId}?key=${encodeURIComponent(apiKey)}`;
   const metaRes = await fetch(metaUrl);
   if (!metaRes.ok) {
-    throw new Error(`スプレッドシート情報取得失敗: ${metaRes.status}`);
+    const body = await metaRes.text().catch(() => "(body read failed)");
+    throw new Error(`スプレッドシート情報取得失敗: ${metaRes.status} - ${body}`);
   }
   const meta = await metaRes.json();
 
@@ -119,7 +124,8 @@ async function fetchSheetRows(apiKey, spreadsheetId, gid) {
   const dataUrl = `${SHEETS_API_BASE}/${spreadsheetId}/values/${range}?key=${encodeURIComponent(apiKey)}`;
   const dataRes = await fetch(dataUrl);
   if (!dataRes.ok) {
-    throw new Error(`シートデータ取得失敗: ${dataRes.status}`);
+    const body = await dataRes.text().catch(() => "(body read failed)");
+    throw new Error(`シートデータ取得失敗: ${dataRes.status} - ${body}`);
   }
   const data = await dataRes.json();
   return data.values ?? [];
