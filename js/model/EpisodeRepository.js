@@ -96,13 +96,13 @@ async function fetchEpisodeManualMetaOnce() {
   const apiData = apiResult.status === "fulfilled" && Array.isArray(apiResult.value) ? apiResult.value : [];
   const jsonData = jsonResult.status === "fulfilled" && Array.isArray(jsonResult.value) ? jsonResult.value : [];
 
-  // API データをベースに JSON で上書き（JSON = Excel 由来の正確なデータが優先）
-  // Sheets は JSON 未登録の新規エピソードのみ補完する
+  // JSON をベースに API（Google Sheets）で上書き（Sheets = 最新の正確なデータが優先）
+  // JSON は Sheets 未取得時のフォールバック
   const map = new Map();
-  for (const r of apiData) {
+  for (const r of jsonData) {
     if (typeof r?.videoId === "string" && r.videoId) map.set(r.videoId, r);
   }
-  for (const r of jsonData) {
+  for (const r of apiData) {
     if (typeof r?.videoId === "string" && r.videoId) map.set(r.videoId, r);
   }
   return [...map.values()];
