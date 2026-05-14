@@ -125,7 +125,7 @@ async function fetchAndProcess() {
 
 async function fetchSheetRows(apiKey, spreadsheetId, gid) {
   const metaUrl = `${SHEETS_API_BASE}/${spreadsheetId}?key=${encodeURIComponent(apiKey)}`;
-  const metaRes = await fetch(metaUrl);
+  const metaRes = await fetch(metaUrl, { cache: "no-store" });
   if (!metaRes.ok) {
     const body = await metaRes.text().catch(() => "(body read failed)");
     throw new Error(`スプレッドシート情報取得失敗: ${metaRes.status} - ${body}`);
@@ -140,7 +140,7 @@ async function fetchSheetRows(apiKey, spreadsheetId, gid) {
 
   const range = encodeURIComponent(sheetName);
   const dataUrl = `${SHEETS_API_BASE}/${spreadsheetId}/values/${range}?key=${encodeURIComponent(apiKey)}`;
-  const dataRes = await fetch(dataUrl);
+  const dataRes = await fetch(dataUrl, { cache: "no-store" });
   if (!dataRes.ok) {
     const body = await dataRes.text().catch(() => "(body read failed)");
     throw new Error(`シートデータ取得失敗: ${dataRes.status} - ${body}`);
