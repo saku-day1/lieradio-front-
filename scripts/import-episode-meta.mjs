@@ -168,17 +168,20 @@ async function main() {
 
     const get = (i) => String(row[i] ?? "").trim();
 
-    const num = parseBroadcastNumber(get(colNum));
-    if (!Number.isFinite(num) || num < 1) continue;
-
-    // videoId: スプレッドシートの列 → URLからID抽出 → 既存JSONから引き継ぎ
+    // videoId を先に取り出す（公開録音回など回番号が非整数の行もスキップしないため）
     let videoId = "";
     if (colVideoId !== -1) {
       videoId = extractVideoId(get(colVideoId)) || get(colVideoId);
-      // 11文字のIDが直接入っている場合もそのまま使う
       if (!/^[A-Za-z0-9_-]{11}$/.test(videoId)) videoId = "";
     }
-    if (!videoId) videoId = existingVideoIdMap.get(num) ?? "";
+
+    const num = parseBroadcastNumber(get(colNum));
+    const hasValidNum = Number.isFinite(num) && num >= 1;
+
+    if (!videoId && hasValidNum) videoId = existingVideoIdMap.get(num) ?? "";
+
+    // videoId も broadcastNumber もない行はスキップ
+    if (!videoId && !hasValidNum) continue;
 
     // 列オフセット（videoId列が先頭に追加された分をずらす）
     const o = colNum - 1; // 「回」の手前までの列数（videoId列分）
@@ -250,7 +253,7 @@ async function main() {
 
     const entry = {
       videoId: videoId || undefined,
-      broadcastNumber: num,
+      ...(hasValidNum ? { broadcastNumber: num } : {}),
       excelRow: ri + 1,
       corners,
       lunchTimeRequestSong: lunch || "",
