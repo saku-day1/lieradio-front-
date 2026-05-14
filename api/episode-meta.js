@@ -41,6 +41,7 @@ export default async function handler(request, response) {
 
   // インメモリキャッシュが有効なら即返す
   if (!forceRefresh && inMemory.data && Date.now() - inMemory.fetchedAt < IN_MEMORY_TTL_MS) {
+    setDebugHeaders(response, inMemory.data, "memory");
     return response.status(200).json(inMemory.data);
   }
 
@@ -49,6 +50,7 @@ export default async function handler(request, response) {
     const cached = await readRedisCache();
     if (cached) {
       inMemory = { data: cached, fetchedAt: Date.now() };
+      setDebugHeaders(response, cached, "redis");
       return response.status(200).json(cached);
     }
   }
@@ -58,6 +60,7 @@ export default async function handler(request, response) {
     const data = await fetchAndProcess();
     inMemory = { data, fetchedAt: Date.now() };
     await writeRedisCache(data);
+    setDebugHeaders(response, data, "sheets");
     return response.status(200).json(data);
   } catch (error) {
     console.error("[episode-meta] fetch error:", error);
@@ -78,6 +81,7 @@ export default async function handler(request, response) {
     // 通常アクセス時: インメモリキャッシュがあれば返す
     if (inMemory.data) {
       response.setHeader("Warning", "110 - Response is stale");
+      setDebugHeaders(response, inMemory.data, "memory-stale");
       return response.status(200).json(inMemory.data);
     }
 
@@ -86,6 +90,7 @@ export default async function handler(request, response) {
     if (redisStale) {
       inMemory = { data: redisStale, fetchedAt: Date.now() };
       response.setHeader("Warning", "110 - Response is stale");
+      setDebugHeaders(response, redisStale, "redis-stale");
       return response.status(200).json(redisStale);
     }
 
@@ -462,4 +467,17 @@ function setResponseHeaders(request, response) {
     "Content-Security-Policy",
     "default-src 'none'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'"
   );
+}
+
+/**
+ * デバッグ用レスポンスヘッダーを付与する。
+ * DevTools の Network タブで確認できる。
+ *   X-Meta-Source  : データの取得元（sheets / redis / memory / redis-stale / memory-stale）
+ *   X-Meta-Count   : レコード件数
+ *   X-Meta-Time    : ヘッダー付与時刻（ISO8601）
+ */
+function setDebugHeaders(response, data, source) {
+  response.setHeader("X-Meta-Source", source);
+  response.setHeader("X-Meta-Count", Array.isArray(data) ? String(data.length) : "0");
+  response.setHeader("X-Meta-Time", new Date().toISOString());
 }
