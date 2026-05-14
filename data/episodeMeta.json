@@ -2433,13 +2433,6 @@
         "priority": 100
       },
       {
-        "name": "公開録音2022第1回",
-        "type": "publicRecordingNote",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 22
-      },
-      {
         "name": "1st",
         "type": "liveImpression",
         "searchable": true,
@@ -2456,7 +2449,7 @@
       "hasEventImpression": false,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
-      "mentionsPublicRecordingInRemark": true,
+      "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
@@ -2479,13 +2472,6 @@
         "priority": 100
       },
       {
-        "name": "公開録音2022第2回",
-        "type": "publicRecordingNote",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 22
-      },
-      {
         "name": "1st",
         "type": "liveImpression",
         "searchable": true,
@@ -2502,7 +2488,7 @@
       "hasEventImpression": false,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
-      "mentionsPublicRecordingInRemark": true,
+      "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
@@ -5087,13 +5073,6 @@
         "searchable": true,
         "visibleInList": true,
         "priority": 100
-      },
-      {
-        "name": "公開録音2023第1回",
-        "type": "publicRecordingNote",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 22
       }
     ],
     "primaryTagsForList": [],
@@ -5105,7 +5084,7 @@
       "hasEventImpression": false,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
-      "mentionsPublicRecordingInRemark": true,
+      "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
@@ -5126,13 +5105,6 @@
         "searchable": true,
         "visibleInList": true,
         "priority": 100
-      },
-      {
-        "name": "公開録音2023第2回",
-        "type": "publicRecordingNote",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 22
       }
     ],
     "primaryTagsForList": [],
@@ -5144,7 +5116,7 @@
       "hasEventImpression": false,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
-      "mentionsPublicRecordingInRemark": true,
+      "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
@@ -7612,13 +7584,6 @@
         "searchable": true,
         "visibleInList": true,
         "priority": 100
-      },
-      {
-        "name": "公開録音2024第1回",
-        "type": "publicRecordingNote",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 22
       }
     ],
     "primaryTagsForList": [],
@@ -7630,15 +7595,16 @@
       "hasEventImpression": false,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
-      "mentionsPublicRecordingInRemark": true,
+      "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-14T15:09:42.457Z"
+    "exportedAt": "2026-05-14T15:09:42.457Z",
+    "broadcastNumber": 170
   },
   {
     "videoId": "QFKhjUGgvB4",
-    "broadcastNumber": 170,
+    "broadcastNumber": 171,
     "excelRow": 172,
     "corners": [
       "リエランチ！"
@@ -7689,13 +7655,6 @@
         "searchable": true,
         "visibleInList": true,
         "priority": 100
-      },
-      {
-        "name": "公開録音2024第2回",
-        "type": "publicRecordingNote",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 22
       }
     ],
     "primaryTagsForList": [],
@@ -7707,15 +7666,16 @@
       "hasEventImpression": false,
       "hasAnimeImpression": false,
       "hasNetaTag": false,
-      "mentionsPublicRecordingInRemark": true,
+      "mentionsPublicRecordingInRemark": false,
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-14T15:09:42.457Z"
+    "exportedAt": "2026-05-14T15:09:42.457Z",
+    "broadcastNumber": 172
   },
   {
     "videoId": "D1RSamj_BSw",
-    "broadcastNumber": 171,
+    "broadcastNumber": 173,
     "excelRow": 174,
     "corners": [
       "GoGo!! リスタート"
@@ -7761,7 +7721,7 @@
   },
   {
     "videoId": "Me9Pdw4HitA",
-    "broadcastNumber": 172,
+    "broadcastNumber": 174,
     "excelRow": 175,
     "corners": [
       "リエランチ！"
@@ -7800,7 +7760,7 @@
   },
   {
     "videoId": "Hgdg05xTHcI",
-    "broadcastNumber": 173,
+    "broadcastNumber": 175,
     "excelRow": 176,
     "corners": [
       "GoGo!! リスタート"
@@ -7846,7 +7806,7 @@
   },
   {
     "videoId": "iudCsp-WRZQ",
-    "broadcastNumber": 174,
+    "broadcastNumber": 176,
     "excelRow": 177,
     "corners": [
       "リエランチ！"
@@ -7899,7 +7859,7 @@
   },
   {
     "videoId": "FKnOPwy5raA",
-    "broadcastNumber": 175,
+    "broadcastNumber": 177,
     "excelRow": 178,
     "corners": [],
     "lunchTimeRequestSong": "トゥ トゥ トゥ！",
@@ -7943,7 +7903,7 @@
   },
   {
     "videoId": "Inef-ITCbm0",
-    "broadcastNumber": 176,
+    "broadcastNumber": 178,
     "excelRow": 179,
     "corners": [
       "リエランチ！"
@@ -7989,7 +7949,7 @@
   },
   {
     "videoId": "z2DXScPL78M",
-    "broadcastNumber": 177,
+    "broadcastNumber": 179,
     "excelRow": 180,
     "corners": [
       "GoGo!! リスタート"
@@ -8049,7 +8009,7 @@
   },
   {
     "videoId": "eHntIK6Q1gg",
-    "broadcastNumber": 178,
+    "broadcastNumber": 180,
     "excelRow": 181,
     "corners": [
       "リエランチ！"
@@ -8088,7 +8048,7 @@
   },
   {
     "videoId": "Rf1TTMOnnTA",
-    "broadcastNumber": 179,
+    "broadcastNumber": 181,
     "excelRow": 182,
     "corners": [],
     "lunchTimeRequestSong": "Jump Into the New World",
@@ -8125,7 +8085,7 @@
   },
   {
     "videoId": "5zZoIcUOCjY",
-    "broadcastNumber": 180,
+    "broadcastNumber": 182,
     "excelRow": 183,
     "corners": [
       "リエランチ！"
@@ -8178,7 +8138,7 @@
   },
   {
     "videoId": "4dScorZFj0w",
-    "broadcastNumber": 181,
+    "broadcastNumber": 183,
     "excelRow": 184,
     "corners": [],
     "lunchTimeRequestSong": "WE WILL!!",
@@ -8215,7 +8175,7 @@
   },
   {
     "videoId": "0zZUZEygS7o",
-    "broadcastNumber": 182,
+    "broadcastNumber": 184,
     "excelRow": 185,
     "corners": [],
     "lunchTimeRequestSong": "プライム・アドベンチャー",
@@ -8252,7 +8212,7 @@
   },
   {
     "videoId": "1Hd4zGGHMtY",
-    "broadcastNumber": 183,
+    "broadcastNumber": 185,
     "excelRow": 186,
     "corners": [],
     "lunchTimeRequestSong": "TO BE CONTINUED",
@@ -8289,7 +8249,7 @@
   },
   {
     "videoId": "UQkhtI55qGA",
-    "broadcastNumber": 184,
+    "broadcastNumber": 186,
     "excelRow": 187,
     "corners": [],
     "lunchTimeRequestSong": "Wish Song",
@@ -8326,7 +8286,7 @@
   },
   {
     "videoId": "iaS001hpmFA",
-    "broadcastNumber": 185,
+    "broadcastNumber": 187,
     "excelRow": 188,
     "corners": [
       "GoGo!! リスタート"
@@ -8372,7 +8332,7 @@
   },
   {
     "videoId": "HpXcY04d1TI",
-    "broadcastNumber": 186,
+    "broadcastNumber": 188,
     "excelRow": 189,
     "corners": [
       "リエランチ！"
@@ -8418,7 +8378,7 @@
   },
   {
     "videoId": "2-H4ybARt9s",
-    "broadcastNumber": 187,
+    "broadcastNumber": 189,
     "excelRow": 190,
     "corners": [],
     "lunchTimeRequestSong": "未来予報ハレルヤ！",
@@ -8469,7 +8429,7 @@
   },
   {
     "videoId": "z7sGBOmUWuE",
-    "broadcastNumber": 188,
+    "broadcastNumber": 190,
     "excelRow": 191,
     "corners": [
       "GoGo!! リスタート"
@@ -8508,7 +8468,7 @@
   },
   {
     "videoId": "h_X42XeeiUw",
-    "broadcastNumber": 189,
+    "broadcastNumber": 191,
     "excelRow": 192,
     "corners": [],
     "lunchTimeRequestSong": "Let's be ONE",
@@ -8538,7 +8498,7 @@
   },
   {
     "videoId": "ZEg9nkfMvXc",
-    "broadcastNumber": 190,
+    "broadcastNumber": 192,
     "excelRow": 193,
     "corners": [
       "ユニット紹介チャレンジ"
@@ -8577,7 +8537,7 @@
   },
   {
     "videoId": "pb00D5eHlAo",
-    "broadcastNumber": 191,
+    "broadcastNumber": 193,
     "excelRow": 194,
     "corners": [],
     "lunchTimeRequestSong": "青春HOPPERS",
@@ -8614,7 +8574,7 @@
   },
   {
     "videoId": "rz9v6mxlnHc",
-    "broadcastNumber": 192,
+    "broadcastNumber": 194,
     "excelRow": 195,
     "corners": [],
     "lunchTimeRequestSong": "Within a Dream",
@@ -8665,7 +8625,7 @@
   },
   {
     "videoId": "N8WEtpMLc7Y",
-    "broadcastNumber": 193,
+    "broadcastNumber": 195,
     "excelRow": 196,
     "corners": [],
     "lunchTimeRequestSong": "Bubble Rise",
@@ -8709,7 +8669,7 @@
   },
   {
     "videoId": "VmYJXTGqs0U",
-    "broadcastNumber": 194,
+    "broadcastNumber": 196,
     "excelRow": 197,
     "corners": [],
     "lunchTimeRequestSong": "Special Color",
@@ -8746,7 +8706,7 @@
   },
   {
     "videoId": "nrg9ktD_zYk",
-    "broadcastNumber": 195,
+    "broadcastNumber": 197,
     "excelRow": 198,
     "corners": [],
     "lunchTimeRequestSong": "いつものピースサイン",
@@ -8783,7 +8743,7 @@
   },
   {
     "videoId": "vn8-gRJZgFs",
-    "broadcastNumber": 196,
+    "broadcastNumber": 198,
     "excelRow": 199,
     "corners": [],
     "lunchTimeRequestSong": "QUESTION99",
@@ -8820,7 +8780,7 @@
   },
   {
     "videoId": "xEP8BIAebQc",
-    "broadcastNumber": 197,
+    "broadcastNumber": 199,
     "excelRow": 200,
     "corners": [],
     "lunchTimeRequestSong": "真っ赤。",
@@ -8864,7 +8824,7 @@
   },
   {
     "videoId": "-zA35FC35jA",
-    "broadcastNumber": 198,
+    "broadcastNumber": 200,
     "excelRow": 201,
     "corners": [],
     "lunchTimeRequestSong": "絶対的LOVER",
@@ -8901,7 +8861,7 @@
   },
   {
     "videoId": "Z2p0DAlCNsw",
-    "broadcastNumber": 199,
+    "broadcastNumber": 201,
     "excelRow": 202,
     "corners": [],
     "lunchTimeRequestSong": "Let's be ONE",
@@ -8938,7 +8898,7 @@
   },
   {
     "videoId": "eUX8Nj5DYU4",
-    "broadcastNumber": 200,
+    "broadcastNumber": 202,
     "excelRow": 203,
     "corners": [],
     "lunchTimeRequestSong": "笑顔のPromise",
@@ -8975,7 +8935,7 @@
   },
   {
     "videoId": "557fMT6a8zQ",
-    "broadcastNumber": 201,
+    "broadcastNumber": 203,
     "excelRow": 204,
     "corners": [],
     "lunchTimeRequestSong": "スーパースター！！",
@@ -9012,7 +8972,7 @@
   },
   {
     "videoId": "fivQr8L35qc",
-    "broadcastNumber": 202,
+    "broadcastNumber": 204,
     "excelRow": 205,
     "corners": [],
     "lunchTimeRequestSong": "笑顔のPromise",
@@ -9049,7 +9009,7 @@
   },
   {
     "videoId": "bm7h34eDe0k",
-    "broadcastNumber": 203,
+    "broadcastNumber": 205,
     "excelRow": 206,
     "corners": [],
     "lunchTimeRequestSong": "Wish Song ～11Ver.～",
@@ -9086,7 +9046,7 @@
   },
   {
     "videoId": "cJ8E0cCen7k",
-    "broadcastNumber": 204,
+    "broadcastNumber": 206,
     "excelRow": 207,
     "corners": [
       "アピール FULL POWER"
@@ -9132,7 +9092,7 @@
   },
   {
     "videoId": "OnqJdqz3UwI",
-    "broadcastNumber": 205,
+    "broadcastNumber": 207,
     "excelRow": 208,
     "corners": [
       "アピール FULL POWER"
@@ -9185,7 +9145,7 @@
   },
   {
     "videoId": "Rd6wfZNRHoY",
-    "broadcastNumber": 206,
+    "broadcastNumber": 208,
     "excelRow": 209,
     "corners": [
       "アピール FULL POWER"
@@ -9224,7 +9184,7 @@
   },
   {
     "videoId": "Vq1aA-qKhX0",
-    "broadcastNumber": 207,
+    "broadcastNumber": 209,
     "excelRow": 210,
     "corners": [
       "アピール FULL POWER"
@@ -9263,7 +9223,7 @@
   },
   {
     "videoId": "k9-MdtOHktA",
-    "broadcastNumber": 208,
+    "broadcastNumber": 210,
     "excelRow": 211,
     "corners": [
       "アピール FULL POWER"
@@ -9309,7 +9269,7 @@
   },
   {
     "videoId": "88kdBoLVkb8",
-    "broadcastNumber": 209,
+    "broadcastNumber": 211,
     "excelRow": 212,
     "corners": [
       "GoGo!! リスタート"
@@ -9355,7 +9315,7 @@
   },
   {
     "videoId": "5oqcI-Pk6ZU",
-    "broadcastNumber": 210,
+    "broadcastNumber": 212,
     "excelRow": 213,
     "corners": [],
     "lunchTimeRequestSong": "Let's be ONE",
@@ -9399,7 +9359,7 @@
   },
   {
     "videoId": "2VPIf99H7L8",
-    "broadcastNumber": 211,
+    "broadcastNumber": 213,
     "excelRow": 214,
     "corners": [],
     "lunchTimeRequestSong": "この街でいまキミと",
@@ -9436,7 +9396,7 @@
   },
   {
     "videoId": "ZzHIVSb2ZLA",
-    "broadcastNumber": 212,
+    "broadcastNumber": 214,
     "excelRow": 215,
     "corners": [
       "リエランチ！"
@@ -9475,7 +9435,7 @@
   },
   {
     "videoId": "eldLLfGon2Q",
-    "broadcastNumber": 213,
+    "broadcastNumber": 215,
     "excelRow": 216,
     "corners": [],
     "lunchTimeRequestSong": "MIRACLE NEW STORY",
@@ -9512,7 +9472,7 @@
   },
   {
     "videoId": "0qlg_OTjf8M",
-    "broadcastNumber": 214,
+    "broadcastNumber": 216,
     "excelRow": 217,
     "corners": [],
     "lunchTimeRequestSong": "始まりは君の空",
@@ -9549,7 +9509,7 @@
   },
   {
     "videoId": "CvFxlYxUHE8",
-    "broadcastNumber": 215,
+    "broadcastNumber": 217,
     "excelRow": 218,
     "corners": [
       "ハンバーグもアグリー！"
@@ -9588,7 +9548,7 @@
   },
   {
     "videoId": "5ci0ZTBy3BE",
-    "broadcastNumber": 216,
+    "broadcastNumber": 218,
     "excelRow": 219,
     "corners": [],
     "lunchTimeRequestSong": "QUESTION99",
@@ -9625,7 +9585,7 @@
   },
   {
     "videoId": "FMTyciEAp9A",
-    "broadcastNumber": 217,
+    "broadcastNumber": 219,
     "excelRow": 220,
     "corners": [
       "ハンバーグもアグリー！"
@@ -9678,7 +9638,7 @@
   },
   {
     "videoId": "eHsupNt2nWQ",
-    "broadcastNumber": 218,
+    "broadcastNumber": 220,
     "excelRow": 221,
     "corners": [],
     "lunchTimeRequestSong": "だから僕らは鳴らすんだ！",
@@ -9708,7 +9668,7 @@
   },
   {
     "videoId": "_QfHhI0jlu4",
-    "broadcastNumber": 219,
+    "broadcastNumber": 221,
     "excelRow": 222,
     "corners": [],
     "lunchTimeRequestSong": "Over Over",
@@ -9745,7 +9705,7 @@
   },
   {
     "videoId": "Ts8Gsjbuzjw",
-    "broadcastNumber": 220,
+    "broadcastNumber": 222,
     "excelRow": 223,
     "corners": [
       "ハンバーグもアグリー！"
@@ -9791,7 +9751,7 @@
   },
   {
     "videoId": "nf_V1XmvDCw",
-    "broadcastNumber": 221,
+    "broadcastNumber": 223,
     "excelRow": 224,
     "corners": [],
     "lunchTimeRequestSong": "Aspire",
@@ -9835,7 +9795,7 @@
   },
   {
     "videoId": "HaBJBrtF8LE",
-    "broadcastNumber": 222,
+    "broadcastNumber": 224,
     "excelRow": 225,
     "corners": [
       "ハンバーグもアグリー！"
@@ -9881,7 +9841,7 @@
   },
   {
     "videoId": "ZAXGJxhDxSU",
-    "broadcastNumber": 223,
+    "broadcastNumber": 225,
     "excelRow": 226,
     "corners": [],
     "lunchTimeRequestSong": "LiLiA",
@@ -9918,7 +9878,7 @@
   },
   {
     "videoId": "yvmDRE5chTo",
-    "broadcastNumber": 224,
+    "broadcastNumber": 226,
     "excelRow": 227,
     "corners": [],
     "lunchTimeRequestSong": "Let's be ONE",
@@ -9948,7 +9908,7 @@
   },
   {
     "videoId": "Yy-WFAhWclw",
-    "broadcastNumber": 225,
+    "broadcastNumber": 227,
     "excelRow": 228,
     "corners": [],
     "lunchTimeRequestSong": "Sky Linker",
@@ -9985,7 +9945,7 @@
   },
   {
     "videoId": "l-77AJ69Qv8",
-    "broadcastNumber": 226,
+    "broadcastNumber": 228,
     "excelRow": 229,
     "corners": [
       "ハンバーグもアグリー！"
@@ -10024,7 +9984,7 @@
   },
   {
     "videoId": "A2eWcJtEkfE",
-    "broadcastNumber": 227,
+    "broadcastNumber": 229,
     "excelRow": 230,
     "corners": [],
     "lunchTimeRequestSong": "Just woo!!",
@@ -10068,7 +10028,7 @@
   },
   {
     "videoId": "gPmQmtEgXPk",
-    "broadcastNumber": 228,
+    "broadcastNumber": 230,
     "excelRow": 231,
     "corners": [],
     "lunchTimeRequestSong": "ファンダメンタル",
@@ -10105,7 +10065,7 @@
   },
   {
     "videoId": "5mjbQzGzRpk",
-    "broadcastNumber": 229,
+    "broadcastNumber": 231,
     "excelRow": 232,
     "corners": [],
     "lunchTimeRequestSong": "ルカ",
@@ -10156,7 +10116,7 @@
   },
   {
     "videoId": "aNMt2SyhzWs",
-    "broadcastNumber": 230,
+    "broadcastNumber": 232,
     "excelRow": 233,
     "corners": [],
     "lunchTimeRequestSong": "オレンジのままで",
@@ -10193,7 +10153,7 @@
   },
   {
     "videoId": "9POX0HBvWjc",
-    "broadcastNumber": 231,
+    "broadcastNumber": 233,
     "excelRow": 234,
     "corners": [],
     "lunchTimeRequestSong": "Rhythm",
@@ -10237,7 +10197,7 @@
   },
   {
     "videoId": "6rxxAt4p9Hc",
-    "broadcastNumber": 232,
+    "broadcastNumber": 234,
     "excelRow": 235,
     "corners": [],
     "lunchTimeRequestSong": "パステルコラージュ",
@@ -10281,7 +10241,7 @@
   },
   {
     "videoId": "4j5FMHH5WrQ",
-    "broadcastNumber": 233,
+    "broadcastNumber": 235,
     "excelRow": 236,
     "corners": [],
     "lunchTimeRequestSong": "結び葉",
@@ -10318,7 +10278,7 @@
   },
   {
     "videoId": "vFqKW0-FEs4",
-    "broadcastNumber": 234,
+    "broadcastNumber": 236,
     "excelRow": 237,
     "corners": [],
     "lunchTimeRequestSong": "ビタミンSUMMER!",
@@ -10355,7 +10315,7 @@
   },
   {
     "videoId": "tiMAtjytmTo",
-    "broadcastNumber": 235,
+    "broadcastNumber": 237,
     "excelRow": 238,
     "corners": [],
     "lunchTimeRequestSong": "Dancing Heart La-Pa-Pa-Pa!",
@@ -10392,7 +10352,7 @@
   },
   {
     "videoId": "cAduEN6unRo",
-    "broadcastNumber": 236,
+    "broadcastNumber": 238,
     "excelRow": 239,
     "corners": [],
     "lunchTimeRequestSong": "愛スクリ～ム！",
@@ -10429,7 +10389,7 @@
   },
   {
     "videoId": "PtwktQQ1Xbk",
-    "broadcastNumber": 237,
+    "broadcastNumber": 239,
     "excelRow": 240,
     "corners": [
       "八木山ベニーランドクイズ"
@@ -10468,7 +10428,7 @@
   },
   {
     "videoId": "_jB3rfpLrNY",
-    "broadcastNumber": 238,
+    "broadcastNumber": 240,
     "excelRow": 241,
     "corners": [
       "ハンバーグもアグリー！"
@@ -10507,7 +10467,7 @@
   },
   {
     "videoId": "UM5B-nwoWU8",
-    "broadcastNumber": 239,
+    "broadcastNumber": 241,
     "excelRow": 242,
     "corners": [
       "八木山ベニーランドクイズ"
@@ -10546,7 +10506,7 @@
   },
   {
     "videoId": "CBnlj_k1-3c",
-    "broadcastNumber": 240,
+    "broadcastNumber": 242,
     "excelRow": 243,
     "corners": [
       "ハンバーグもアグリー！"
@@ -10592,7 +10552,7 @@
   },
   {
     "videoId": "q8zbgsPPK3s",
-    "broadcastNumber": 241,
+    "broadcastNumber": 243,
     "excelRow": 244,
     "corners": [],
     "lunchTimeRequestSong": "ファイティングコール",
@@ -10649,7 +10609,8 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-14T15:09:42.458Z"
+    "exportedAt": "2026-05-14T15:09:42.458Z",
+    "broadcastNumber": 244
   },
   {
     "videoId": "mPHmCF9AAvE",
@@ -10680,11 +10641,12 @@
       "mentionsIjigenFes": false,
       "mentionsGen3Join": false
     },
-    "exportedAt": "2026-05-14T15:09:42.458Z"
+    "exportedAt": "2026-05-14T15:09:42.458Z",
+    "broadcastNumber": 246
   },
   {
     "videoId": "7SGMkOAoCO8",
-    "broadcastNumber": 243,
+    "broadcastNumber": 247,
     "excelRow": 248,
     "corners": [],
     "lunchTimeRequestSong": "Let's be ONE",
@@ -10721,7 +10683,7 @@
   },
   {
     "videoId": "JcEXfUJe2h0",
-    "broadcastNumber": 244,
+    "broadcastNumber": 248,
     "excelRow": 249,
     "corners": [
       "ハンバーグもアグリー！"
@@ -10774,7 +10736,7 @@
   },
   {
     "videoId": "XLF6jnwTupA",
-    "broadcastNumber": 245,
+    "broadcastNumber": 249,
     "excelRow": 250,
     "corners": [],
     "lunchTimeRequestSong": "約束になれ僕らの歌",
@@ -10811,7 +10773,7 @@
   },
   {
     "videoId": "hyTrxNbHk7M",
-    "broadcastNumber": 246,
+    "broadcastNumber": 250,
     "excelRow": 251,
     "corners": [
       "ハンバーグもアグリー！"
@@ -10857,7 +10819,7 @@
   },
   {
     "videoId": "7jInf-EKRYU",
-    "broadcastNumber": 247,
+    "broadcastNumber": 251,
     "excelRow": 252,
     "corners": [],
     "lunchTimeRequestSong": "OPEN THE G☆TE!!!",
@@ -10894,7 +10856,7 @@
   },
   {
     "videoId": "h7lHXPXg7dM",
-    "broadcastNumber": 248,
+    "broadcastNumber": 252,
     "excelRow": 253,
     "corners": [
       "ハンバーグもアグリー！"
@@ -10940,7 +10902,7 @@
   },
   {
     "videoId": "GZY5GbB94PU",
-    "broadcastNumber": 249,
+    "broadcastNumber": 253,
     "excelRow": 254,
     "corners": [],
     "lunchTimeRequestSong": "Starlight Prologue",
@@ -10977,7 +10939,7 @@
   },
   {
     "videoId": "AQQuVEsXSwc",
-    "broadcastNumber": 250,
+    "broadcastNumber": 254,
     "excelRow": 255,
     "corners": [],
     "lunchTimeRequestSong": "Day1",
@@ -11014,7 +10976,7 @@
   },
   {
     "videoId": "Bqfzl6Uozsg",
-    "broadcastNumber": 251,
+    "broadcastNumber": 255,
     "excelRow": 256,
     "corners": [],
     "lunchTimeRequestSong": "勇気のカケラ",
@@ -11058,7 +11020,7 @@
   },
   {
     "videoId": "0_PU_cuJ_ic",
-    "broadcastNumber": 252,
+    "broadcastNumber": 256,
     "excelRow": 257,
     "corners": [
       "だいすきのうたでサジェストしてマルっと正解したい"
@@ -11097,7 +11059,7 @@
   },
   {
     "videoId": "NwOdZulBi9s",
-    "broadcastNumber": 253,
+    "broadcastNumber": 257,
     "excelRow": 258,
     "corners": [
       "ハンバーグもアグリー！"
@@ -11143,7 +11105,7 @@
   },
   {
     "videoId": "4SP8Uy91qf0",
-    "broadcastNumber": 254,
+    "broadcastNumber": 258,
     "excelRow": 259,
     "corners": [
       "OPEN THE NEW YEAR"
@@ -11189,7 +11151,7 @@
   },
   {
     "videoId": "4VCgy4BbQEw",
-    "broadcastNumber": 255,
+    "broadcastNumber": 259,
     "excelRow": 260,
     "corners": [],
     "lunchTimeRequestSong": "START!! True dreams(Poppin'Party)",
@@ -11219,7 +11181,7 @@
   },
   {
     "videoId": "_oJg06JJQbw",
-    "broadcastNumber": 256,
+    "broadcastNumber": 260,
     "excelRow": 261,
     "corners": [
       "ハンバーグもアグリー！"
