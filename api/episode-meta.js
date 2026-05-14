@@ -177,15 +177,20 @@ function processRows(rows) {
 
     const get = (i) => String(row[i] ?? "").trim();
 
-    const num = parseBroadcastNumber(get(colNum));
-    if (!Number.isFinite(num) || num < 1) continue;
-
+    // videoId を先に取り出す（公開録音回など回番号が非整数の行もスキップしないため）
     let videoId = "";
     if (colVideoId !== -1) {
       videoId = extractVideoId(get(colVideoId)) || get(colVideoId);
       if (!/^[A-Za-z0-9_-]{11}$/.test(videoId)) videoId = "";
     }
-    if (!videoId) videoId = fallbackVideoIdMap.get(num) ?? "";
+
+    const num = parseBroadcastNumber(get(colNum));
+    const hasValidNum = Number.isFinite(num) && num >= 1;
+
+    if (!videoId && hasValidNum) videoId = fallbackVideoIdMap.get(num) ?? "";
+
+    // videoId も broadcastNumber もない行はスキップ
+    if (!videoId && !hasValidNum) continue;
 
     const o = colNum - 1;
 
@@ -253,7 +258,7 @@ function processRows(rows) {
     };
 
     const entry = {
-      broadcastNumber: num,
+      ...(hasValidNum ? { broadcastNumber: num } : {}),
       corners,
       lunchTimeRequestSong: lunch || "",
       tags,
