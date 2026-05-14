@@ -11265,7 +11265,7 @@
   },
   {
     "videoId": "dUs_SWQR7J0",
-    "broadcastNumber": 257,
+    "broadcastNumber": 261,
     "excelRow": 262,
     "corners": [],
     "lunchTimeRequestSong": "笑顔のPromise",
@@ -11295,7 +11295,7 @@
   },
   {
     "videoId": "8JNO5tUQdL8",
-    "broadcastNumber": 258,
+    "broadcastNumber": 262,
     "excelRow": 263,
     "corners": [],
     "lunchTimeRequestSong": "君・街・空・星",
@@ -11325,7 +11325,7 @@
   },
   {
     "videoId": "fuTI4ingXrM",
-    "broadcastNumber": 259,
+    "broadcastNumber": 263,
     "excelRow": 264,
     "corners": [
       "えもりん～♪"
@@ -11364,7 +11364,7 @@
   },
   {
     "videoId": "lu3_d8ikhZs",
-    "broadcastNumber": 260,
+    "broadcastNumber": 264,
     "excelRow": 265,
     "corners": [
       "OPEN THE G☆TE!!! を応援 THE エール！"
@@ -11410,7 +11410,7 @@
   },
   {
     "videoId": "CvZ695z6r7M",
-    "broadcastNumber": 261,
+    "broadcastNumber": 265,
     "excelRow": 266,
     "corners": [
       "あいチ～ズ！！"
@@ -11456,7 +11456,7 @@
   },
   {
     "videoId": "B2hql4vSZfw",
-    "broadcastNumber": 262,
+    "broadcastNumber": 266,
     "excelRow": 267,
     "corners": [
       "OPEN THE G☆TE!!! を応援 THE エール！"
@@ -11509,7 +11509,7 @@
   },
   {
     "videoId": "SEXLGs6z0B8",
-    "broadcastNumber": 263,
+    "broadcastNumber": 267,
     "excelRow": 268,
     "corners": [],
     "lunchTimeRequestSong": "OPEN THE G☆TE!!!",
@@ -11546,170 +11546,8 @@
   },
   {
     "videoId": "duOmiU86v9o",
-    "broadcastNumber": 264,
-    "excelRow": 269,
-    "corners": [],
-    "lunchTimeRequestSong": "ユートピアマジック",
-    "tags": [
-      {
-        "name": "ユートピアマジック",
-        "type": "lunchSong",
-        "searchable": true,
-        "visibleInList": true,
-        "priority": 95
-      },
-      {
-        "name": "7th",
-        "type": "liveImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 30
-      }
-    ],
-    "primaryTagsForList": [],
-    "flags": {
-      "hasCorner": false,
-      "hasLunchSong": true,
-      "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
-      "hasAnimeImpression": false,
-      "hasNetaTag": false,
-      "mentionsPublicRecordingInRemark": false,
-      "mentionsIjigenFes": false,
-      "mentionsGen3Join": false
-    },
-    "exportedAt": "2026-05-14T15:09:42.458Z"
-  },
-  {
-    "videoId": "rXf-lu1o4d8",
-    "broadcastNumber": 265,
-    "excelRow": 270,
-    "corners": [],
-    "lunchTimeRequestSong": "Sky Linker",
-    "tags": [
-      {
-        "name": "Sky Linker",
-        "type": "lunchSong",
-        "searchable": true,
-        "visibleInList": true,
-        "priority": 95
-      },
-      {
-        "name": "7th",
-        "type": "liveImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 30
-      }
-    ],
-    "primaryTagsForList": [],
-    "flags": {
-      "hasCorner": false,
-      "hasLunchSong": true,
-      "hasBirthdayTag": false,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
-      "hasAnimeImpression": false,
-      "hasNetaTag": false,
-      "mentionsPublicRecordingInRemark": false,
-      "mentionsIjigenFes": false,
-      "mentionsGen3Join": false
-    },
-    "exportedAt": "2026-05-14T15:09:42.458Z"
-  },
-  {
-    "videoId": "ptwqnHy_ajY",
-    "broadcastNumber": 266,
-    "excelRow": 271,
-    "corners": [],
-    "lunchTimeRequestSong": "Sing! Shine! Smile!",
-    "tags": [
-      {
-        "name": "Sing! Shine! Smile!",
-        "type": "lunchSong",
-        "searchable": true,
-        "visibleInList": true,
-        "priority": 95
-      },
-      {
-        "name": "坂倉花",
-        "type": "birthday",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 12
-      },
-      {
-        "name": "7th",
-        "type": "liveImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 30
-      }
-    ],
-    "primaryTagsForList": [],
-    "flags": {
-      "hasCorner": false,
-      "hasLunchSong": true,
-      "hasBirthdayTag": true,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
-      "hasAnimeImpression": false,
-      "hasNetaTag": false,
-      "mentionsPublicRecordingInRemark": false,
-      "mentionsIjigenFes": false,
-      "mentionsGen3Join": false
-    },
-    "exportedAt": "2026-05-14T15:09:42.458Z"
-  },
-  {
-    "videoId": "7DNw_7rAxLc",
-    "broadcastNumber": 267,
-    "excelRow": 272,
-    "corners": [],
-    "lunchTimeRequestSong": "LiLiA",
-    "tags": [
-      {
-        "name": "LiLiA",
-        "type": "lunchSong",
-        "searchable": true,
-        "visibleInList": true,
-        "priority": 95
-      },
-      {
-        "name": "大熊和奏",
-        "type": "birthday",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 12
-      },
-      {
-        "name": "7th",
-        "type": "liveImpression",
-        "searchable": true,
-        "visibleInList": false,
-        "priority": 30
-      }
-    ],
-    "primaryTagsForList": [],
-    "flags": {
-      "hasCorner": false,
-      "hasLunchSong": true,
-      "hasBirthdayTag": true,
-      "hasLiveImpression": true,
-      "hasEventImpression": false,
-      "hasAnimeImpression": false,
-      "hasNetaTag": false,
-      "mentionsPublicRecordingInRemark": false,
-      "mentionsIjigenFes": false,
-      "mentionsGen3Join": false
-    },
-    "exportedAt": "2026-05-14T15:09:42.458Z"
-  },
-  {
-    "videoId": "8qP_j5pxT2g",
     "broadcastNumber": 268,
-    "excelRow": 273,
+    "excelRow": 269,
     "corners": [],
     "lunchTimeRequestSong": "ユートピアマジック",
     "tags": [
