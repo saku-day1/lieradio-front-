@@ -3,7 +3,13 @@
  * Google Sheets からエピソードメタ情報を取得し、Redis にキャッシュして返す。
  * シートを更新後に ?refresh=1 または Authorization: Bearer <CRON_SECRET> でキャッシュを破棄できる。
  */
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 import { Redis } from "@upstash/redis";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const FALLBACK_META_PATH = path.join(__dirname, "..", "data", "episodeMeta.json");
 
 const SHEETS_API_BASE = "https://sheets.googleapis.com/v4/spreadsheets";
 const CACHE_KEY = process.env.EPISODE_META_CACHE_KEY || "episode_meta_cache_v1";
@@ -113,6 +119,22 @@ async function fetchSheetRows(apiKey, spreadsheetId, gid) {
   return data.values ?? [];
 }
 
+function readFallbackVideoIdMap() {
+  try {
+    const raw = fs.readFileSync(FALLBACK_META_PATH, "utf8");
+    const records = JSON.parse(raw);
+    const map = new Map();
+    for (const r of records) {
+      if (Number.isFinite(r.broadcastNumber) && typeof r.videoId === "string" && r.videoId) {
+        map.set(r.broadcastNumber, r.videoId);
+      }
+    }
+    return map;
+  } catch (_) {
+    return new Map();
+  }
+}
+
 function processRows(rows) {
   const header = rows[0];
   const colVideoId = header.indexOf("videoId");
@@ -122,6 +144,7 @@ function processRows(rows) {
     throw new Error(`「回」列が見つかりません。ヘッダー: ${header.join(", ")}`);
   }
 
+  const fallbackVideoIdMap = readFallbackVideoIdMap();
   const out = [];
 
   for (let ri = 1; ri < rows.length; ri++) {
@@ -138,6 +161,7 @@ function processRows(rows) {
       videoId = extractVideoId(get(colVideoId)) || get(colVideoId);
       if (!/^[A-Za-z0-9_-]{11}$/.test(videoId)) videoId = "";
     }
+    if (!videoId) videoId = fallbackVideoIdMap.get(num) ?? "";
 
     const o = colNum - 1;
 
