@@ -214,6 +214,14 @@ api/episode-meta.js   # Google Sheets → タグ処理 → Redis キャッシュ
 
 ---
 
+## Vercel 環境変数の設定ルール
+
+新しい環境変数を Vercel に追加するときは、**必ず Production・Preview・Development の全スコープにチェックを入れること**。
+
+スコープを絞ると「プレビューでは動くが本番で動かない」という症状になり、原因の特定が困難になる。過去に `CRON_SECRET` を Preview のみに設定したことで、GitHub Actions が常に空振りし続けた事例あり。
+
+---
+
 ## 環境変数（Vercel）
 
 | 変数名 | 用途 |
