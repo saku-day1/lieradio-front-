@@ -201,9 +201,8 @@ api/episode-meta.js   # Google Sheets → タグ処理 → Redis キャッシュ
 
 ---
 
-## 現在のイシュー（2026-05-15 時点）
+## 解決済みイシュー（2026-05-15 修正・確認済み）
 
-### 解決済み（このセッションで修正・コミット済み）
 | # | ファイル | 内容 |
 |---|----------|------|
 | 1 | `js/view/EpisodeListView.js` | `lunchLineHtml`（リクエスト曲）がテンプレートに含まれておらず、楽曲名が一切表示されていなかった |
@@ -211,19 +210,7 @@ api/episode-meta.js   # Google Sheets → タグ処理 → Redis キャッシュ
 | 3 | `api/episode-meta.js` | `processRows` が `broadcastNumber` をエントリに追加していないためソートが無効だった |
 | 4 | `api/episode-meta.js` | `extractVideoId` が `youtu.be` 形式の URL に未対応 |
 | 5 | `.github/workflows/refresh-meta.yml` | `-o /dev/null` でレスポンスボディを捨てていたため何が起きているか不明だった → ボディとエントリ数をログ出力するよう修正 |
-
-### 未解決
-**症状**: 新しくシートに追加した回のコーナー名・楽曲名がサイトに表示されない
-
-**原因候補（未特定）**:
-- `processRows` が Sheets の列オフセットをズレて読んでいる（コーナー列の位置が想定と異なる）
-- Sheets の videoId 列の URL フォーマットが正しく解析されていない
-- `fetchEpisodeManualMetaOnce` の API/JSON マージで、Sheets データが JSON データを空の corners で上書きしている
-
-**次にやること**:
-1. GitHub Actions を再実行してログの「取得エントリ数」を確認（正しければ 272 件前後）
-2. 特定の回（例: 第X回）を指定して、その回の `videoId` が `/api/episode-meta` レスポンスに含まれているか確認
-3. エントリに corners が入っているにもかかわらずサイトで表示されない場合 → merge のvideoId不一致を疑う
+| 6 | Vercel 環境変数 | `CRON_SECRET` が Preview 環境にのみ設定されており、Production で `isAuthorizedRefresh` が常に false を返していた → Production にも設定することで解決（x-meta-source: sheets, 275件取得を確認） |
 
 ---
 
