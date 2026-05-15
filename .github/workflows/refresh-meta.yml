@@ -19,19 +19,21 @@ jobs:
     steps:
       - name: /api/episode-meta のキャッシュを破棄
         run: |
-          BODY=$(curl -s -w "\n%{http_code}" \
+          RESPONSE_FILE=$(mktemp)
+          HEADERS_FILE=$(mktemp)
+          STATUS=$(curl -s -D "$HEADERS_FILE" -o "$RESPONSE_FILE" -w "%{http_code}" \
             -X GET \
             -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
             "${{ secrets.VERCEL_APP_URL }}/api/episode-meta?refresh=1")
-          STATUS=$(echo "$BODY" | tail -1)
-          RESPONSE=$(echo "$BODY" | head -c 2000)
           echo "HTTP status: $STATUS"
-          echo "レスポンス先頭 2000 文字:"
-          echo "$RESPONSE"
+          echo "--- 診断ヘッダー ---"
+          grep -i "x-force-refresh\|x-has-cron-secret\|x-meta-source\|x-meta-count" "$HEADERS_FILE" || echo "(ヘッダーなし)"
+          echo "--- レスポンス先頭 2000 文字 ---"
+          head -c 2000 "$RESPONSE_FILE"
           if [ "$STATUS" != "200" ]; then
             echo "::error::キャッシュ更新に失敗しました（HTTP $STATUS）"
             exit 1
           fi
-          ENTRY_COUNT=$(echo "$RESPONSE" | python3 -c "import sys,json; d=json.load(sys.stdin); print(len(d))" 2>/dev/null || echo "不明")
+          ENTRY_COUNT=$(python3 -c "import json; d=json.load(open('$RESPONSE_FILE')); print(len(d))" 2>/dev/null || echo "不明")
           echo "取得エントリ数: $ENTRY_COUNT"
           echo "キャッシュを正常に更新しました。"

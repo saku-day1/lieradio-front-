@@ -25,6 +25,8 @@ export default async function handler(request, response) {
   }
 
   setResponseHeaders(request, response);
+  response.setHeader("X-Force-Refresh", String(forceRefresh));
+  response.setHeader("X-Has-Cron-Secret", String(Boolean(CRON_SECRET)));
 
   if (request.method === "OPTIONS") {
     response.setHeader("Allow", "GET, OPTIONS");
