@@ -174,6 +174,15 @@ api/episode-meta.js   # Google Sheets → タグ処理 → Redis キャッシュ
 .github/workflows/refresh-meta.yml  # 手動 workflow_dispatch でキャッシュ即時更新
 ```
 
+### 新しい回を追加するときの手順
+
+1. Google Sheets に YouTube URL・コーナー名・リクエスト曲などを記入
+2. GitHub Actions → 「メタ情報を今すぐ反映」を手動実行（workflow_dispatch）
+3. Actions ログで以下を確認
+   - `x-meta-source: sheets`（Sheets から取得できている）
+   - `x-meta-count: 275`（件数が期待通りか）
+4. サイトをリロードして反映を確認
+
 ### データフロー（メタ情報）
 1. ユーザーが Google Sheets に YouTube URL・コーナー・楽曲などを記入
 2. GitHub Actions（workflow_dispatch）で `/api/episode-meta?refresh=1` を叩く
