@@ -270,6 +270,7 @@ function buildEpisodeItemHtml(episode, isAndMode, favorites, watched, hitMap, me
           <div class="cast-badges" aria-label="出演者">${castBadgesHtml}</div>
           ${unitBadgesHtml ? `<div class="unit-badges" aria-label="ユニット">${unitBadgesHtml}</div>` : ""}
           ${cornersLineHtml}
+          ${lunchLineHtml}
           ${primaryHtml}
           ${hitBlock}
           ${memoPreviewHtml}

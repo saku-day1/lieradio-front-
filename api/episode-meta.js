@@ -15,9 +15,6 @@ const CACHE_TTL_SEC = Number(process.env.EPISODE_META_CACHE_TTL_SEC || 3600);
 const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || "";
 const CRON_SECRET = process.env.CRON_SECRET || "";
 
-let inMemory = { data: null, fetchedAt: 0 };
-const IN_MEMORY_TTL_MS = 10 * 60 * 1000;
-
 let redisClient = null;
 
 export default async function handler(request, response) {
@@ -39,17 +36,10 @@ export default async function handler(request, response) {
     return response.status(405).json({ error: "Method Not Allowed" });
   }
 
-  // インメモリキャッシュが有効なら即返す
-  if (!forceRefresh && inMemory.data && Date.now() - inMemory.fetchedAt < IN_MEMORY_TTL_MS) {
-    setDebugHeaders(response, inMemory.data, "memory");
-    return response.status(200).json(inMemory.data);
-  }
-
   // Redis キャッシュを確認
   if (!forceRefresh) {
     const cached = await readRedisCache();
     if (cached) {
-      inMemory = { data: cached, fetchedAt: Date.now() };
       setDebugHeaders(response, cached, "redis");
       return response.status(200).json(cached);
     }
@@ -58,14 +48,13 @@ export default async function handler(request, response) {
   // Google Sheets から取得・処理
   try {
     const data = await fetchAndProcess();
-    inMemory = { data, fetchedAt: Date.now() };
     await writeRedisCache(data);
     setDebugHeaders(response, data, "sheets");
     return response.status(200).json(data);
   } catch (error) {
     console.error("[episode-meta] fetch error:", error);
 
-    // force refresh 時はキャッシュに頼らず失敗を返す（GitHub Actions が検知できるように）
+    // force refresh 時は失敗を返す（GitHub Actions が検知できるように）
     if (forceRefresh) {
       const apiKey = process.env.GOOGLE_SHEETS_API_KEY;
       const spreadsheetId = process.env.GOOGLE_SHEETS_SPREADSHEET_ID;
@@ -78,17 +67,9 @@ export default async function handler(request, response) {
       });
     }
 
-    // 通常アクセス時: インメモリキャッシュがあれば返す
-    if (inMemory.data) {
-      response.setHeader("Warning", "110 - Response is stale");
-      setDebugHeaders(response, inMemory.data, "memory-stale");
-      return response.status(200).json(inMemory.data);
-    }
-
-    // Redis のキャッシュにフォールバック
+    // 通常アクセス時: Redis にフォールバック
     const redisStale = await readRedisCache();
     if (redisStale) {
-      inMemory = { data: redisStale, fetchedAt: Date.now() };
       response.setHeader("Warning", "110 - Response is stale");
       setDebugHeaders(response, redisStale, "redis-stale");
       return response.status(200).json(redisStale);
@@ -282,6 +263,7 @@ function processRows(rows) {
     };
 
     const entry = {
+      ...(hasValidNum ? { broadcastNumber: num } : {}),
       corners,
       lunchTimeRequestSong: lunch || "",
       tags,
@@ -351,8 +333,10 @@ function extractBirthdayName(text) {
 
 function extractVideoId(url) {
   if (typeof url !== "string") return "";
-  const m = url.match(/[?&]v=([A-Za-z0-9_-]{11})/);
-  return m ? m[1] : "";
+  const watchMatch = url.match(/[?&]v=([A-Za-z0-9_-]{11})/);
+  if (watchMatch) return watchMatch[1];
+  const shortMatch = url.match(/youtu\.be\/([A-Za-z0-9_-]{11})/);
+  return shortMatch ? shortMatch[1] : "";
 }
 
 function parseBroadcastNumber(cell) {
@@ -400,7 +384,6 @@ async function writeRedisCache(data) {
 }
 
 export async function invalidateCache() {
-  inMemory = { data: null, fetchedAt: 0 };
   const redis = getRedisClient();
   if (!redis) return;
   try {
