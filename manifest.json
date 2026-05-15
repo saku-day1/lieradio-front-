@@ -1,0 +1,23 @@
+{
+  "name": "リエラジ出演者検索",
+  "short_name": "リエラジ検索",
+  "description": "Love Live! Superstar!! ラジオ番組「リエラジ」の放送回検索サイト",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "icons": [
+    {
+      "src": "/icons/icon-192-v2.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512-v2.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
