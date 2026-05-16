@@ -421,6 +421,50 @@ function buildProperties(episode) {
   return props;
 }
 
+function buildPageBody(episode) {
+  const line = (emoji, label, value) =>
+    value ? `${emoji} ${label}: ${value}` : null;
+
+  const lines = [
+    line("🎙", "出演者", episode.castMembers?.join(" / ")),
+    line("📅", "公開日", episode.publishedAt),
+    line("🎪", "コーナー", episode.corners?.join(" / ")),
+    line("🎵", "リクエスト曲", episode.lunchSong),
+    line("🎤", "ライブ感想", episode.liveImpressions?.join(" / ")),
+    line("📝", "イベント感想", episode.eventImpression),
+    line("📺", "アニメ感想", episode.animeImpression),
+    line("🎂", "誕生日", episode.birthdayTags?.join(" / ")),
+    line("⚡", "出来事", episode.incidentText),
+    episode.isPublicRecording ? "🎤 公開録音回" : null,
+  ].filter(Boolean);
+
+  const paragraphs = lines.map((text) => ({
+    object: "block",
+    type: "paragraph",
+    paragraph: {
+      rich_text: [{ type: "text", text: { content: text } }],
+    },
+  }));
+
+  // YouTube URL はブックマークブロックで埋め込む
+  const bookmark = {
+    object: "block",
+    type: "bookmark",
+    bookmark: { url: `https://youtu.be/${episode.videoId}` },
+  };
+
+  return [...paragraphs, bookmark];
+}
+
+async function appendPageBody(pageId, episode) {
+  const children = buildPageBody(episode);
+  if (USE_FETCH_FALLBACK) {
+    await notionRequest("PATCH", `/blocks/${pageId}/children`, { children });
+  } else {
+    await notion.blocks.children.append({ block_id: pageId, children });
+  }
+}
+
 function thumbnailCover(videoId) {
   return {
     type: "external",
@@ -444,11 +488,13 @@ async function upsertEpisode(episode) {
   } else {
     if (!DRY_RUN) {
       const body = { parent: { database_id: DATABASE_ID }, properties: props, cover };
+      let newPage;
       if (USE_FETCH_FALLBACK) {
-        await notionRequest("POST", "/pages", body);
+        newPage = await notionRequest("POST", "/pages", body);
       } else {
-        await notion.pages.create(body);
+        newPage = await notion.pages.create(body);
       }
+      await appendPageBody(newPage.id, episode);
     }
     return "created";
   }
