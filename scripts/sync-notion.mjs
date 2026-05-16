@@ -421,21 +421,29 @@ function buildProperties(episode) {
   return props;
 }
 
+function thumbnailCover(videoId) {
+  return {
+    type: "external",
+    external: { url: `https://img.youtube.com/vi/${videoId}/mqdefault.jpg` },
+  };
+}
+
 async function upsertEpisode(episode) {
   const props = buildProperties(episode);
+  const cover = thumbnailCover(episode.videoId);
   const existing = await findPageByVideoId(episode.videoId);
   if (existing) {
     if (!DRY_RUN) {
       if (USE_FETCH_FALLBACK) {
-        await notionRequest("PATCH", `/pages/${existing.id}`, { properties: props });
+        await notionRequest("PATCH", `/pages/${existing.id}`, { properties: props, cover });
       } else {
-        await notion.pages.update({ page_id: existing.id, properties: props });
+        await notion.pages.update({ page_id: existing.id, properties: props, cover });
       }
     }
     return "updated";
   } else {
     if (!DRY_RUN) {
-      const body = { parent: { database_id: DATABASE_ID }, properties: props };
+      const body = { parent: { database_id: DATABASE_ID }, properties: props, cover };
       if (USE_FETCH_FALLBACK) {
         await notionRequest("POST", "/pages", body);
       } else {
