@@ -6,6 +6,10 @@ name: Notion へエピソードを同期
 on:
   workflow_dispatch:
     inputs:
+      from_json:
+        description: "true=ローカルJSONファイルを使用（API不要）/ false=Google Sheets+YouTubeをリアルタイム取得"
+        required: false
+        default: "true"
       limit:
         description: "同期件数上限（テスト用: 5〜10 を推奨。空欄=全件）"
         required: false
@@ -43,6 +47,7 @@ jobs:
           GOOGLE_SHEETS_SHEET_GID: ${{ secrets.GOOGLE_SHEETS_SHEET_GID }}
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
           YOUTUBE_PLAYLIST_ID: ${{ secrets.YOUTUBE_PLAYLIST_ID }}
+          FROM_JSON: ${{ inputs.from_json }}
           SYNC_LIMIT: ${{ inputs.limit }}
           DRY_RUN: ${{ inputs.dry_run }}
         run: node scripts/sync-notion.mjs
