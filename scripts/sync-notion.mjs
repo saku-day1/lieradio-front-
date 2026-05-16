@@ -404,7 +404,7 @@ function buildProperties(episode) {
     タイトル: { title: richText(episode.title || `第${episode.broadcastNumber ?? "?"}回`) },
     videoId: { rich_text: richText(episode.videoId) },
     "YouTube URL": { url: `https://youtu.be/${episode.videoId}` },
-    公開録音: { checkbox: Boolean(episode.isPublicRecording) },
+    公開録音: episode.isPublicRecording ? { select: { name: "公開録音" } } : { select: null },
   };
 
   if (episode.broadcastNumber != null) props.回 = { number: episode.broadcastNumber };
