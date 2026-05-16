@@ -358,14 +358,36 @@ function enc(s) { return encodeURIComponent(s); }
 // Notion upsert
 // ---------------------------------------------------------------------------
 
-const notion = new Client({ auth: NOTION_TOKEN });
+// ntn- 形式の新トークンは fetch を直接使って送信する
+const USE_FETCH_FALLBACK = NOTION_TOKEN.startsWith("ntn");
+
+const notion = USE_FETCH_FALLBACK ? null : new Client({ auth: NOTION_TOKEN });
+
+async function notionRequest(method, path, body) {
+  const res = await fetch(`https://api.notion.com/v1${path}`, {
+    method,
+    headers: {
+      Authorization: `Bearer ${NOTION_TOKEN}`,
+      "Content-Type": "application/json",
+      "Notion-Version": "2022-06-28",
+    },
+    body: JSON.stringify(body),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.message ?? `Notion API error: ${res.status}`);
+  }
+  return res.json();
+}
 
 async function findPageByVideoId(videoId) {
-  const res = await notion.databases.query({
-    database_id: DATABASE_ID,
+  const body = {
     filter: { property: "videoId", rich_text: { equals: videoId } },
     page_size: 1,
-  });
+  };
+  const res = USE_FETCH_FALLBACK
+    ? await notionRequest("POST", `/databases/${DATABASE_ID}/query`, body)
+    : await notion.databases.query({ database_id: DATABASE_ID, ...body });
   return res.results[0] ?? null;
 }
 
@@ -403,10 +425,23 @@ async function upsertEpisode(episode) {
   const props = buildProperties(episode);
   const existing = await findPageByVideoId(episode.videoId);
   if (existing) {
-    if (!DRY_RUN) await notion.pages.update({ page_id: existing.id, properties: props });
+    if (!DRY_RUN) {
+      if (USE_FETCH_FALLBACK) {
+        await notionRequest("PATCH", `/pages/${existing.id}`, { properties: props });
+      } else {
+        await notion.pages.update({ page_id: existing.id, properties: props });
+      }
+    }
     return "updated";
   } else {
-    if (!DRY_RUN) await notion.pages.create({ parent: { database_id: DATABASE_ID }, properties: props });
+    if (!DRY_RUN) {
+      const body = { parent: { database_id: DATABASE_ID }, properties: props };
+      if (USE_FETCH_FALLBACK) {
+        await notionRequest("POST", "/pages", body);
+      } else {
+        await notion.pages.create(body);
+      }
+    }
     return "created";
   }
 }
