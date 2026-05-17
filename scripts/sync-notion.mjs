@@ -430,22 +430,8 @@ async function fetchNotionIndex() {
   return index;
 }
 
-function extractNotionFingerprint(props) {
-  return JSON.stringify({
-    title: props.タイトル?.title?.[0]?.text?.content ?? "",
-    castMembers: (props.出演者?.multi_select ?? []).map((s) => s.name).sort(),
-    corners: (props.コーナー?.multi_select ?? []).map((s) => s.name).sort(),
-    lunchSong: props.リクエスト曲?.rich_text?.[0]?.text?.content ?? "",
-    liveImpressions: (props.ライブ感想?.multi_select ?? []).map((s) => s.name).sort(),
-    eventImpression: props.イベント感想?.rich_text?.[0]?.text?.content ?? "",
-    animeImpression: props.アニメ感想?.rich_text?.[0]?.text?.content ?? "",
-    isPublicRecording: props.公開録音?.select?.name ?? "",
-    birthdayTags: (props.誕生日?.multi_select ?? []).map((s) => s.name).sort(),
-    incidentText: props.出来事?.rich_text?.[0]?.text?.content ?? "",
-  });
-}
-
-const normalizeComma = (s) => String(s).replace(/,/g, "，");
+// フィンガープリント比較用に全角・半角カンマを統一（半角に揃える）
+const normalizeComma = (s) => String(s).replace(/，/g, ",");
 
 function buildEpisodeFingerprint(episode) {
   return JSON.stringify({
@@ -459,6 +445,21 @@ function buildEpisodeFingerprint(episode) {
     isPublicRecording: episode.isPublicRecording ? "公開録音" : "",
     birthdayTags: [...(episode.birthdayTags ?? [])].map(normalizeComma).sort(),
     incidentText: normalizeComma(episode.incidentText ?? ""),
+  });
+}
+
+function extractNotionFingerprint(props) {
+  return JSON.stringify({
+    title: normalizeComma(props.タイトル?.title?.[0]?.text?.content ?? ""),
+    castMembers: (props.出演者?.multi_select ?? []).map((s) => normalizeComma(s.name)).sort(),
+    corners: (props.コーナー?.multi_select ?? []).map((s) => normalizeComma(s.name)).sort(),
+    lunchSong: normalizeComma(props.リクエスト曲?.rich_text?.[0]?.text?.content ?? ""),
+    liveImpressions: (props.ライブ感想?.multi_select ?? []).map((s) => normalizeComma(s.name)).sort(),
+    eventImpression: normalizeComma(props.イベント感想?.rich_text?.[0]?.text?.content ?? ""),
+    animeImpression: normalizeComma(props.アニメ感想?.rich_text?.[0]?.text?.content ?? ""),
+    isPublicRecording: props.公開録音?.select?.name ?? "",
+    birthdayTags: (props.誕生日?.multi_select ?? []).map((s) => normalizeComma(s.name)).sort(),
+    incidentText: normalizeComma(props.出来事?.rich_text?.[0]?.text?.content ?? ""),
   });
 }
 
