@@ -141,10 +141,20 @@ async function loadFromApis() {
   console.log(`[sync-notion] Sheets: ${sheetsData.size} 件, YouTube: ${youtubeData.size} 件`);
 
   const result = [];
+
+  // Sheets にある動画（メタ情報あり）
   for (const [videoId, meta] of sheetsData) {
     const yt = youtubeData.get(videoId) ?? {};
     result.push({ ...meta, ...yt, videoId });
   }
+
+  // YouTube にあって Sheets にない動画（総集編・公録など）
+  for (const [videoId, yt] of youtubeData) {
+    if (!sheetsData.has(videoId)) {
+      result.push({ ...yt, videoId, corners: [], lunchSong: "", liveImpressions: [], isPublicRecording: /公開録音|公録/.test(yt.title ?? "") });
+    }
+  }
+
   return result;
 }
 
