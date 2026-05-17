@@ -363,21 +363,33 @@ const USE_FETCH_FALLBACK = NOTION_TOKEN.startsWith("ntn");
 
 const notion = USE_FETCH_FALLBACK ? null : new Client({ auth: NOTION_TOKEN });
 
-async function notionRequest(method, path, body) {
-  const res = await fetch(`https://api.notion.com/v1${path}`, {
-    method,
-    headers: {
-      Authorization: `Bearer ${NOTION_TOKEN}`,
-      "Content-Type": "application/json",
-      "Notion-Version": "2022-06-28",
-    },
-    body: JSON.stringify(body),
-  });
-  if (!res.ok) {
+async function notionRequest(method, path, body, retries = 3) {
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    const res = await fetch(`https://api.notion.com/v1${path}`, {
+      method,
+      headers: {
+        Authorization: `Bearer ${NOTION_TOKEN}`,
+        "Content-Type": "application/json",
+        "Notion-Version": "2022-06-28",
+      },
+      body: JSON.stringify(body),
+    });
+
+    if (res.ok) return res.json();
+
     const err = await res.json().catch(() => ({}));
+
+    // 5xx はリトライ対象
+    if (res.status >= 500 && attempt < retries) {
+      const wait = attempt * 3000;
+      console.warn(`[retry ${attempt}/${retries}] ${res.status} ${path} → ${wait}ms 後にリトライ`);
+      await new Promise((r) => setTimeout(r, wait));
+      continue;
+    }
+
     throw new Error(err.message ?? `Notion API error: ${res.status}`);
   }
-  return res.json();
+
 }
 
 async function findPageByVideoId(videoId) {
