@@ -24,7 +24,7 @@ const LIELLA_SPECIAL_PREFIX = "Li絵lla!日記スペシャル";
 const PUBLIC_REC_TEXT_RE = /\u516c\u958b\u9332\u97f3|\u516c\u9332/;
 
 /** 備考・タグ文言として「公開録音」とみなせるもの */
-function isPublicRecordingMemoTag(tag) {
+export function isPublicRecordingTag(tag) {
   if (!tag) return false;
   if (tag.type === "publicRecordingNote") return true;
   return PUBLIC_REC_TEXT_RE.test(String(tag.name || ""));
@@ -104,7 +104,7 @@ export function buildFacetCatalog(episodes) {
     const tags = Array.isArray(meta.tags) ? meta.tags : [];
     for (const tag of tags) {
       const name = tag?.name || "";
-      if (isPublicRecordingMemoTag(tag)) {
+      if (isPublicRecordingTag(tag)) {
         addLabel(publicRecordingMemos, name);
       }
 

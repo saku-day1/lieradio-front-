@@ -4,6 +4,7 @@
  */
 
 import { normalizeSearchText, isPublicRecordingTitle, extractYoutubeVideoId } from "./EpisodeRepository.js";
+import { isPublicRecordingTag } from "./facetCatalog.js";
 
 /** 親ファセット（検索しない＝値なし） */
 export const FACET_PRIMARY_NONE = "";
@@ -21,8 +22,6 @@ export const SEARCH_CATEGORY = {
 
 const TAG_EVENT_TYPES = new Set(["eventImpression", "eventName", "externalShow"]);
 
-const PUBLIC_REC_TEXT_RE = /\u516c\u958b\u9332\u97f3|\u516c\u9332/;
-
 function tagsOf(episode) {
   const m = episode.manualMeta;
   return Array.isArray(m?.tags) ? m.tags : [];
@@ -32,12 +31,6 @@ function truncateSnippet(text, max = 40) {
   const s = String(text || "").replace(/\s+/g, " ").trim();
   if (s.length <= max) return s;
   return `${s.slice(0, max - 1)}…`;
-}
-
-function isPublicRecordingTag(tag) {
-  if (!tag) return false;
-  if (tag.type === "publicRecordingNote") return true;
-  return PUBLIC_REC_TEXT_RE.test(String(tag.name || ""));
 }
 
 /** タイトルまたは備考・タグに公開録音の記載がある */
