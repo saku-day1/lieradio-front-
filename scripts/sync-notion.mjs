@@ -554,8 +554,6 @@ async function upsertEpisode(episode, notionIndex) {
   if (existing) {
     const newFingerprint = buildEpisodeFingerprint(episode);
     if (existing.fingerprint === newFingerprint) return "skipped";
-    console.log(`[debug ${episode.broadcastNumber ?? episode.videoId}] Notion:`, existing.fingerprint);
-    console.log(`[debug ${episode.broadcastNumber ?? episode.videoId}] New:   `, newFingerprint);
     if (!DRY_RUN) {
       if (USE_FETCH_FALLBACK) {
         await notionRequest("PATCH", `/pages/${existing.id}`, { properties: props, cover });
