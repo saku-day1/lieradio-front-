@@ -445,18 +445,20 @@ function extractNotionFingerprint(props) {
   });
 }
 
+const normalizeComma = (s) => String(s).replace(/,/g, "，");
+
 function buildEpisodeFingerprint(episode) {
   return JSON.stringify({
     title: episode.title || `第${episode.broadcastNumber ?? "?"}回`,
     castMembers: [...(episode.castMembers ?? [])].sort(),
-    corners: [...(episode.corners ?? [])].sort(),
-    lunchSong: episode.lunchSong ?? "",
-    liveImpressions: [...(episode.liveImpressions ?? [])].sort(),
-    eventImpression: episode.eventImpression ?? "",
-    animeImpression: episode.animeImpression ?? "",
+    corners: [...(episode.corners ?? [])].map(normalizeComma).sort(),
+    lunchSong: normalizeComma(episode.lunchSong ?? ""),
+    liveImpressions: [...(episode.liveImpressions ?? [])].map(normalizeComma).sort(),
+    eventImpression: normalizeComma(episode.eventImpression ?? ""),
+    animeImpression: normalizeComma(episode.animeImpression ?? ""),
     isPublicRecording: episode.isPublicRecording ? "公開録音" : "",
-    birthdayTags: [...(episode.birthdayTags ?? [])].sort(),
-    incidentText: episode.incidentText ?? "",
+    birthdayTags: [...(episode.birthdayTags ?? [])].map(normalizeComma).sort(),
+    incidentText: normalizeComma(episode.incidentText ?? ""),
   });
 }
 
@@ -551,10 +553,6 @@ async function upsertEpisode(episode, notionIndex) {
   if (existing) {
     const newFingerprint = buildEpisodeFingerprint(episode);
     if (existing.fingerprint === newFingerprint) return "skipped";
-    if (episode.broadcastNumber === 112) {
-      console.log("[debug 112] Notion:", existing.fingerprint);
-      console.log("[debug 112] New:   ", newFingerprint);
-    }
     if (!DRY_RUN) {
       if (USE_FETCH_FALLBACK) {
         await notionRequest("PATCH", `/pages/${existing.id}`, { properties: props, cover });
