@@ -128,6 +128,7 @@ function mergeEpisode(videoId, ep, meta) {
 // ---------------------------------------------------------------------------
 
 async function loadFromApis() {
+  console.log(`[sync-notion] 環境変数確認: SHEETS_API_KEY=${SHEETS_API_KEY ? "set" : "MISSING"}, SPREADSHEET_ID=${SPREADSHEET_ID ? "set" : "MISSING"}`);
   if (!SHEETS_API_KEY || !SPREADSHEET_ID) {
     throw new Error("GOOGLE_SHEETS_API_KEY / GOOGLE_SHEETS_SPREADSHEET_ID が未設定です");
   }
