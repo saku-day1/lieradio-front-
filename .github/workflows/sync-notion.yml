@@ -9,15 +9,15 @@ on:
       from_json:
         description: "true=ローカルJSONファイルを使用（API不要）/ false=Google Sheets+YouTubeをリアルタイム取得"
         required: false
-        default: "true"
+        default: "false"
       limit:
-        description: "同期件数上限（テスト用: 5〜10 を推奨。空欄=全件）"
+        description: "同期件数上限（テスト用のみ。空欄=全件）"
         required: false
-        default: "10"
+        default: ""
       dry_run:
         description: "true にすると Notion への書き込みをスキップしてログだけ確認"
         required: false
-        default: "true"
+        default: "false"
 
 permissions: {}
 
