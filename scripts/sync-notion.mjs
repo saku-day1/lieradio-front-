@@ -403,15 +403,61 @@ async function notionRequest(method, path, body, retries = 3) {
 
 }
 
-async function findPageByVideoId(videoId) {
-  const body = {
-    filter: { property: "videoId", rich_text: { equals: videoId } },
-    page_size: 1,
-  };
-  const res = USE_FETCH_FALLBACK
-    ? await notionRequest("POST", `/databases/${DATABASE_ID}/query`, body)
-    : await notion.databases.query({ database_id: DATABASE_ID, ...body });
-  return res.results[0] ?? null;
+// Notion DB を全件スキャンして videoId → { id, fingerprint } の Map を返す
+async function fetchNotionIndex() {
+  const index = new Map();
+  let cursor = undefined;
+
+  do {
+    const body = { page_size: 100, ...(cursor ? { start_cursor: cursor } : {}) };
+    const res = USE_FETCH_FALLBACK
+      ? await notionRequest("POST", `/databases/${DATABASE_ID}/query`, body)
+      : await notion.databases.query({ database_id: DATABASE_ID, ...body });
+
+    for (const page of res.results) {
+      const videoId = page.properties.videoId?.rich_text?.[0]?.text?.content;
+      if (videoId) {
+        index.set(videoId, {
+          id: page.id,
+          fingerprint: extractNotionFingerprint(page.properties),
+        });
+      }
+    }
+
+    cursor = res.has_more ? res.next_cursor : undefined;
+  } while (cursor);
+
+  return index;
+}
+
+function extractNotionFingerprint(props) {
+  return JSON.stringify({
+    title: props.タイトル?.title?.[0]?.text?.content ?? "",
+    castMembers: (props.出演者?.multi_select ?? []).map((s) => s.name).sort(),
+    corners: (props.コーナー?.multi_select ?? []).map((s) => s.name).sort(),
+    lunchSong: props.リクエスト曲?.rich_text?.[0]?.text?.content ?? "",
+    liveImpressions: (props.ライブ感想?.multi_select ?? []).map((s) => s.name).sort(),
+    eventImpression: props.イベント感想?.rich_text?.[0]?.text?.content ?? "",
+    animeImpression: props.アニメ感想?.rich_text?.[0]?.text?.content ?? "",
+    isPublicRecording: props.公開録音?.select?.name ?? "",
+    birthdayTags: (props.誕生日?.multi_select ?? []).map((s) => s.name).sort(),
+    incidentText: props.出来事?.rich_text?.[0]?.text?.content ?? "",
+  });
+}
+
+function buildEpisodeFingerprint(episode) {
+  return JSON.stringify({
+    title: episode.title || `第${episode.broadcastNumber ?? "?"}回`,
+    castMembers: [...(episode.castMembers ?? [])].sort(),
+    corners: [...(episode.corners ?? [])].sort(),
+    lunchSong: episode.lunchSong ?? "",
+    liveImpressions: [...(episode.liveImpressions ?? [])].sort(),
+    eventImpression: episode.eventImpression ?? "",
+    animeImpression: episode.animeImpression ?? "",
+    isPublicRecording: episode.isPublicRecording ? "公開録音" : "",
+    birthdayTags: [...(episode.birthdayTags ?? [])].sort(),
+    incidentText: episode.incidentText ?? "",
+  });
 }
 
 function richText(str) {
@@ -497,11 +543,14 @@ function thumbnailCover(videoId) {
   };
 }
 
-async function upsertEpisode(episode) {
+async function upsertEpisode(episode, notionIndex) {
   const props = buildProperties(episode);
   const cover = thumbnailCover(episode.videoId);
-  const existing = await findPageByVideoId(episode.videoId);
+  const existing = notionIndex.get(episode.videoId);
+
   if (existing) {
+    const newFingerprint = buildEpisodeFingerprint(episode);
+    if (existing.fingerprint === newFingerprint) return "skipped";
     if (!DRY_RUN) {
       if (USE_FETCH_FALLBACK) {
         await notionRequest("PATCH", `/pages/${existing.id}`, { properties: props, cover });
@@ -537,28 +586,34 @@ async function main() {
 
   console.log(`[sync-notion] 開始: FROM_JSON=${FROM_JSON}, DRY_RUN=${DRY_RUN}, LIMIT=${isFinite(LIMIT) ? LIMIT : "全件"}`);
 
-  const episodes = await loadEpisodes();
+  const [episodes, notionIndex] = await Promise.all([
+    loadEpisodes(),
+    fetchNotionIndex(),
+  ]);
+
   episodes.sort((a, b) => (a.broadcastNumber ?? Infinity) - (b.broadcastNumber ?? Infinity));
 
   const targets = isFinite(LIMIT) ? episodes.slice(0, LIMIT) : episodes;
-  console.log(`[sync-notion] 同期対象: ${targets.length} 件 / 全 ${episodes.length} 件`);
+  console.log(`[sync-notion] ソースデータ: ${targets.length} 件 / Notion既存: ${notionIndex.size} 件`);
 
-  let created = 0, updated = 0, errors = 0;
+  let created = 0, updated = 0, skipped = 0, errors = 0;
 
   for (const ep of targets) {
     try {
-      const result = await upsertEpisode(ep);
-      result === "created" ? created++ : updated++;
+      const result = await upsertEpisode(ep, notionIndex);
+      if (result === "created") created++;
+      else if (result === "updated") updated++;
+      else skipped++;
       const label = ep.broadcastNumber ? `第${ep.broadcastNumber}回` : ep.videoId;
-      console.log(`[${result}] ${label} ${ep.title || ""}`);
-      await new Promise((r) => setTimeout(r, NOTION_DELAY_MS));
+      if (result !== "skipped") console.log(`[${result}] ${label} ${ep.title || ""}`);
+      if (result !== "skipped") await new Promise((r) => setTimeout(r, NOTION_DELAY_MS));
     } catch (e) {
       errors++;
       console.error(`[error] ${ep.videoId}:`, e.message);
     }
   }
 
-  console.log(`\n[sync-notion] 完了: created=${created} updated=${updated} errors=${errors}`);
+  console.log(`\n[sync-notion] 完了: created=${created} updated=${updated} skipped=${skipped} errors=${errors}`);
   if (errors > 0) process.exit(1);
 }
 
