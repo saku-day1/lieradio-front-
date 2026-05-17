@@ -396,7 +396,9 @@ function richText(str) {
 }
 
 function multiSelect(arr) {
-  return arr.map((name) => ({ name: String(name).slice(0, 100) }));
+  return arr.map((name) => ({
+    name: String(name).slice(0, 100).replace(/,/g, "，"),
+  }));
 }
 
 function buildProperties(episode) {
