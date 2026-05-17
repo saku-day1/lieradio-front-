@@ -13,6 +13,14 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import {
+  tagObj,
+  classifyRemark,
+  extractBirthdayName,
+  extractVideoId,
+  parseBroadcastNumber,
+  fetchSheetRows,
+} from "../lib/sheetParser.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, "..");
@@ -29,105 +37,20 @@ function loadEnv() {
   }
 }
 
-function extractVideoId(url) {
-  if (typeof url !== "string") return "";
-  const m = url.match(/[?&]v=([A-Za-z0-9_-]{11})/);
-  return m ? m[1] : "";
-}
-
-function parseBroadcastNumber(cell) {
-  const n = Number.parseInt(String(cell ?? "").trim(), 10);
-  return Number.isFinite(n) ? n : NaN;
-}
-
-/**
- * @param {string} text
- */
-function classifyRemark(text) {
-  const t = String(text).trim();
-  if (!t) return null;
-
-  if (/公開録音|公録/.test(t)) {
-    return { type: "publicRecordingNote", searchable: true, visibleInList: false, priority: 22 };
-  }
-  if (/誕生日|バースデー|たんじょうび|おたんじょうび/i.test(t)) {
-    return { type: "birthday", searchable: true, visibleInList: false, priority: 12 };
-  }
-  if (/事件|おそろっち|炎上|ハプニング|ミスリード/i.test(t)) {
-    return { type: "incident", searchable: true, visibleInList: false, priority: 8 };
-  }
-  if (/異次元フェス|異次元|イジゲン/i.test(t)) {
-    return { type: "eventName", searchable: true, visibleInList: false, priority: 70 };
-  }
-  if (
-    /シブヤノオト|Anime\s*Japan|THE\s*FIRST\s*TAKE|オタクに恋は困る|ミュージックステーション|Mステ|めざましテレビ|テレビ朝日/i.test(t)
-  ) {
-    return { type: "externalShow", searchable: true, visibleInList: false, priority: 18 };
-  }
-  if (/期キ|^[123１２３]期|^アニメ\d+期|^\d+期\s*/.test(t) && t.length <= 14) {
-    return { type: "animeSeasonTag", searchable: true, visibleInList: true, priority: 88 };
-  }
-  const shortish = t.length <= 12;
-  return {
-    type: "netaTag",
-    searchable: true,
-    visibleInList: shortish && !/^https?:\/\//i.test(t),
-    priority: shortish ? 45 : 25
-  };
-}
-
-function extractBirthdayName(text) {
-  const m = String(text).trim().match(/^(.+?)(?:誕生日|バースデー|たんじょうび|おたんじょうび)/i);
-  return m ? m[1].trim() : text;
-}
-
-function tagObj(name, type, searchable, visibleInList, priority) {
-  return {
-    name: String(name).trim(),
-    type,
-    searchable: !!searchable,
-    visibleInList: !!visibleInList,
-    priority: Number.isFinite(priority) ? priority : 0
-  };
-}
-
-async function fetchSheetRows() {
-  const apiKey = process.env.GOOGLE_SHEETS_API_KEY;
-  const spreadsheetId = process.env.GOOGLE_SHEETS_SPREADSHEET_ID;
-  const gid = process.env.GOOGLE_SHEETS_SHEET_GID;
-
-  if (!apiKey || !spreadsheetId) {
-    throw new Error(
-      "環境変数が不足しています。.env.local に GOOGLE_SHEETS_API_KEY と GOOGLE_SHEETS_SPREADSHEET_ID を設定してください。"
-    );
-  }
-
-  // gid からシート名を取得する
-  const metaUrl = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}?key=${apiKey}`;
-  const metaRes = await fetch(metaUrl);
-  if (!metaRes.ok) throw new Error(`スプレッドシート情報取得失敗: ${metaRes.status} ${await metaRes.text()}`);
-  const meta = await metaRes.json();
-
-  let sheetName = meta.sheets?.[0]?.properties?.title ?? "Sheet1";
-  if (gid) {
-    const matched = meta.sheets?.find((s) => String(s.properties.sheetId) === String(gid));
-    if (matched) sheetName = matched.properties.title;
-  }
-
-  const range = encodeURIComponent(`${sheetName}`);
-  const dataUrl = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?key=${apiKey}`;
-  const dataRes = await fetch(dataUrl);
-  if (!dataRes.ok) throw new Error(`シートデータ取得失敗: ${dataRes.status} ${await dataRes.text()}`);
-  const data = await dataRes.json();
-
-  return data.values ?? [];
-}
-
 async function main() {
   loadEnv();
 
+  const apiKey = process.env.GOOGLE_SHEETS_API_KEY;
+  const spreadsheetId = process.env.GOOGLE_SHEETS_SPREADSHEET_ID;
+  const gid = process.env.GOOGLE_SHEETS_SHEET_GID || "";
+
+  if (!apiKey || !spreadsheetId) {
+    console.error("環境変数が不足しています。.env.local に GOOGLE_SHEETS_API_KEY と GOOGLE_SHEETS_SPREADSHEET_ID を設定してください。");
+    process.exit(1);
+  }
+
   console.log("Google スプレッドシートからデータを取得中...");
-  const rows = await fetchSheetRows();
+  const rows = await fetchSheetRows(apiKey, spreadsheetId, gid);
 
   if (rows.length === 0) {
     console.error("シートにデータがありません。");
